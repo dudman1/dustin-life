@@ -103,7 +103,7 @@ export default function Home() {
   return (
     <div className="flex flex-col flex-1 gradient-mesh min-h-screen text-white">
       {/* ── NAV ────────────────────────────────────────── */}
-      <nav className="flex items-center justify-between px-6 py-5 md:px-12 lg:px-20">
+      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-5 md:px-12 lg:px-20 border-b border-[rgba(200,169,110,0.1)]" style={{ backgroundColor: "rgba(15,17,21,0.85)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         <a href="/" className="block">
           <Image
             src="/wordmark-dark.jpg"
@@ -138,10 +138,10 @@ export default function Home() {
 
       {/* ── HERO ───────────────────────────────────────── */}
       <section className="flex flex-1 flex-col items-center justify-center px-6 pt-16 pb-24 md:pt-24 md:pb-32">
-        <div className="max-w-3xl text-center">
+        <div className="max-w-[600px] text-center">
           {/* Eyebrow */}
           <p
-            className="text-xs tracking-[0.25em] uppercase mb-8"
+            className="text-xs tracking-[0.25em] uppercase mb-10"
             style={{
               fontFamily: "var(--font-geist-mono)",
               color: "#c8a96e",
@@ -152,15 +152,19 @@ export default function Home() {
 
           {/* Headline */}
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
-            style={{ fontFamily: "var(--font-playfair)" }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
+            style={{
+              fontFamily: "var(--font-playfair)",
+              lineHeight: "1.15",
+              textShadow: "0 2px 20px rgba(200,169,110,0.15)",
+            }}
           >
             Let&apos;s Figure Out What You{" "}
             <span style={{ color: "#c8a96e" }}>Actually</span> Need
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-8 text-lg md:text-xl leading-relaxed text-zinc-400 max-w-2xl mx-auto">
+          <p className="mt-10 text-lg md:text-xl leading-relaxed text-zinc-400 max-w-2xl mx-auto" style={{ letterSpacing: "0.02em" }}>
             I&apos;m not a call center. I&apos;m not captive to one carrier. I shop
             the market for you, explain what actually matters, and disappear when
             you don&apos;t need me.
@@ -169,7 +173,12 @@ export default function Home() {
           {/* CTA */}
           <button
             onClick={scrollToForm}
-            className="mt-10 inline-block px-8 py-3.5 text-sm font-medium tracking-widest uppercase border border-[#c8a96e] text-[#c8a96e] bg-transparent rounded-sm transition-all duration-300 hover:bg-[#c8a96e] hover:text-[#080808] hover:shadow-[0_0_30px_rgba(200,169,110,0.2)]"
+            className="btn-shimmer mt-20 inline-block px-9 py-4 text-sm font-semibold rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(200,169,110,0.25)]"
+            style={{
+              backgroundColor: "#c8a96e",
+              color: "#0f1115",
+              letterSpacing: "0.04em",
+            }}
           >
             Get My Free Assessment
           </button>
@@ -178,7 +187,7 @@ export default function Home() {
 
       {/* ── TRUST STRIP ────────────────────────────────── */}
       <section className="border-y border-zinc-800/50">
-        <div className="max-w-4xl mx-auto px-6 py-10 md:py-12 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+        <div className="max-w-4xl mx-auto px-6 py-12 md:py-14 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
           {[
             "Independent — Not Captive to One Carrier",
             "Licensed Across 8 States",
@@ -259,7 +268,7 @@ export default function Home() {
 
         <div className="w-full max-w-lg">
           {!submitted ? (
-            <div className="glass-card rounded-2xl p-8 md:p-10">
+            <div className="glass-card rounded-2xl p-10 md:p-12">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className="block text-xs text-zinc-500 uppercase tracking-wider mb-2">
@@ -398,10 +407,12 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-shimmer pulse-attention w-full rounded-lg py-4 text-sm font-semibold tracking-widest uppercase transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-shimmer pulse-attention w-full rounded-lg text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: "#c8a96e",
-                    color: "#080808",
+                    color: "#0f1115",
+                    padding: "18px 32px",
+                    letterSpacing: "0.04em",
                   }}
                 >
                   {submitting ? "Submitting..." : "Get My Free Assessment"}

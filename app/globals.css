@@ -49,7 +49,7 @@
   --color-gold: #c8a96e;
   --color-gold-dark: #a68b4b;
   --color-gold-light: #dfc08a;
-  --color-dark: #080808;
+  --color-dark: #0f1115;
 }
 
 :root {
@@ -149,14 +149,15 @@
 .gradient-mesh {
   background: linear-gradient(
     135deg,
-    #080808 0%,
-    #0d0a1a 25%,
-    #0a0d14 50%,
-    #0d0a1a 75%,
-    #080808 100%
+    #0f1115 0%,
+    #0d0f18 20%,
+    #111520 40%,
+    #0a0d14 60%,
+    #0d0f18 80%,
+    #0f1115 100%
   );
   background-size: 400% 400%;
-  animation: gradientMesh 15s ease infinite alternate;
+  animation: gradientMesh 20s ease infinite alternate;
 }
 
 /* ── Glassmorphism Card ──────────────────────────────── */
