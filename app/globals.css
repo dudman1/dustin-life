@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-playfair);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -46,6 +46,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-gold: #c8a96e;
+  --color-gold-dark: #a68b4b;
+  --color-gold-light: #dfc08a;
+  --color-dark: #080808;
 }
 
 :root {
@@ -127,4 +131,134 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ── Gradient Mesh Background ────────────────────────── */
+@keyframes gradientMesh {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-mesh {
+  background: linear-gradient(
+    135deg,
+    #080808 0%,
+    #0d0a1a 25%,
+    #0a0d14 50%,
+    #0d0a1a 75%,
+    #080808 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientMesh 15s ease infinite alternate;
+}
+
+/* ── Glassmorphism Card ──────────────────────────────── */
+.glass-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(200, 169, 110, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(200, 169, 110, 0.05);
+}
+
+/* ── Gold Input Glow ─────────────────────────────────── */
+.gold-input {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gold-input:focus {
+  border-color: #c8a96e;
+  box-shadow: 0 0 0 1px rgba(200, 169, 110, 0.3),
+    0 0 20px rgba(200, 169, 110, 0.1);
+  outline: none;
+}
+
+/* ── Shimmer Button ──────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-shimmer:hover::after {
+  opacity: 1;
+  animation: shimmer 1.5s ease infinite;
+}
+
+/* ── Pulse Attention ─────────────────────────────────── */
+@keyframes pulseGold {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 169, 110, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(200, 169, 110, 0);
+  }
+}
+
+.pulse-attention {
+  animation: pulseGold 2.5s ease-in-out 3;
+}
+
+/* ── Success Checkmark ───────────────────────────────── */
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.check-pop {
+  animation: checkPop 0.5s ease-out forwards;
+}
+
+/* ── Social Icon Glow ────────────────────────────────── */
+.social-icon {
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.social-icon:hover {
+  color: #c8a96e;
+  filter: drop-shadow(0 0 6px rgba(200, 169, 110, 0.5));
 }
