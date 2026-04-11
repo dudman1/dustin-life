@@ -10,7 +10,8 @@
 //   3. Return 200 on success
 
 interface Env {
-  // Add KV / D1 bindings here if needed
+  GHL_WEBHOOK_URL: string;
+  CONVEX_ADMIN_KEY: string;
 }
 
 interface LeadPayload {
@@ -37,21 +38,48 @@ export async function onRequestPost(context: {
       );
     }
 
-    // ── PLACEHOLDER: Dual-write logic ──
-    // TODO: Phoenix webhook URL goes here
-    // const PHOENIX_WEBHOOK = context.env.PHOENIX_LEAD_WEBHOOK;
-    //
-    // await fetch(PHOENIX_WEBHOOK, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(body),
-    // });
+    const GHL_WEBHOOK = context.env.GHL_WEBHOOK_URL;
+    const CONVEX_KEY = context.env.CONVEX_ADMIN_KEY;
+    const timestamp = Date.now();
 
-    // TODO: Write to D1 or KV
-    // await context.env.LEADS_KV.put(
-    //   `lead:${Date.now()}`,
-    //   JSON.stringify(body)
-    // );
+    const [ghl, convex] = await Promise.allSettled([
+      fetch(GHL_WEBHOOK, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: body.name,
+          email: body.email,
+          phone: body.phone,
+          state: body.state,
+          timestamp,
+          tcpa_consent: true,
+          source: "dustinlife.com",
+        }),
+      }),
+      fetch("https://rapid-hummingbird-980.convex.cloud/api/mutation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Convex ${CONVEX_KEY}`,
+        },
+        body: JSON.stringify({
+          path: "insuranceLeads:create",
+          args: {
+            name: body.name,
+            email: body.email,
+            phone: body.phone,
+            state: body.state,
+            source: "dustinlife.com",
+            timestamp,
+            tcpa_consent: true,
+          },
+        }),
+      }),
+    ]);
+
+    if (ghl.status === "rejected" || convex.status === "rejected") {
+      throw new Error("Dual-write failed.");
+    }
 
     return new Response(
       JSON.stringify({ success: true, message: "Lead received." }),
