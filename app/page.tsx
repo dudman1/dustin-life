@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -98,7 +97,7 @@ export default function Home() {
   return (
     <div className="gradient-mesh flex min-h-screen flex-1 flex-col text-white">
       <nav
-        className="sticky top-0 z-50 flex items-center justify-between border-b border-[rgba(200,169,110,0.1)] px-6 py-5 md:px-12 lg:px-20"
+        className="sticky top-0 z-50 flex items-center justify-between border-b border-[rgba(200,169,110,0.1)] px-6 py-3 md:px-12 lg:px-20"
         style={{
           backgroundColor: "rgba(15,17,21,0.85)",
           backdropFilter: "blur(16px)",
@@ -106,13 +105,14 @@ export default function Home() {
         }}
       >
         <Link href="/" className="block">
-          <Image
+          <img
             src="/wordmark-dark.jpg"
-            alt="Dustin McCormick Life Insurance Specialist"
-            width={220}
-            height={55}
-            priority
-            className="object-contain"
+            alt="Dustin McCormick"
+            style={{
+              height: "40px",
+              width: "auto",
+              objectFit: "contain",
+            }}
           />
         </Link>
         <div className="flex items-center gap-5">
@@ -180,13 +180,13 @@ export default function Home() {
       <section className="relative w-full overflow-hidden bg-[#0f1115] px-6 py-24">
         <div className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-[#c8a96e] opacity-[0.02] blur-[120px]" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 lg:grid-cols-2 lg:gap-20">
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 md:gap-16 lg:grid-cols-2 lg:gap-20">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
+            className="order-1 space-y-6"
           >
             <div>
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#c8a96e]">
@@ -197,12 +197,23 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-gray-800 ring-1 ring-inset ring-white/5 transition-colors duration-300 hover:border-gray-600">
+            <div className="relative group overflow-hidden rounded-2xl border border-gray-800 ring-1 ring-inset ring-white/5 transition-colors duration-300 hover:border-gray-600">
+              <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 group-[.video-playing]:opacity-0">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="ml-1 h-8 w-8 text-[#c8a96e] opacity-90" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
               <video
                 src="/iul-explainer.mp4"
+                poster="/iul-performance.jpg"
                 controls
                 playsInline
                 muted
+                onPlay={(e) => e.currentTarget.closest(".group")?.classList.add("video-playing")}
+                onPause={(e) => e.currentTarget.closest(".group")?.classList.remove("video-playing")}
+                onEnded={(e) => e.currentTarget.closest(".group")?.classList.remove("video-playing")}
                 className="aspect-video w-full bg-black object-cover"
               />
             </div>
@@ -215,6 +226,7 @@ export default function Home() {
 
           <motion.div
             id="lead-form"
+            className="order-2"
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -231,9 +243,9 @@ export default function Home() {
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-7 md:space-y-8">
                   <div>
-                    <label className="mb-2 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500">
+                    <label className="mb-3 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-400">
                       Full Name
                     </label>
                     <input
@@ -249,7 +261,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <label className="mb-2 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500">
+                    <label className="mb-3 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-400">
                       Email Address
                     </label>
                     <input
@@ -264,9 +276,9 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
                     <div>
-                      <label className="mb-2 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500">
+                      <label className="mb-3 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-400">
                         Phone Number
                       </label>
                       <input
@@ -282,7 +294,7 @@ export default function Home() {
                     </div>
 
                     <div>
-                      <label className="mb-2 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500">
+                      <label className="mb-3 ml-1 block text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-400">
                         State
                       </label>
                       <select
