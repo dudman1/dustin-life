@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "Dustin Life Insurance — Michigan Family Protection",
   description:
     "William Dustin McCormick helps Michigan families protect what matters most with life insurance options including Indexed Universal Life and Final Expense coverage.",
+  icons: {
+    icon: "/dm-monogram.jpg",
+  },
 };
 
 export default function RootLayout({

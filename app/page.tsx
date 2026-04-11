@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 const STATES = [
   "Michigan",
@@ -103,17 +104,16 @@ export default function Home() {
     <div className="flex flex-col flex-1 gradient-mesh min-h-screen text-white">
       {/* ── NAV ────────────────────────────────────────── */}
       <nav className="flex items-center justify-between px-6 py-5 md:px-12 lg:px-20">
-        <div>
-          <div
-            className="text-xl italic font-semibold tracking-tight"
-            style={{ fontFamily: "var(--font-playfair)" }}
-          >
-            Dustin McCormick
-          </div>
-          <div className="text-xs text-zinc-500 tracking-wide uppercase mt-0.5">
-            Life Insurance Specialist
-          </div>
-        </div>
+        <a href="/" className="block">
+          <Image
+            src="/wordmark-dark.jpg"
+            alt="Dustin McCormick Life Insurance Specialist"
+            width={220}
+            height={55}
+            priority
+            className="object-contain"
+          />
+        </a>
         <div className="flex items-center gap-5">
           <a
             href="https://www.facebook.com/profile.php?id=61577772774808"
@@ -194,6 +194,49 @@ export default function Home() {
               </span>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── VIDEO SECTION ──────────────────────────────── */}
+      <section style={{ padding: "64px 0", textAlign: "center" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 32px" }}>
+          <p
+            style={{
+              fontFamily: "var(--font-geist-mono)",
+              fontSize: "0.68rem",
+              color: "#c8a96e",
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              marginBottom: "14px",
+            }}
+          >
+            See How It Works
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+              fontWeight: 400,
+              color: "#fff",
+              marginBottom: "8px",
+            }}
+          >
+            28 seconds. No fluff.
+          </h2>
+          <video
+            src="/iul-explainer.mp4"
+            controls
+            playsInline
+            muted
+            style={{
+              width: "100%",
+              maxWidth: "720px",
+              margin: "32px auto 0",
+              display: "block",
+              borderRadius: "12px",
+              border: "1px solid rgba(200,169,110,0.2)",
+            }}
+          />
         </div>
       </section>
 
