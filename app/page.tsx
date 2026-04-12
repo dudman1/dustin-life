@@ -95,7 +95,7 @@ export default function Home() {
   };
 
   return (
-    <div className="gradient-mesh flex min-h-screen flex-1 flex-col text-white">
+    <div className="gradient-mesh bg-[#0d0e12] flex min-h-screen flex-1 flex-col text-white">
       <nav
         className="sticky top-0 z-50 flex items-center justify-between border-b border-[rgba(200,169,110,0.1)] px-6 py-3 md:px-12 lg:px-20"
         style={{
@@ -109,8 +109,8 @@ export default function Home() {
             src="/dm-monogram.jpg"
             alt="DM"
             style={{
-              height: "44px",
-              width: "44px",
+              height: "48px",
+              width: "48px",
               objectFit: "contain",
               borderRadius: "4px",
             }}
@@ -120,6 +120,9 @@ export default function Home() {
           <a
             href="tel:+12489709094"
             style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
               fontFamily: "var(--mono)",
               fontSize: "0.75rem",
               color: "var(--accent)",
@@ -128,6 +131,9 @@ export default function Home() {
               opacity: 0.85,
             }}
           >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
             248-970-9094
           </a>
           <a
@@ -155,7 +161,7 @@ export default function Home() {
         <div className="relative z-10 mx-auto w-full max-w-7xl">
           <div className="max-w-4xl">
             <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 md:text-sm">
-              Licensed in MI, IN, OH, IL, NC, AL, WV, PA
+              Licensed Nationwide
             </p>
             <h1 className="font-playfair mb-6 max-w-4xl text-5xl leading-tight md:text-7xl md:leading-snug">
               Let&apos;s Figure Out What You{" "}
@@ -225,7 +231,7 @@ export default function Home() {
         >
           <img
             src="/headshot.jpg"
-            alt="Dustin Dudman — Independent Life Insurance Agent"
+            alt="Dustin Dudman — Licensed Life Insurance Agent"
             style={{
               width: "140px",
               height: "140px",
@@ -256,7 +262,7 @@ export default function Home() {
                 letterSpacing: "0.04em",
               }}
             >
-              Independent Life Insurance Agent
+              Licensed Life Insurance Agent
             </p>
             <p
               style={{
@@ -267,9 +273,9 @@ export default function Home() {
                 fontWeight: 300,
               }}
             >
-              I help families across 8 states find life insurance that actually
-              fits, not the policy that pays the highest commission. Independent
-              means I work for you.
+              I help Michigan families and clients across 8 states find the right
+              coverage, without the sales pressure. I work for you, not for a
+              carrier.
             </p>
           </div>
         </div>
@@ -545,5 +551,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-12 18:58 ET | Updated by: Forge*
+*Last updated: 2026-04-12 19:18 ET | Updated by: Forge*
 */
