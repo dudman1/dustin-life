@@ -118,6 +118,19 @@ export default function Home() {
         </Link>
         <div className="flex items-center gap-5">
           <a
+            href="tel:+12489709094"
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: "0.75rem",
+              color: "var(--accent)",
+              letterSpacing: "0.05em",
+              textDecoration: "none",
+              opacity: 0.85,
+            }}
+          >
+            248-970-9094
+          </a>
+          <a
             href="https://www.facebook.com/profile.php?id=61577772774808"
             target="_blank"
             rel="noopener noreferrer"
@@ -148,14 +161,26 @@ export default function Home() {
               Let&apos;s Figure Out What You{" "}
               <em className="italic text-[#c8a96e]">Actually</em> Need
             </h1>
-            <p className="mb-12 max-w-2xl text-lg leading-relaxed text-gray-300 md:text-xl">
+            <p className="mb-12 max-w-2xl text-lg font-light leading-relaxed text-gray-200 md:text-xl">
               I&apos;m not a call center. I&apos;m not captive to one carrier. I shop
               the market for you, explain what actually matters, and disappear when
               you don&apos;t need me.
             </p>
             <button
               onClick={scrollToForm}
-              className="bg-[#c8a96e] hover:bg-[#b8995e] rounded-full px-10 py-4 text-lg font-semibold text-black shadow-[0_4px_14px_0_rgba(200,169,110,0.39)] transition-all duration-300 hover:-translate-y-0.5"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 0 30px rgba(200,169,110,0.4), 0 4px 20px rgba(200,169,110,0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow =
+                  "0 0 20px rgba(200,169,110,0.25), 0 4px 14px rgba(200,169,110,0.15)";
+              }}
+              className="bg-[#c8a96e] hover:bg-[#b8995e] rounded-full px-10 py-4 text-lg font-semibold text-black transition-all duration-300 hover:-translate-y-0.5"
+              style={{
+                boxShadow:
+                  "0 0 20px rgba(200,169,110,0.25), 0 4px 14px rgba(200,169,110,0.15)",
+              }}
             >
               Get My Free Assessment
             </button>
@@ -165,16 +190,88 @@ export default function Home() {
 
       <section className="border-y border-zinc-800/50">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-8 px-6 py-12 md:flex-row md:gap-16 md:py-14">
-          {[
-            "Independent, not captive to one carrier",
-            "Licensed across 8 states",
-            "No obligation, ever",
-          ].map((item) => (
-            <div key={item} className="flex items-center gap-3">
-              <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#c8a96e]" />
-              <span className="text-sm tracking-wide text-zinc-400">{item}</span>
-            </div>
-          ))}
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span className="text-sm tracking-wide text-zinc-400">Independent Agent</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="1.5">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span className="text-sm tracking-wide text-zinc-400">Licensed Across 8 States</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="1.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <span className="text-sm tracking-wide text-zinc-400">No Obligation, Ever</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-zinc-800/50 px-6 py-12 md:py-14">
+        <div
+          className="mx-auto max-w-5xl"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "32px",
+            padding: "48px 0",
+            flexWrap: "wrap",
+          }}
+        >
+          <img
+            src="/headshot.jpg"
+            alt="Dustin Dudman — Independent Life Insurance Agent"
+            style={{
+              width: "140px",
+              height: "140px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              objectPosition: "center top",
+              border: "2px solid rgba(200,169,110,0.3)",
+              flexShrink: 0,
+            }}
+          />
+          <div>
+            <p
+              style={{
+                fontWeight: 600,
+                fontSize: "1.05rem",
+                marginBottom: "6px",
+                color: "var(--text)",
+              }}
+            >
+              Dustin Dudman
+            </p>
+            <p
+              style={{
+                fontSize: "0.85rem",
+                color: "var(--accent)",
+                marginBottom: "10px",
+                fontFamily: "var(--mono)",
+                letterSpacing: "0.04em",
+              }}
+            >
+              Independent Life Insurance Agent
+            </p>
+            <p
+              style={{
+                fontSize: "0.9rem",
+                color: "var(--text-2)",
+                maxWidth: "420px",
+                lineHeight: 1.65,
+                fontWeight: 300,
+              }}
+            >
+              I help families across 8 states find life insurance that actually
+              fits, not the policy that pays the highest commission. Independent
+              means I work for you.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -445,3 +542,8 @@ export default function Home() {
     </div>
   );
 }
+
+/*
+---
+*Last updated: 2026-04-12 18:58 ET | Updated by: Forge*
+*/
