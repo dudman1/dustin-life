@@ -106,12 +106,13 @@ export default function Home() {
       >
         <Link href="/" className="block">
           <img
-            src="/wordmark-dark.jpg"
-            alt="Dustin McCormick"
+            src="/dm-monogram.jpg"
+            alt="DM"
             style={{
-              height: "40px",
-              width: "auto",
+              height: "44px",
+              width: "44px",
               objectFit: "contain",
+              borderRadius: "4px",
             }}
           />
         </Link>
