@@ -7,11 +7,11 @@ export default function Privacy() {
 
       <h2>Who We Are</h2>
       <p>
-        This website is operated by <strong>William Dustin McCormick</strong>,
-        an independent life insurance agent based in Michigan.
+        This website is operated by <strong>William Dustin McCormick (Dustin McCormick)</strong>,
+        an independent life insurance agent serving families nationwide.
       </p>
       <address className="not-italic">
-        William Dustin McCormick<br />
+        William Dustin McCormick (Dustin McCormick)<br />
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
@@ -40,7 +40,7 @@ export default function Privacy() {
       <h2>SMS Text Messaging</h2>
       <p>
         If you provide your phone number and consent to receive text messages,
-        you may receive SMS messages from William Dustin McCormick related to
+        you may receive SMS messages from William Dustin McCormick (Dustin McCormick) related to
         your insurance inquiry, including appointment reminders, quote updates,
         and follow-up communications.
       </p>
@@ -95,7 +95,7 @@ export default function Privacy() {
 
       <h2>Contact Us</h2>
       <address className="not-italic">
-        William Dustin McCormick<br />
+        William Dustin McCormick (Dustin McCormick)<br />
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
@@ -104,3 +104,8 @@ export default function Privacy() {
     </main>
   );
 }
+
+/*
+---
+*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
+*/

@@ -4,7 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const STATES = ["MI", "IN", "OH", "IL", "NC", "AL", "WV", "PA"];
+const STATES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+];
 
 function FacebookIcon({ className }: { className?: string }) {
   return (
@@ -300,14 +306,14 @@ export default function Home() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="order-1 space-y-6"
+            className="order-2 space-y-6 lg:order-1"
           >
             <div>
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#c8a96e]">
-                SEE HOW IT WORKS
+                QUICK INTRO
               </p>
               <h2 className="font-playfair text-4xl leading-tight text-white md:text-5xl">
-                28 seconds. <span className="italic text-gray-500">No fluff.</span>
+                28 seconds. <span className="italic text-gray-500">Then decide.</span>
               </h2>
             </div>
 
@@ -333,14 +339,14 @@ export default function Home() {
             </div>
 
             <p className="border-l-2 border-gray-800 pl-4 text-sm leading-relaxed text-gray-500">
-              I designed this process to respect your time. Watch the breakdown,
-              then grab your custom assessment on the right.
+              Watch the quick intro if you want context, or skip it and go straight
+              to the assessment. Either way, the goal is clarity fast.
             </p>
           </motion.div>
 
           <motion.div
             id="lead-form"
-            className="order-2"
+            className="order-1 lg:order-2"
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -448,8 +454,8 @@ export default function Home() {
                       className="mt-0.5 h-4 w-4 rounded border-gray-700 bg-[#0a0b0e] text-[#c8a96e] focus:ring-[#c8a96e]"
                     />
                     <span className="text-xs leading-relaxed text-gray-500 transition-colors group-hover:text-gray-400">
-                      I agree to receive text messages from William Dustin McCormick at
-                      the phone number provided, including insurance quotes,
+                      I agree to receive text messages from William Dustin McCormick
+                      (Dustin McCormick) at the phone number provided, including insurance quotes,
                       appointment reminders, and follow-up communications related to
                       my inquiry. Message frequency varies. Message and data rates
                       may apply. Reply STOP to opt out or HELP for assistance at any
@@ -467,7 +473,7 @@ export default function Home() {
                       className="mt-0.5 h-4 w-4 rounded border-gray-700 bg-[#0a0b0e] text-[#c8a96e] focus:ring-[#c8a96e]"
                     />
                     <span className="text-xs leading-relaxed text-gray-500 transition-colors group-hover:text-gray-400">
-                      I have reviewed and accept William Dustin McCormick&apos;s{" "}
+                      I have reviewed and accept Dustin McCormick&apos;s{" "}
                       <Link href="/privacy" className="text-[#c8a96e] hover:underline">
                         Privacy Policy
                       </Link>{" "}
@@ -490,8 +496,8 @@ export default function Home() {
                   </button>
 
                   <p className="pt-1 text-[10px] leading-relaxed text-zinc-600">
-                    By submitting this form, you are requesting a quote from William
-                    Dustin McCormick, a licensed independent insurance agent. Your
+                    By submitting this form, you are requesting a quote from Dustin
+                    McCormick, a licensed independent insurance agent. Your
                     information will be used solely to provide you with insurance
                     options and will not be sold or shared for marketing purposes.
                   </p>
@@ -563,5 +569,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-12 21:03 ET | Updated by: Forge*
+*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
 */

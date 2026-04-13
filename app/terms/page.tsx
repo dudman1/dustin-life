@@ -7,18 +7,18 @@ export default function Terms() {
 
       <h2>About This Website</h2>
       <p>
-        This website is operated by <strong>William Dustin McCormick</strong>,
-        an independent life insurance agent licensed in the state of Michigan.
+        This website is operated by <strong>William Dustin McCormick (Dustin McCormick)</strong>,
+        an independent life insurance agent serving families nationwide.
         This site provides educational content about life insurance products,
-        including Indexed Universal Life (IUL) and Final Expense insurance,
+        including life insurance, Indexed Universal Life (IUL), and Final Expense coverage,
         and offers visitors the ability to request quotes and schedule consultations.
       </p>
       <address className="not-italic">
-        William Dustin McCormick<br />
+        William Dustin McCormick (Dustin McCormick)<br />
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-        Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
+        Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a>
       </address>
 
       <h2>Use of This Website</h2>
@@ -33,7 +33,7 @@ export default function Terms() {
         When you submit your phone number through a form on this website and provide
         consent by checking the SMS opt-in checkbox, you are enrolling in the
         <strong> dustinlife.com text messaging program</strong> operated by
-        William Dustin McCormick.
+        William Dustin McCormick (Dustin McCormick).
       </p>
 
       <h3>Program Description</h3>
@@ -41,7 +41,7 @@ export default function Terms() {
       <ul>
         <li>Insurance quotes and coverage options you have requested</li>
         <li>Appointment reminders and scheduling confirmations</li>
-        <li>Tuesday IUL education emails and SMS follow-ups for your review</li>
+        <li>Educational follow-ups related to coverage options you asked to review</li>
         <li>SMS alerts when you respond to a quote or express interest in coverage</li>
         <li>Policy application status updates and next steps</li>
         <li>Renewal reminders and annual review scheduling</li>
@@ -73,7 +73,7 @@ export default function Terms() {
       </p>
       <ul>
         <li>Phone: <a href="tel:+12489709094">248-970-9094</a></li>
-        <li>Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a></li>
+        <li>Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a></li>
       </ul>
 
       <h3>Carrier Liability</h3>
@@ -103,7 +103,7 @@ export default function Terms() {
 
       <h2>Intellectual Property</h2>
       <p>
-        All content on this website is the property of William Dustin McCormick
+        All content on this website is the property of William Dustin McCormick (Dustin McCormick)
         unless otherwise noted. You may not reproduce, distribute, or modify any
         content without written permission.
       </p>
@@ -116,7 +116,7 @@ export default function Terms() {
 
       <h2>Limitation of Liability</h2>
       <p>
-        William Dustin McCormick shall not be liable for any direct, indirect,
+        William Dustin McCormick (Dustin McCormick) shall not be liable for any direct, indirect,
         incidental, consequential, or punitive damages arising from your use
         of this website.
       </p>
@@ -129,12 +129,17 @@ export default function Terms() {
 
       <h2>Contact Us</h2>
       <address className="not-italic">
-        William Dustin McCormick<br />
+        William Dustin McCormick (Dustin McCormick)<br />
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-        Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
+        Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a>
       </address>
     </main>
   );
 }
+
+/*
+---
+*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
+*/
