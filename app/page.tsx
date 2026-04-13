@@ -109,8 +109,8 @@ export default function Home() {
             src="/dm-monogram.jpg"
             alt="DM"
             style={{
-              height: "48px",
-              width: "48px",
+              height: "56px",
+              width: "56px",
               objectFit: "contain",
               borderRadius: "4px",
             }}
@@ -207,7 +207,7 @@ export default function Home() {
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
-            <span className="text-sm tracking-wide text-zinc-400">Licensed Across 8 States</span>
+            <span className="text-sm tracking-wide text-zinc-400">Licensed Nationwide</span>
           </div>
           <div className="flex items-center gap-3">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c8a96e" strokeWidth="1.5">
@@ -231,7 +231,7 @@ export default function Home() {
         >
           <img
             src="/headshot.jpg"
-            alt="Dustin Dudman — Licensed Life Insurance Agent"
+            alt="Dustin McCormick — Licensed Life Insurance Agent"
             style={{
               width: "140px",
               height: "140px",
@@ -251,7 +251,7 @@ export default function Home() {
                 color: "var(--text)",
               }}
             >
-              Dustin Dudman
+              Dustin McCormick
             </p>
             <p
               style={{
@@ -273,9 +273,8 @@ export default function Home() {
                 fontWeight: 300,
               }}
             >
-              I help Michigan families and clients across 8 states find the right
-              coverage, without the sales pressure. I work for you, not for a
-              carrier.
+              I help families nationwide find life insurance that actually fits.
+              No pressure, no captive carrier agenda. I work for you.
             </p>
           </div>
         </div>
@@ -505,7 +504,7 @@ export default function Home() {
 
       <footer className="border-t border-zinc-800/50 px-6 py-10 text-center">
         <div className="font-playfair text-sm font-semibold uppercase tracking-wider text-zinc-400">
-          WILLIAM DUSTIN MCCORMICK
+          DUSTIN MCCORMICK
         </div>
         <p className="mt-3 text-xs leading-relaxed text-zinc-600">
           101 W Big Beaver Rd Ste 345, Troy, MI 48084
@@ -542,7 +541,7 @@ export default function Home() {
           </a>
         </div>
         <p className="mt-6 text-[10px] text-zinc-800">
-          &copy; 2026 William Dustin McCormick
+          &copy; 2026 Dustin McCormick
         </p>
       </footer>
     </div>
@@ -551,5 +550,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-12 19:18 ET | Updated by: Forge*
+*Last updated: 2026-04-12 20:49 ET | Updated by: Forge*
 */

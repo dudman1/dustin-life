@@ -20,9 +20,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Dustin Life Insurance — Michigan Family Protection",
+  title: "Dustin Life Insurance — Nationwide Family Protection",
   description:
-    "William Dustin McCormick helps Michigan families protect what matters most with life insurance options including Indexed Universal Life and Final Expense coverage.",
+    "Dustin McCormick helps families nationwide protect what matters most with life insurance options including Indexed Universal Life and Final Expense coverage.",
   icons: {
     icon: "/dm-monogram.jpg",
   },
@@ -42,3 +42,8 @@ export default function RootLayout({
     </html>
   );
 }
+
+/*
+---
+*Last updated: 2026-04-12 20:50 ET | Updated by: Forge*
+*/
