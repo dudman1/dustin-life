@@ -454,8 +454,8 @@ export default function Home() {
                       className="mt-0.5 h-4 w-4 rounded border-gray-700 bg-[#0a0b0e] text-[#c8a96e] focus:ring-[#c8a96e]"
                     />
                     <span className="text-xs leading-relaxed text-gray-500 transition-colors group-hover:text-gray-400">
-                      I agree to receive text messages from William Dustin McCormick
-                      (Dustin McCormick) at the phone number provided, including insurance quotes,
+                      I agree to receive text messages from Dustin McCormick at the
+                      phone number provided, including insurance quotes,
                       appointment reminders, and follow-up communications related to
                       my inquiry. Message frequency varies. Message and data rates
                       may apply. Reply STOP to opt out or HELP for assistance at any
@@ -569,5 +569,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
+*Last updated: 2026-04-12 23:26 ET | Updated by: Forge*
 */
