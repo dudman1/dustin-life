@@ -18,7 +18,7 @@ export default function Terms() {
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-        Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a>
+        Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
       </address>
 
       <h2>Use of This Website</h2>
@@ -41,7 +41,7 @@ export default function Terms() {
       <ul>
         <li>Insurance quotes and coverage options you have requested</li>
         <li>Appointment reminders and scheduling confirmations</li>
-        <li>Educational follow-ups related to coverage options you asked to review</li>
+        <li>Tuesday IUL education emails and SMS follow-ups for your review</li>
         <li>SMS alerts when you respond to a quote or express interest in coverage</li>
         <li>Policy application status updates and next steps</li>
         <li>Renewal reminders and annual review scheduling</li>
@@ -133,7 +133,7 @@ export default function Terms() {
         101 W Big Beaver Rd Ste 345<br />
         Troy, MI 48084<br />
         Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-        Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a>
+        Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
       </address>
     </main>
   );
@@ -141,5 +141,5 @@ export default function Terms() {
 
 /*
 ---
-*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
+*Last updated: 2026-04-12 23:16 ET | Updated by: Forge*
 */
