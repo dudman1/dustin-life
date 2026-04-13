@@ -126,10 +126,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: #0d0e12;
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
 
@@ -281,3 +283,8 @@
   color: #c8a96e;
   filter: drop-shadow(0 0 6px rgba(200, 169, 110, 0.5));
 }
+
+/*
+---
+*Last updated: 2026-04-12 21:02 ET | Updated by: Forge*
+*/

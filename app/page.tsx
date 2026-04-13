@@ -95,7 +95,10 @@ export default function Home() {
   };
 
   return (
-    <div className="gradient-mesh bg-[#0d0e12] flex min-h-screen flex-1 flex-col text-white">
+    <div
+      className="gradient-mesh flex min-h-screen flex-1 flex-col text-white"
+      style={{ backgroundColor: "#0d0e12" }}
+    >
       <nav
         className="sticky top-0 z-50 flex items-center justify-between border-b border-[rgba(200,169,110,0.1)] px-6 py-3 md:px-12 lg:px-20"
         style={{
@@ -116,6 +119,14 @@ export default function Home() {
             }}
           />
         </Link>
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
+          <a href="#how-it-works" className="text-sm text-gray-400 transition-colors hover:text-white">
+            How It Works
+          </a>
+          <a href="#lead-form" className="text-sm text-gray-400 transition-colors hover:text-white">
+            Free Assessment
+          </a>
+        </div>
         <div className="flex items-center gap-5">
           <a
             href="tel:+12489709094"
@@ -167,7 +178,7 @@ export default function Home() {
               Let&apos;s Figure Out What You{" "}
               <em className="italic text-[#c8a96e]">Actually</em> Need
             </h1>
-            <p className="mb-12 max-w-2xl text-lg font-light leading-relaxed text-gray-200 md:text-xl">
+            <p className="mb-12 max-w-2xl text-lg font-light leading-relaxed text-gray-300 md:text-xl">
               I&apos;m not a call center. I&apos;m not captive to one carrier. I shop
               the market for you, explain what actually matters, and disappear when
               you don&apos;t need me.
@@ -280,7 +291,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative w-full overflow-hidden bg-[#0f1115] px-6 py-24">
+      <section id="how-it-works" className="relative w-full overflow-hidden bg-[#0f1115] px-6 py-24">
         <div className="absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-[#c8a96e] opacity-[0.02] blur-[120px]" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 md:gap-16 lg:grid-cols-2 lg:gap-20">
@@ -300,7 +311,7 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="relative group overflow-hidden rounded-2xl border border-gray-800 ring-1 ring-inset ring-white/5 transition-colors duration-300 hover:border-gray-600">
+            <div className="relative group overflow-hidden rounded-2xl border border-gray-800 shadow-[0_0_15px_rgba(212,175,55,0.15)] ring-1 ring-inset ring-white/5 transition-colors duration-300 hover:border-gray-600">
               <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-300 group-[.video-playing]:opacity-0">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-white/20 bg-white/5 shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-110">
                   <svg viewBox="0 0 24 24" className="ml-1 h-8 w-8 text-[#c8a96e] opacity-90" fill="currentColor">
@@ -335,8 +346,9 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
           >
-            {!submitted ? (
-              <div className="rounded-2xl border border-[#c8a96e]/20 bg-[#16181D] p-8 shadow-2xl md:p-10">
+            <div className="rounded-2xl border border-gray-800 bg-[#16181d] p-6 md:p-8">
+              {!submitted ? (
+                <div className="rounded-2xl border border-[#c8a96e]/20 bg-[#16181D] p-8 shadow-2xl md:p-10">
                 <div className="mb-8 text-center">
                   <h2 className="font-playfair mb-3 text-3xl md:text-4xl">
                     Get Your Free Assessment
@@ -484,9 +496,9 @@ export default function Home() {
                     options and will not be sold or shared for marketing purposes.
                   </p>
                 </form>
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-[#c8a96e]/20 bg-[#16181D] p-8 text-center shadow-2xl md:p-10">
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-[#c8a96e]/20 bg-[#16181D] p-8 text-center shadow-2xl md:p-10">
                 <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(200,169,110,0.15)] text-[#c8a96e]">
                   <CheckIcon className="h-8 w-8" />
                 </div>
@@ -496,8 +508,9 @@ export default function Home() {
                 <p className="mt-3 text-zinc-400">
                   Dustin will be in touch within 24 hours.
                 </p>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -550,5 +563,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-12 20:49 ET | Updated by: Forge*
+*Last updated: 2026-04-12 21:03 ET | Updated by: Forge*
 */
