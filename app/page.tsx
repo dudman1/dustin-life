@@ -102,6 +102,14 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
               <PhoneIcon />
               248-970-9094
             </a>
+            <div className={styles.navIcons}>
+              <a className={styles.navIcon} href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <FacebookIcon />
+              </a>
+              <a className={styles.navIcon} href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <LinkedInIcon />
+              </a>
+            </div>
           </div>
         </div>
       </header>
@@ -193,7 +201,7 @@ export default function Home() {
                 <ShieldIcon />
                 Licensed Nationwide
               </div>
-              <h1 className={styles.display}>Let&apos;s figure out what actually fits your family.</h1>
+              <h1 className={styles.display}>Let&apos;s Figure Out What You <em className={styles.heroAccent}>Actually</em> Need</h1>
               <p className={styles.lead}>
                 I&apos;m an independent life insurance agent, so I can shop options, explain the tradeoffs,
                 and help you choose a policy that makes sense without the pressure.
@@ -304,10 +312,10 @@ export default function Home() {
           </section>
 
           <section className={styles.section} id="assessment">
-            <div className={styles.twoCol}>
+            <div className={styles.formShell}>
               <div className={styles.formCard}>
-                <h2 className={styles.sectionTitle}>Get your free assessment.</h2>
-                <p className={styles.sectionIntro}>Tell me a little about yourself and I&apos;ll reach out with next steps.</p>
+                <h2 className={styles.sectionTitle}>Get Your Free Assessment</h2>
+                <p className={styles.sectionIntro}>Takes 60 seconds. No spam. Ever.</p>
 
                 {!submitted ? (
                   <form onSubmit={handleSubmit}>
@@ -337,37 +345,28 @@ export default function Home() {
 
                     <label className={styles.checkboxRow}>
                       <input className={styles.checkbox} type="checkbox" checked={formState.smsConsent} onChange={(e) => setFormState({ ...formState, smsConsent: e.target.checked })} />
-                      <span className={styles.smallNote}>I agree to receive text messages from Dustin McCormick at the number provided regarding insurance quotes and related follow-up. Message and data rates may apply. Reply STOP to opt out.</span>
+                      <span className={styles.smallNote}>I agree to receive text messages from Dustin McCormick at the phone number provided, including insurance quotes, appointment reminders, and follow-up communications related to my inquiry. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for assistance at any time. Consent is not a condition of purchase.</span>
                     </label>
 
                     <label className={styles.checkboxRow}>
                       <input className={styles.checkbox} type="checkbox" checked={formState.termsConsent} onChange={(e) => setFormState({ ...formState, termsConsent: e.target.checked })} />
-                      <span className={styles.smallNote}>I have reviewed and accept the <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms and Conditions</Link>.</span>
+                      <span className={styles.smallNote}>I have reviewed and accept Dustin McCormick&apos;s <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms and Conditions</Link>.</span>
                     </label>
 
                     {error ? <p className={styles.error}>{error}</p> : null}
 
-                    <div className={styles.heroActions}>
+                    <div className={styles.formButtonRow}>
                       <button className={styles.primaryLink} type="submit" disabled={submitting}>
                         {submitting ? "Submitting..." : "Get My Free Assessment"}
                       </button>
                     </div>
+
+                    <p className={styles.formDisclosure}>By submitting this form, you are requesting a quote from Dustin McCormick, a licensed independent insurance agent. Your information will be used solely to provide you with insurance options and will not be sold or shared for marketing purposes.</p>
                   </form>
                 ) : (
                   <p className={styles.success}>Thanks. Dustin will be in touch within 24 hours.</p>
                 )}
               </div>
-
-              <aside className={styles.callout}>
-                <h3 className={styles.cardTitle}>What to expect</h3>
-                <p className={styles.cardText}>Once you reach out, we&apos;ll start with what matters most to you and narrow the options from there.</p>
-                <ul className={styles.list}>
-                  <li>Quick conversation about your goals</li>
-                  <li>Clear explanation of available options</li>
-                  <li>Help choosing the right next step</li>
-                  <li>No obligation to move forward</li>
-                </ul>
-              </aside>
             </div>
           </section>
         </div>
@@ -380,5 +379,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:18 ET | Updated by: Forge*
+*Last updated: 2026-04-14 16:46 ET | Updated by: Forge*
 */

@@ -113,6 +113,30 @@
   gap: 12px;
 }
 
+.navIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #e6dccf;
+  background: #fff;
+  color: #7a6641;
+  box-shadow: 0 10px 24px rgba(38, 29, 16, 0.06);
+}
+
+.navIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
 .phoneLink,
 .primaryLink,
 .outlineLink,
@@ -173,7 +197,7 @@
 }
 
 .main {
-  padding: 32px 0 72px;
+  padding: 24px 0 52px;
 }
 
 .card,
@@ -192,7 +216,7 @@
 }
 
 .hero {
-  padding: 44px;
+  padding: 36px;
 }
 
 .heroCopy {
@@ -227,17 +251,22 @@
 }
 
 .display {
-  margin: 18px 0 0;
-  font-size: clamp(40px, 5vw, 68px);
+  margin: 14px 0 0;
+  font-size: clamp(40px, 5vw, 64px);
   line-height: 1.06;
   letter-spacing: -0.04em;
 }
 
+.heroAccent {
+  font-style: italic;
+  color: #c8a96e;
+}
+
 .lead {
   max-width: 680px;
-  font-size: 20px;
+  font-size: 19px;
   color: #6e675c;
-  margin: 18px 0 20px;
+  margin: 14px 0 16px;
 }
 
 .support {
@@ -250,7 +279,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 26px;
+  margin-top: 20px;
 }
 
 .heroNote {
@@ -270,7 +299,7 @@
 }
 
 .section {
-  margin-top: 26px;
+  margin-top: 20px;
 }
 
 .trustStrip {
@@ -305,7 +334,7 @@
 .formCard,
 .callout,
 .profileCard {
-  padding: 34px;
+  padding: 28px;
 }
 
 .sectionHead {
@@ -352,7 +381,7 @@
 
 .pathCard,
 .infoCard {
-  padding: 26px;
+  padding: 22px;
 }
 
 .tag {
@@ -419,9 +448,14 @@
   background: linear-gradient(180deg, #fff 0%, #fbf7f1 100%);
 }
 
+.formShell {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 14px;
   margin-top: 18px;
 }
@@ -467,6 +501,23 @@
   align-items: flex-start;
   gap: 10px;
   margin-top: 14px;
+}
+
+.formButtonRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.formButtonRow .primaryLink {
+  width: 100%;
+}
+
+.formDisclosure {
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #6e675c;
 }
 
 .checkbox {
@@ -593,6 +644,10 @@
   .twoCol {
     grid-template-columns: 1fr;
   }
+
+  .navRight {
+    gap: 10px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -609,7 +664,7 @@
   .videoCard,
   .faqItem,
   .profileCard {
-    padding: 22px;
+    padding: 20px;
   }
 
   .navMain {
@@ -622,6 +677,10 @@
   .formGrid,
   .faqGrid {
     grid-template-columns: 1fr;
+  }
+
+  .navIcons {
+    gap: 8px;
   }
 
   .profileCard {
@@ -641,5 +700,5 @@
 
 /*
 ---
-*Last updated: 2026-04-14 16:03 ET | Updated by: Forge*
+*Last updated: 2026-04-14 16:46 ET | Updated by: Forge*
 */
