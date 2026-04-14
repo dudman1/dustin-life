@@ -1,10 +1,11 @@
 import Link from "next/link";
 import styles from "../dustinlife-v2.module.css";
 
-function PhoneIcon() {
+function EmailIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+      <path d="M4 6h16v12H4z" />
+      <path d="M4 7l8 6 8-6" />
     </svg>
   );
 }
@@ -46,10 +47,6 @@ function SiteHeader() {
         <div className={`${styles.wrap} ${styles.navRow}`}>
           <Link href="/" className={styles.brand}>
             <img src="/dm-monogram.jpg" alt="DM" />
-            <div className={styles.brandCopy}>
-              <strong>Dustin McCormick</strong>
-              <span>Licensed Independent Agent</span>
-            </div>
           </Link>
 
           <nav className={styles.navMain} aria-label="Primary">
@@ -60,10 +57,17 @@ function SiteHeader() {
           </nav>
 
           <div className={styles.navRight}>
-            <a className={styles.phoneLink} href="tel:+12489709094">
-              <PhoneIcon />
-              248-970-9094
-            </a>
+            <div className={styles.navIcons}>
+              <a className={styles.navIcon} href="mailto:transamerica.dustin@gmail.com" aria-label="Email Dustin">
+                <EmailIcon />
+              </a>
+              <a className={styles.navIcon} href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <FacebookIcon />
+              </a>
+              <a className={styles.navIcon} href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <LinkedInIcon />
+              </a>
+            </div>
           </div>
         </div>
       </header>
@@ -113,13 +117,9 @@ export default function IndexedUniversalLifePage() {
                 <ShieldIcon />
                 Indexed Universal Life
               </div>
-              <h1 className={styles.display}>Permanent coverage with cash value potential, explained clearly.</h1>
+              <h1 className={styles.display}>Indexed Universal Life, without the sales pitch.</h1>
               <p className={styles.lead}>
-                Indexed Universal Life can be useful when you want lifelong protection and flexibility,
-                but it works best when the policy is designed with real goals in mind.
-              </p>
-              <p className={styles.support}>
-                My job is to help you understand how it works, where it fits, and what to watch for before you make a decision.
+                IUL is permanent life insurance first. The cash value potential is real, but it depends entirely on how the policy is designed and funded. I&apos;ll help you understand whether it actually fits before you commit to anything.
               </p>
               <div className={styles.heroActions}>
                 <a className={styles.primaryLink} href="#video">Watch the Quick Intro</a>
@@ -165,23 +165,15 @@ export default function IndexedUniversalLifePage() {
           </section>
 
           <section className={styles.section}>
-            <div className={styles.twoCol}>
-              <div className={styles.sectionCard}>
-                <h3 className={styles.cardTitle}>When it may be worth exploring</h3>
-                <ul className={styles.list}>
+            <div className={styles.centerCard}>
+              <div className={styles.centerCardInner}>
+                <div className={styles.eyebrow}>Worth exploring</div>
+                <h3 className={styles.intentionalTitle}>When it may be <span className={styles.intentionalAccent}>worth</span> exploring</h3>
+                <ul className={styles.intentionalList}>
                   <li>You want permanent life insurance, not temporary coverage only</li>
                   <li>You care about flexibility in premiums and long-term planning</li>
                   <li>You want to understand cash value without the hype</li>
                   <li>You want guidance from an independent agent who can compare options</li>
-                </ul>
-              </div>
-              <div className={styles.sectionCard}>
-                <h3 className={styles.cardTitle}>What to watch for</h3>
-                <ul className={styles.list}>
-                  <li>It is not a shortcut or magic solution</li>
-                  <li>Policy design matters more than flashy illustrations</li>
-                  <li>Not every budget or goal points to IUL</li>
-                  <li>Clear answers matter before you commit</li>
                 </ul>
               </div>
             </div>
@@ -220,5 +212,5 @@ export default function IndexedUniversalLifePage() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:18 ET | Updated by: Forge*
+*Last updated: 2026-04-14 18:15 ET | Updated by: Forge*
 */

@@ -13,14 +13,6 @@ const STATES = [
   "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
 ];
 
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
-    </svg>
-  );
-}
-
 function EmailIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -84,10 +76,6 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
         <div className={`${styles.wrap} ${styles.navRow}`}>
           <Link href="/" className={styles.brand}>
             <img src="/dm-monogram.jpg" alt="DM" />
-            <div className={styles.brandCopy}>
-              <strong>Dustin McCormick</strong>
-              <span>Licensed Independent Agent</span>
-            </div>
           </Link>
 
           <nav className={styles.navMain} aria-label="Primary">
@@ -98,11 +86,10 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
           </nav>
 
           <div className={styles.navRight}>
-            <a className={styles.phoneLink} href="tel:+12489709094">
-              <PhoneIcon />
-              248-970-9094
-            </a>
             <div className={styles.navIcons}>
+              <a className={styles.navIcon} href="mailto:transamerica.dustin@gmail.com" aria-label="Email Dustin">
+                <EmailIcon />
+              </a>
               <a className={styles.navIcon} href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <FacebookIcon />
               </a>
@@ -196,27 +183,36 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.wrap}>
           <section className={styles.hero}>
-            <div className={styles.heroCopy}>
-              <div className={styles.eyebrow}>
-                <ShieldIcon />
-                Licensed Nationwide
+            <div className={styles.heroSplit}>
+              <div className={styles.heroCopy}>
+                <div className={styles.eyebrow}>
+                  <ShieldIcon />
+                  Licensed Nationwide
+                </div>
+                <h1 className={styles.display}>Let&apos;s Figure Out What You <em className={styles.heroAccent}>Actually</em> Need</h1>
+                <p className={styles.lead}>
+                  I&apos;m an independent life insurance agent, so I can shop options, explain the tradeoffs,
+                  and help you choose a policy that makes sense without the pressure.
+                </p>
+                <p className={styles.support}>
+                  If you want help covering burial expenses, protecting loved ones, or understanding how
+                  Indexed Universal Life works, start with the path that matches your goal.
+                </p>
+                <div className={styles.heroActions}>
+                  <a className={styles.primaryLink} href="#start-here">Choose My Path</a>
+                  <a className={styles.outlineLink} href="#assessment">Get My Free Assessment</a>
+                </div>
               </div>
-              <h1 className={styles.display}>Let&apos;s Figure Out What You <em className={styles.heroAccent}>Actually</em> Need</h1>
-              <p className={styles.lead}>
-                I&apos;m an independent life insurance agent, so I can shop options, explain the tradeoffs,
-                and help you choose a policy that makes sense without the pressure.
-              </p>
-              <p className={styles.support}>
-                If you want help covering burial expenses, protecting loved ones, or understanding how
-                Indexed Universal Life works, start with the path that matches your goal.
-              </p>
-              <div className={styles.heroActions}>
-                <a className={styles.primaryLink} href="#start-here">Choose My Path</a>
-                <a className={styles.outlineLink} href="#assessment">Get My Free Assessment</a>
-                <a className={styles.iconLink} href="mailto:transamerica.dustin@gmail.com" aria-label="Talk to Dustin by email">
-                  <EmailIcon />
-                </a>
-              </div>
+
+              <aside className={styles.heroChecklistCard}>
+                <div className={styles.heroChecklistHeader}>Fast, clean coverage signals.</div>
+                <ul className={styles.heroChecklist}>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Instant underwriting</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />No medical exams</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Same-day coverage</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Trusted carriers</li>
+                </ul>
+              </aside>
             </div>
           </section>
 
@@ -379,5 +375,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:46 ET | Updated by: Forge*
+*Last updated: 2026-04-14 18:15 ET | Updated by: Forge*
 */

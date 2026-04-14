@@ -38,6 +38,31 @@ const STATES = [
   "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
 ];
 
+function EmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+      <path d="M4 6h16v12H4z" />
+      <path d="M4 7l8 6 8-6" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+
 export default function FinalExpensePage() {
   const formWrapRef = useRef<HTMLDivElement | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
@@ -171,25 +196,20 @@ export default function FinalExpensePage() {
 
         <nav>
           <div className="nav-inner">
-            <a href="/" className="nav-logo">
-              <img src="/dm-monogram.jpg" alt="Dustin McCormick" />
-            </a>
-            <div className="nav-tabs">
-              <Link href="/" className="nav-tab">IUL</Link>
-              <Link href="/final-expense" className="nav-tab active">Final Expense</Link>
+            <Link href="/" className="nav-logo">
+              <img src="/dm-monogram.jpg" alt="DM" />
+            </Link>
+            <div className="nav-main">
+              <Link href="/" className="nav-link">Home</Link>
+              <Link href="/final-expense" className="nav-link active">Final Expense</Link>
+              <Link href="/indexed-universal-life" className="nav-link">Indexed Universal Life</Link>
+              <Link href="/faq" className="nav-link">FAQ</Link>
             </div>
-            <ul className="nav-links">
-              <li><a href="#what-is">What Is It</a></li>
-              <li><a href="#how-it-works">How It Works</a></li>
-              <li><a href="#faq">FAQ</a></li>
-              <li>
-                <a href="tel:+12489709094" className="nav-phone">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-                  248-970-9094
-                </a>
-              </li>
-              <li><a href="#get-quote" className="nav-cta">Get a Free Quote</a></li>
-            </ul>
+            <div className="nav-icons">
+              <a href="mailto:transamerica.dustin@gmail.com" className="nav-icon-link" aria-label="Email Dustin"><EmailIcon /></a>
+              <a href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" className="nav-icon-link" aria-label="Facebook"><FacebookIcon /></a>
+              <a href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" className="nav-icon-link" aria-label="LinkedIn"><LinkedInIcon /></a>
+            </div>
           </div>
         </nav>
 
@@ -203,17 +223,7 @@ export default function FinalExpensePage() {
               <h1>Help protect your family from an <em>unexpected bill.</em></h1>
               <p className="hero-sub">Final expense insurance helps cover funeral costs, medical bills, and other end-of-life expenses, so your loved ones don't have to worry about money during one of the hardest moments of their lives.</p>
               <div className="hero-actions">
-                <a href="#get-quote" className="btn-primary">See What Coverage May Cost</a>
-                <a href="tel:+12489709094" className="btn-phone">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-                  Call 248-970-9094
-                </a>
-              </div>
-              <div className="hero-trust">
-                <span className="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>No Medical Exam</span>
-                <span className="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>Licensed Nationwide</span>
-                <span className="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>Independent Agent</span>
-                <span className="trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>No Pressure, No Obligation</span>
+                <a href="#get-quote" className="btn-primary">Get My Free Quote</a>
               </div>
             </div>
 
@@ -245,11 +255,10 @@ export default function FinalExpensePage() {
 
         <div className="carriers">
           <div className="carriers-inner">
-            <span className="carrier-label">Carriers we work with</span>
-            <div className="carrier-logos">
-              <span className="carrier-logo">Corebridge Financial</span>
-              <span className="carrier-logo">Transamerica</span>
-              <span className="carrier-logo">Americo</span>
+            <div className="carrier-points">
+              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Instant underwriting</span>
+              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>No medical exam</span>
+              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Same-day coverage</span>
             </div>
           </div>
         </div>
@@ -281,7 +290,7 @@ export default function FinalExpensePage() {
               <div className="explainer-card">
                 <div className="explainer-num">1</div>
                 <h3>What is final expense insurance?</h3>
-                <p>Final expense insurance is a whole life policy designed to help cover funeral costs, outstanding medical bills, and other end-of-life expenses. Coverage typically ranges from $5,000 to $25,000.</p>
+                <p>Final expense insurance is a whole life policy designed to help cover funeral costs, outstanding medical bills, and other end-of-life expenses. Coverages range from $5,000 to $100,000.</p>
               </div>
               <div className="explainer-card">
                 <div className="explainer-num">2</div>
@@ -629,73 +638,74 @@ export default function FinalExpensePage() {
         .fe-page .nav-inner {
           max-width: 1100px;
           margin: 0 auto;
-          padding: 0 24px;
-          height: 64px;
+          padding: 12px 24px;
+          min-height: 72px;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 18px;
+          flex-wrap: wrap;
         }
+        .fe-page .nav-logo { display: inline-flex; }
         .fe-page .nav-logo img { height: 48px; width: auto; border-radius: 4px; }
-        .fe-page .nav-tabs {
+        .fe-page .nav-main {
           display: flex;
           align-items: center;
+          justify-content: center;
+          gap: 6px;
+          padding: 6px;
           border: 1px solid var(--border);
           border-radius: 999px;
           background: var(--bg-2);
-          padding: 4px;
-          gap: 4px;
+          box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+          margin: 0 auto;
         }
-        .fe-page .nav-tab {
+        .fe-page .nav-link {
           padding: 8px 16px;
           border-radius: 999px;
           font-size: 13px;
           font-weight: 600;
           color: var(--text-2);
           transition: background 0.15s, color 0.15s;
+          white-space: nowrap;
         }
-        .fe-page .nav-tab:hover { color: var(--text); }
-        .fe-page .nav-tab.active {
+        .fe-page .nav-link:hover { color: var(--text); }
+        .fe-page .nav-link.active {
           background: var(--accent);
           color: var(--white);
         }
-        .fe-page .nav-links {
-          display: flex;
+        .fe-page .nav-icons {
+          display: inline-flex;
           align-items: center;
-          gap: 28px;
-          list-style: none;
+          gap: 10px;
         }
-        .fe-page .nav-links a {
-          font-size: 14px;
-          color: var(--text-2);
-          font-weight: 400;
-          transition: color 0.15s;
-        }
-        .fe-page .nav-links a:hover { color: var(--text); }
-        .fe-page .nav-phone {
-          display: flex;
+        .fe-page .nav-icon-link {
+          display: inline-flex;
           align-items: center;
-          gap: 6px;
-          font-size: 14px;
-          font-weight: 600;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 999px;
+          border: 1px solid var(--border);
+          background: var(--white);
           color: var(--accent);
+          box-shadow: 0 10px 24px rgba(0,0,0,0.05);
         }
-        .fe-page .nav-phone svg { width: 14px; height: 14px; }
-        .fe-page .nav-cta {
-          background: var(--accent);
-          color: var(--white) !important;
-          font-size: 13px !important;
-          font-weight: 600 !important;
-          padding: 8px 18px;
-          border-radius: 6px;
-          transition: opacity 0.15s;
+        .fe-page .nav-icon-link svg {
+          width: 16px;
+          height: 16px;
         }
-        .fe-page .nav-cta:hover { opacity: 0.88; }
         @media (max-width: 900px) {
-          .fe-page .nav-links { display: none; }
-        }
-        @media (max-width: 680px) {
-          .fe-page .nav-tabs { display: none; }
-          .fe-page .nav-inner { padding: 0 16px; }
+          .fe-page .nav-inner {
+            justify-content: center;
+            padding: 12px 16px;
+          }
+          .fe-page .nav-main {
+            order: 3;
+            width: 100%;
+            justify-content: flex-start;
+            overflow-x: auto;
+          }
         }
         .fe-page .hero {
           background: var(--white);
@@ -763,25 +773,6 @@ export default function FinalExpensePage() {
           box-shadow: 0 2px 12px rgba(184,134,11,0.25);
         }
         .fe-page .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .fe-page .btn-phone {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 15px;
-          font-weight: 600;
-          color: var(--text-2);
-        }
-        .fe-page .btn-phone svg { width: 16px; height: 16px; stroke: var(--accent); }
-        .fe-page .hero-trust { display: flex; flex-wrap: wrap; gap: 18px; }
-        .fe-page .trust-item {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 13px;
-          color: var(--text-3);
-          font-weight: 400;
-        }
-        .fe-page .trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; flex-shrink: 0; }
         .fe-page .hero-image-wrap { position: relative; }
         .fe-page .hero-img {
           width: 100%;
@@ -847,24 +838,32 @@ export default function FinalExpensePage() {
           gap: 40px;
           flex-wrap: wrap;
         }
-        .fe-page .carrier-label {
-          font-size: 11px;
-          color: var(--text-3);
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-weight: 600;
-          white-space: nowrap;
+        .fe-page .carrier-points {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 18px;
+          flex-wrap: wrap;
         }
-        .fe-page .carrier-logos { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
-        .fe-page .carrier-logo {
-          font-size: 13px;
+        .fe-page .carrier-point {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 16px;
+          border-radius: 999px;
+          background: var(--white);
+          border: 1px solid var(--border);
+          color: var(--text-2);
+          font-size: 14px;
           font-weight: 600;
-          color: var(--text-3);
-          letter-spacing: 0.02em;
-          opacity: 0.65;
-          transition: opacity 0.15s;
+          box-shadow: 0 10px 24px rgba(0,0,0,0.04);
         }
-        .fe-page .carrier-logo:hover { opacity: 1; }
+        .fe-page .carrier-point svg {
+          width: 16px;
+          height: 16px;
+          stroke: var(--green);
+          flex-shrink: 0;
+        }
         .fe-page section { padding: 80px 24px; }
         .fe-page .section-inner { max-width: 1000px; margin: 0 auto; }
         .fe-page .section-label {
@@ -1406,5 +1405,5 @@ export default function FinalExpensePage() {
 
 /*
 ---
-*Last updated: 2026-04-13 22:23 ET | Updated by: Forge*
+*Last updated: 2026-04-14 18:15 ET | Updated by: Forge*
 */
