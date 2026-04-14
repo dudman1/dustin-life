@@ -1,26 +1,120 @@
 // Cloudflare Pages Function — /api/lead
-// Forge will wire the dual-write logic once Phoenix returns the webhook URL.
-//
-// Expected POST body:
-//   { name, email, phone, state, smsConsent, termsConsent }
-//
-// TODO: Implement dual-write
-//   1. Write to CRM / lead database
-//   2. Forward to Phoenix webhook (URL TBD)
-//   3. Return 200 on success
+// Supports both homepage IUL leads and /final-expense leads.
 
 interface Env {
   GHL_WEBHOOK_URL: string;
   CONVEX_ADMIN_KEY: string;
 }
 
-interface LeadPayload {
-  name: string;
-  email: string;
-  phone: string;
-  state: string;
-  smsConsent: boolean;
-  termsConsent: boolean;
+interface BaseLeadPayload {
+  phone?: string;
+  state?: string;
+}
+
+interface IulLeadPayload extends BaseLeadPayload {
+  name?: string;
+  email?: string;
+  smsConsent?: boolean;
+  termsConsent?: boolean;
+}
+
+interface FinalExpenseLeadPayload extends BaseLeadPayload {
+  firstName?: string;
+  lastName?: string;
+  dob?: string;
+  gender?: string;
+  coverageAmount?: string;
+  tcpaConsent?: boolean;
+}
+
+type LeadPayload = IulLeadPayload & FinalExpenseLeadPayload;
+
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function buildLeadShape(body: LeadPayload) {
+  const isFinalExpense = Boolean(body.firstName || body.lastName || body.dob || body.gender || body.coverageAmount);
+
+  if (isFinalExpense) {
+    const firstName = body.firstName?.trim() ?? "";
+    const lastName = body.lastName?.trim() ?? "";
+    const phone = body.phone?.trim() ?? "";
+    const state = body.state?.trim() ?? "";
+    const dob = body.dob?.trim() ?? "";
+    const gender = body.gender?.trim() ?? "";
+    const coverageAmount = body.coverageAmount?.trim() ?? "";
+
+    if (!firstName || !lastName || !phone || !state || !dob || !gender || !coverageAmount || !body.tcpaConsent) {
+      return { error: "Missing required final expense fields or consent." };
+    }
+
+    const fullName = `${firstName} ${lastName}`.trim();
+    const notes = [
+      `DOB: ${dob}`,
+      `Gender: ${gender}`,
+      `Coverage Amount: ${coverageAmount}`,
+      "Form: final-expense",
+    ].join(" | ");
+
+    return {
+      product: "Final Expense",
+      source: "dustinlife.com/final-expense",
+      fullName,
+      email: "",
+      phone,
+      state,
+      notes,
+      ghlPayload: {
+        source: "dustinlife.com/final-expense",
+        product: "Final Expense",
+        first_name: firstName,
+        last_name: lastName,
+        full_name: fullName,
+        dob,
+        gender,
+        coverage_amount: coverageAmount,
+        state,
+        phone,
+        tcpa_consent: true,
+        form_name: "final-expense",
+      },
+    };
+  }
+
+  const name = body.name?.trim() ?? "";
+  const email = body.email?.trim() ?? "";
+  const phone = body.phone?.trim() ?? "";
+  const state = body.state?.trim() ?? "";
+
+  if (!name || !email || !phone || !state || !body.smsConsent || !body.termsConsent) {
+    return { error: "Missing required IUL lead fields or consent." };
+  }
+
+  return {
+    product: "IUL",
+    source: "dustinlife.com",
+    fullName: name,
+    email,
+    phone,
+    state,
+    notes: `Email: ${email} | Form: homepage-iul`,
+    ghlPayload: {
+      source: "dustinlife.com",
+      product: "IUL",
+      name,
+      full_name: name,
+      email,
+      phone,
+      state,
+      sms_consent: true,
+      terms_consent: true,
+      form_name: "homepage-iul",
+    },
+  };
 }
 
 export async function onRequestPost(context: {
@@ -29,31 +123,23 @@ export async function onRequestPost(context: {
 }): Promise<Response> {
   try {
     const body: LeadPayload = await context.request.json();
+    const shaped = buildLeadShape(body);
 
-    // Validate required fields
-    if (!body.name || !body.email || !body.phone || !body.smsConsent) {
-      return new Response(
-        JSON.stringify({ error: "Missing required fields or SMS consent." }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+    if ("error" in shaped) {
+      return json({ error: shaped.error }, 400);
     }
 
     const GHL_WEBHOOK = context.env.GHL_WEBHOOK_URL;
     const CONVEX_KEY = context.env.CONVEX_ADMIN_KEY;
     const timestamp = Date.now();
 
-    const [ghl, convex] = await Promise.allSettled([
+    const [ghl, convex] = await Promise.all([
       fetch(GHL_WEBHOOK, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: body.name,
-          email: body.email,
-          phone: body.phone,
-          state: body.state,
+          ...shaped.ghlPayload,
           timestamp,
-          tcpa_consent: true,
-          source: "dustinlife.com",
         }),
       }),
       fetch("https://rapid-hummingbird-980.convex.cloud/api/mutation", {
@@ -65,30 +151,30 @@ export async function onRequestPost(context: {
         body: JSON.stringify({
           path: "insuranceLeads:create",
           args: {
-            name: body.name,
-            email: body.email,
-            phone: body.phone,
-            state: body.state,
-            source: "dustinlife.com",
-            timestamp,
-            tcpa_consent: true,
+            source: shaped.source,
+            fullName: shaped.fullName,
+            phone: shaped.phone,
+            state: shaped.state,
+            product: shaped.product,
+            notes: shaped.notes,
           },
         }),
       }),
     ]);
 
-    if (ghl.status === "rejected" || convex.status === "rejected") {
-      throw new Error("Dual-write failed.");
+    if (!ghl.ok) {
+      const errorText = await ghl.text();
+      throw new Error(`GHL webhook failed: ${ghl.status} ${errorText}`);
     }
 
-    return new Response(
-      JSON.stringify({ success: true, message: "Lead received." }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
-    );
+    if (!convex.ok) {
+      const errorText = await convex.text();
+      throw new Error(`Convex mutation failed: ${convex.status} ${errorText}`);
+    }
+
+    return json({ success: true, message: "Lead received." });
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: "Internal server error." }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    const message = err instanceof Error ? err.message : "Internal server error.";
+    return json({ error: message }, 500);
   }
 }

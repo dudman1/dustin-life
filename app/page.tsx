@@ -125,13 +125,21 @@ export default function Home() {
             }}
           />
         </Link>
-        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
-          <a href="#how-it-works" className="text-sm text-gray-400 transition-colors hover:text-white">
-            How It Works
-          </a>
-          <a href="#lead-form" className="text-sm text-gray-400 transition-colors hover:text-white">
-            Free Assessment
-          </a>
+        <div className="absolute left-1/2 hidden -translate-x-1/2 md:flex">
+          <div className="flex items-center rounded-full border border-[rgba(200,169,110,0.18)] bg-[rgba(255,255,255,0.03)] p-1">
+            <Link
+              href="/"
+              className="rounded-full bg-[#c8a96e] px-4 py-2 text-sm font-medium text-black transition-colors"
+            >
+              IUL
+            </Link>
+            <Link
+              href="/final-expense"
+              className="rounded-full px-4 py-2 text-sm text-gray-400 transition-colors hover:text-white"
+            >
+              Final Expense
+            </Link>
+          </div>
         </div>
         <div className="flex items-center gap-5">
           <a
