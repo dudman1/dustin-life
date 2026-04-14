@@ -71,7 +71,7 @@ function LinkedInIcon() {
   );
 }
 
-function SiteHeader({ current }: { current: "home" | "iul" | "faq" }) {
+function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expense" }) {
   return (
     <>
       <div className={styles.topbar}>
@@ -92,7 +92,7 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" }) {
 
           <nav className={styles.navMain} aria-label="Primary">
             <Link href="/" data-active={current === "home"}>Home</Link>
-            <Link href="/final-expense">Final Expense</Link>
+            <Link href="/final-expense" data-active={current === "final-expense"}>Final Expense</Link>
             <Link href="/indexed-universal-life" data-active={current === "iul"}>Indexed Universal Life</Link>
             <Link href="/faq" data-active={current === "faq"}>FAQ</Link>
           </nav>
@@ -193,14 +193,14 @@ export default function Home() {
                 <ShieldIcon />
                 Licensed Nationwide
               </div>
-              <h1 className={styles.display}>Let&apos;s Figure Out What You Actually Need</h1>
+              <h1 className={styles.display}>Let&apos;s figure out what actually fits your family.</h1>
               <p className={styles.lead}>
-                I&apos;m not a call center. I&apos;m not captive to one carrier. I shop the market for you,
-                explain what actually matters, and disappear when you don&apos;t need me.
+                I&apos;m an independent life insurance agent, so I can shop options, explain the tradeoffs,
+                and help you choose a policy that makes sense without the pressure.
               </p>
               <p className={styles.support}>
-                Same no-pressure tone, cleaner structure. Pick the path that matches what you want,
-                then keep moving.
+                If you want help covering burial expenses, protecting loved ones, or understanding how
+                Indexed Universal Life works, start with the path that matches your goal.
               </p>
               <div className={styles.heroActions}>
                 <a className={styles.primaryLink} href="#start-here">Choose My Path</a>
@@ -208,10 +208,6 @@ export default function Home() {
                 <a className={styles.iconLink} href="mailto:transamerica.dustin@gmail.com" aria-label="Talk to Dustin by email">
                   <EmailIcon />
                 </a>
-              </div>
-              <div className={styles.heroNote}>
-                <strong>Clean fix, not a giant redesign.</strong>
-                The homepage keeps the current Dustin voice, removes the clutter, and leaves the big duplicate headshots dead.
               </div>
             </div>
           </section>
@@ -235,36 +231,34 @@ export default function Home() {
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
                 <div className={styles.eyebrow}>Start Here</div>
-                <h2 className={styles.sectionTitle}>Pick the direction that fits what you want.</h2>
-                <p className={styles.sectionIntro}>Just two options. No fake complexity, no extra wandering.</p>
+                <h2 className={styles.sectionTitle}>Choose the kind of help you want.</h2>
+                <p className={styles.sectionIntro}>Two clear paths, one conversation, zero pressure.</p>
               </div>
 
               <div className={styles.pathGrid}>
                 <article className={styles.pathCard}>
-                  <div className={styles.tag}>Path 1</div>
                   <h3 className={styles.cardTitle}>Cover Burial Expenses</h3>
-                  <p className={styles.cardText}>For people who want final expense coverage that can help protect family from funeral costs, final bills, and an unexpected cash problem.</p>
+                  <p className={styles.cardText}>Final expense coverage can help protect your family from funeral costs, final bills, and other end-of-life expenses.</p>
                   <ul className={styles.list}>
-                    <li>Simple coverage conversation</li>
-                    <li>Focus on burial and end-of-life costs</li>
-                    <li>Keep it practical and easy to understand</li>
+                    <li>Focused on burial and final expense needs</li>
+                    <li>Simple, practical guidance</li>
+                    <li>Built for families who want clarity fast</li>
                   </ul>
                   <div className={styles.pathActions}>
-                    <Link className={styles.primaryLink} href="/final-expense">Go to Final Expense</Link>
+                    <Link className={styles.primaryLink} href="/final-expense">Explore Final Expense</Link>
                   </div>
                 </article>
 
                 <article className={styles.pathCard}>
-                  <div className={styles.tag}>Path 2</div>
                   <h3 className={styles.cardTitle}>Build Cash Value</h3>
-                  <p className={styles.cardText}>For people exploring Indexed Universal Life and wanting to understand cash value, flexibility, and where it may or may not fit.</p>
+                  <p className={styles.cardText}>Indexed Universal Life can offer permanent protection with cash value potential when it is designed the right way.</p>
                   <ul className={styles.list}>
-                    <li>Clearer IUL explanation</li>
-                    <li>Quick intro video moved there</li>
-                    <li>No overhyped retirement pitch</li>
+                    <li>Understand how IUL really works</li>
+                    <li>See where flexibility and cash value fit</li>
+                    <li>Review whether it belongs in your plan</li>
                   </ul>
                   <div className={styles.pathActions}>
-                    <Link className={styles.primaryLink} href="/indexed-universal-life">Go to Indexed Universal Life</Link>
+                    <Link className={styles.primaryLink} href="/indexed-universal-life">Explore Indexed Universal Life</Link>
                   </div>
                 </article>
               </div>
@@ -275,13 +269,12 @@ export default function Home() {
             <div className={styles.profileCard}>
               <img className={styles.smallHeadshot} src="/headshot.jpg" alt="Dustin McCormick" />
               <div>
-                <div className={styles.tag}>Keep this block on the homepage</div>
                 <h3 className={styles.profileName}>Dustin McCormick</h3>
                 <div className={styles.profileRole}>Licensed Life Insurance Agent</div>
                 <p className={styles.cardText}>
-                  I help families nationwide find life insurance that actually fits. No pressure, no captive carrier agenda. I work for you.
+                  I help families nationwide compare life insurance options with a straightforward process,
+                  honest answers, and no captive carrier agenda.
                 </p>
-                <p className={styles.smallNote}>This stays directly under Start Here, per your spec.</p>
               </div>
             </div>
           </section>
@@ -289,25 +282,22 @@ export default function Home() {
           <section className={styles.section}>
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
-                <div className={styles.eyebrow}>What changes, what stays</div>
-                <h2 className={styles.sectionTitle}>Homepage changes are surgical, not a demolition.</h2>
+                <div className={styles.eyebrow}>How I help</div>
+                <h2 className={styles.sectionTitle}>Clear guidance, not a hard sell.</h2>
               </div>
 
               <div className={styles.infoGridCompact}>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Keep</div>
-                  <h3 className={styles.cardTitle}>Current brand spine</h3>
-                  <p className={styles.cardText}>The DM logo, the trust-first tone, and the Dustin context stay.</p>
+                  <h3 className={styles.cardTitle}>Compare options</h3>
+                  <p className={styles.cardText}>I work independently, which means I can help you compare carriers instead of forcing one preset answer.</p>
                 </article>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Change</div>
-                  <h3 className={styles.cardTitle}>CTA clarity</h3>
-                  <p className={styles.cardText}>The CTA order is now exactly: Choose My Path, Get My Free Assessment, Talk to Dustin.</p>
+                  <h3 className={styles.cardTitle}>Keep it simple</h3>
+                  <p className={styles.cardText}>You get a straightforward explanation of what the policy does, what it costs, and what to watch for.</p>
                 </article>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Move</div>
-                  <h3 className={styles.cardTitle}>Video off the homepage</h3>
-                  <p className={styles.cardText}>The Quick Intro 28 Seconds video now lives on Indexed Universal Life where it actually belongs.</p>
+                  <h3 className={styles.cardTitle}>Move at your pace</h3>
+                  <p className={styles.cardText}>Ask questions, review options, and decide when you are ready. No pressure, no obligation.</p>
                 </article>
               </div>
             </div>
@@ -316,9 +306,8 @@ export default function Home() {
           <section className={styles.section} id="assessment">
             <div className={styles.twoCol}>
               <div className={styles.formCard}>
-                <div className={styles.tag}>Get Your Free Assessment</div>
-                <h2 className={styles.sectionTitle}>Keep the form lower on the page.</h2>
-                <p className={styles.sectionIntro}>That part of your spec is right. People should know what they are doing before the form shows up.</p>
+                <h2 className={styles.sectionTitle}>Get your free assessment.</h2>
+                <p className={styles.sectionIntro}>Tell me a little about yourself and I&apos;ll reach out with next steps.</p>
 
                 {!submitted ? (
                   <form onSubmit={handleSubmit}>
@@ -363,7 +352,6 @@ export default function Home() {
                         {submitting ? "Submitting..." : "Get My Free Assessment"}
                       </button>
                     </div>
-                    <p className={styles.formNote}>This keeps the existing live homepage lead flow wired to <code>/api/lead</code>.</p>
                   </form>
                 ) : (
                   <p className={styles.success}>Thanks. Dustin will be in touch within 24 hours.</p>
@@ -371,14 +359,13 @@ export default function Home() {
               </div>
 
               <aside className={styles.callout}>
-                <div className={styles.tag}>Blunt take</div>
-                <h3 className={styles.cardTitle}>This is the right level of change.</h3>
-                <p className={styles.cardText}>Not a giant restructure. Not a generic insurance template. Just enough guidance to make the homepage stop feeling like one big intake wall.</p>
+                <h3 className={styles.cardTitle}>What to expect</h3>
+                <p className={styles.cardText}>Once you reach out, we&apos;ll start with what matters most to you and narrow the options from there.</p>
                 <ul className={styles.list}>
-                  <li>Start Here comes right after the trust strip</li>
-                  <li>Only two path choices</li>
-                  <li>The existing small Dustin headshot block stays</li>
-                  <li>The assessment form stays lower on the page</li>
+                  <li>Quick conversation about your goals</li>
+                  <li>Clear explanation of available options</li>
+                  <li>Help choosing the right next step</li>
+                  <li>No obligation to move forward</li>
                 </ul>
               </aside>
             </div>
@@ -393,5 +380,5 @@ export default function Home() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:03 ET | Updated by: Forge*
+*Last updated: 2026-04-14 16:18 ET | Updated by: Forge*
 */

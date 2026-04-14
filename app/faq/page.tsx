@@ -87,14 +87,14 @@ export default function FAQPage() {
             <div className={styles.heroCopy}>
               <div className={styles.eyebrow}>
                 <ShieldIcon />
-                FAQ placeholder
+                Frequently Asked Questions
               </div>
-              <h1 className={styles.display}>Keep FAQ simple for now.</h1>
+              <h1 className={styles.display}>Straight answers to common questions.</h1>
               <p className={styles.lead}>
-                You said FAQ can wait, so this page is intentionally light instead of pretending it is finished.
+                If you&apos;re comparing life insurance options, these are a few of the questions that usually come up first.
               </p>
               <p className={styles.support}>
-                It holds the nav slot, keeps the typography and layout system consistent, and gives us room to do a real FAQ pass later.
+                If you want a recommendation based on your situation, the fastest move is still to reach out for an assessment.
               </p>
             </div>
           </section>
@@ -107,11 +107,15 @@ export default function FAQPage() {
               </article>
               <article className={styles.faqItem}>
                 <h2 className={styles.faqQuestion}>Do I have to commit before talking to Dustin?</h2>
-                <p className={styles.cardText}>No. The tone stays no-pressure. The point is clarity first, not a forced close.</p>
+                <p className={styles.cardText}>No. The goal is to help you understand your options first. There is no obligation to move forward.</p>
               </article>
               <article className={styles.faqItem}>
-                <h2 className={styles.faqQuestion}>Can this page be expanded later?</h2>
-                <p className={styles.cardText}>Yes. Once the main funnel direction is approved, we can turn this into a proper FAQ page without guessing.</p>
+                <h2 className={styles.faqQuestion}>Can I compare multiple options before choosing?</h2>
+                <p className={styles.cardText}>Yes. That is one of the advantages of working with an independent agent. You can compare the right options instead of getting pushed into one answer.</p>
+              </article>
+              <article className={styles.faqItem}>
+                <h2 className={styles.faqQuestion}>How do I get started?</h2>
+                <p className={styles.cardText}>Use the free assessment on the homepage, call 248-970-9094, or send an email and we can start from there.</p>
               </article>
             </div>
           </section>
@@ -125,5 +129,5 @@ export default function FAQPage() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:03 ET | Updated by: Forge*
+*Last updated: 2026-04-14 16:18 ET | Updated by: Forge*
 */

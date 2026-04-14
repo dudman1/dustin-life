@@ -113,31 +113,25 @@ export default function IndexedUniversalLifePage() {
                 <ShieldIcon />
                 Indexed Universal Life
               </div>
-              <h1 className={styles.display}>Use Indexed Universal Life as a tool, not a magic trick.</h1>
+              <h1 className={styles.display}>Permanent coverage with cash value potential, explained clearly.</h1>
               <p className={styles.lead}>
-                Protection first. Cash value second. Policy design matters the whole time.
+                Indexed Universal Life can be useful when you want lifelong protection and flexibility,
+                but it works best when the policy is designed with real goals in mind.
               </p>
               <p className={styles.support}>
-                This page is meant to help people think clearly about IUL, not get sold with bullshit shortcuts.
+                My job is to help you understand how it works, where it fits, and what to watch for before you make a decision.
               </p>
               <div className={styles.heroActions}>
                 <a className={styles.primaryLink} href="#video">Watch the Quick Intro</a>
                 <Link className={styles.outlineLink} href="/#assessment">Get My Free Assessment</Link>
-              </div>
-              <div className={styles.heroNote}>
-                <strong>What changed here.</strong>
-                The quick intro video moved off the homepage, the naming is cleaned up, and the copy is calmer.
               </div>
             </div>
           </section>
 
           <section className={styles.section} id="video">
             <div className={styles.videoCard}>
-              <div className={styles.tag}>Quick Intro 28 Seconds</div>
-              <h2 className={styles.sectionTitle}>Then decide.</h2>
-              <p className={styles.sectionIntro}>
-                Watch the quick intro if you want context, or skip it and go straight to the assessment.
-              </p>
+              <h2 className={styles.sectionTitle}>Quick Intro</h2>
+              <p className={styles.sectionIntro}>Start here if you want a fast overview before looking at the details.</p>
               <div className={styles.videoFrame}>
                 <video controls playsInline poster="/iul-performance.jpg">
                   <source src="/iul-explainer.mp4" type="video/mp4" />
@@ -149,25 +143,22 @@ export default function IndexedUniversalLifePage() {
           <section className={styles.section}>
             <div className={styles.sectionCard}>
               <div className={styles.sectionHead}>
-                <div className={styles.eyebrow}>Plain-English version</div>
-                <h2 className={styles.sectionTitle}>What Indexed Universal Life actually is</h2>
-                <p className={styles.sectionIntro}>Permanent life insurance first. Cash value potential second. Good design beats hype.</p>
+                <div className={styles.eyebrow}>How it works</div>
+                <h2 className={styles.sectionTitle}>What Indexed Universal Life actually does</h2>
+                <p className={styles.sectionIntro}>Protection first, cash value second, design always matters.</p>
               </div>
               <div className={styles.infoGrid}>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Step 1</div>
-                  <h3 className={styles.cardTitle}>Protection comes first</h3>
-                  <p className={styles.cardText}>An IUL is permanent life insurance. The death benefit and policy structure are not side notes, they are the foundation.</p>
+                  <h3 className={styles.cardTitle}>Permanent protection</h3>
+                  <p className={styles.cardText}>An IUL is permanent life insurance, which means the death benefit is the foundation of the policy.</p>
                 </article>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Step 2</div>
-                  <h3 className={styles.cardTitle}>Cash value may build over time</h3>
-                  <p className={styles.cardText}>Part of the premium can build cash value, with index-linked crediting and carrier rules that need honest explanation.</p>
+                  <h3 className={styles.cardTitle}>Cash value opportunity</h3>
+                  <p className={styles.cardText}>Part of your premium may build cash value over time, based on policy design and the carrier&apos;s crediting method.</p>
                 </article>
                 <article className={styles.infoCard}>
-                  <div className={styles.tag}>Step 3</div>
-                  <h3 className={styles.cardTitle}>Good design beats hype</h3>
-                  <p className={styles.cardText}>A strong IUL depends on funding, structure, and review. A sloppy one gets sold with slogans and becomes a problem later.</p>
+                  <h3 className={styles.cardTitle}>Ongoing review</h3>
+                  <p className={styles.cardText}>The best results come from funding and structuring the policy carefully, then reviewing it as life changes.</p>
                 </article>
               </div>
             </div>
@@ -176,23 +167,21 @@ export default function IndexedUniversalLifePage() {
           <section className={styles.section}>
             <div className={styles.twoCol}>
               <div className={styles.sectionCard}>
-                <div className={styles.tag}>May be a fit</div>
-                <h3 className={styles.cardTitle}>Good fit if you want</h3>
+                <h3 className={styles.cardTitle}>When it may be worth exploring</h3>
                 <ul className={styles.list}>
-                  <li>Permanent coverage with room for cash value accumulation</li>
-                  <li>Another long-term bucket beyond basic retirement account talk</li>
-                  <li>A slower, more intentional conversation instead of a one-call product push</li>
-                  <li>Guidance from an independent agent who can compare options</li>
+                  <li>You want permanent life insurance, not temporary coverage only</li>
+                  <li>You care about flexibility in premiums and long-term planning</li>
+                  <li>You want to understand cash value without the hype</li>
+                  <li>You want guidance from an independent agent who can compare options</li>
                 </ul>
               </div>
               <div className={styles.sectionCard}>
-                <div className={styles.tag}>Probably not a fit</div>
-                <h3 className={styles.cardTitle}>Bad fit if you want</h3>
+                <h3 className={styles.cardTitle}>What to watch for</h3>
                 <ul className={styles.list}>
-                  <li>A magic retirement shortcut</li>
-                  <li>Guarantees that should not be promised</li>
-                  <li>A replacement for every other financial tool</li>
-                  <li>A quick yes or no answer without real design work</li>
+                  <li>It is not a shortcut or magic solution</li>
+                  <li>Policy design matters more than flashy illustrations</li>
+                  <li>Not every budget or goal points to IUL</li>
+                  <li>Clear answers matter before you commit</li>
                 </ul>
               </div>
             </div>
@@ -201,10 +190,9 @@ export default function IndexedUniversalLifePage() {
           <section className={styles.section}>
             <div className={styles.twoCol}>
               <div className={styles.callout}>
-                <div className={styles.tag}>Next step</div>
-                <h3 className={styles.cardTitle}>Ask for the assessment, not a hype pitch.</h3>
+                <h3 className={styles.cardTitle}>Need help deciding?</h3>
                 <p className={styles.cardText}>
-                  If this is worth exploring, the safest next move is still the homepage assessment flow. That keeps lead handling on the current live endpoint.
+                  If you&apos;re comparing final expense, term, or Indexed Universal Life, start with the assessment and I&apos;ll help you sort out what belongs in the conversation.
                 </p>
                 <div className={styles.heroActions}>
                   <Link className={styles.primaryLink} href="/#assessment">Get My Free Assessment</Link>
@@ -212,13 +200,12 @@ export default function IndexedUniversalLifePage() {
                 </div>
               </div>
               <aside className={styles.callout}>
-                <div className={styles.tag}>Why this page is safer</div>
-                <h3 className={styles.cardTitle}>Less hype, more trust.</h3>
+                <h3 className={styles.cardTitle}>What you can expect from me</h3>
                 <ul className={styles.list}>
-                  <li>Uses Indexed Universal Life as the label everywhere</li>
-                  <li>Moves the quick intro video here</li>
-                  <li>Keeps the font and page system consistent with Home</li>
-                  <li>Leaves Final Expense untouched</li>
+                  <li>Straight answers about how the policy works</li>
+                  <li>Help comparing whether IUL actually fits your goals</li>
+                  <li>No hard-sell pressure</li>
+                  <li>A practical path forward if another option fits better</li>
                 </ul>
               </aside>
             </div>
@@ -233,5 +220,5 @@ export default function IndexedUniversalLifePage() {
 
 /*
 ---
-*Last updated: 2026-04-14 16:03 ET | Updated by: Forge*
+*Last updated: 2026-04-14 16:18 ET | Updated by: Forge*
 */
