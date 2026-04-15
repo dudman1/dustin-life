@@ -1,3 +1,12 @@
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Privacy Policy | Dustin McCormick",
+  description:
+    "Privacy policy for dustinlife.com — how your information is collected, used, and protected.",
+  path: "/privacy",
+});
+
 export default function Privacy() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-16 prose prose-zinc dark:prose-invert">
@@ -107,5 +116,5 @@ export default function Privacy() {
 
 /*
 ---
-*Last updated: 2026-04-12 23:02 ET | Updated by: Forge*
+*Last updated: 2026-04-14 19:00 ET | Updated by: Claude Code*
 */

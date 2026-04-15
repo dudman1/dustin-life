@@ -1,5 +1,13 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import styles from "../dustinlife-v2.module.css";
+
+export const metadata = pageMetadata({
+  title: "Indexed Universal Life (IUL) Explained | Dustin McCormick",
+  description:
+    "Understand how Indexed Universal Life works — permanent coverage, cash value potential, and honest guidance from an independent agent.",
+  path: "/indexed-universal-life",
+});
 
 function EmailIcon() {
   return (
@@ -88,7 +96,7 @@ function SiteFooter() {
         <div className={styles.footerLinks}>
           <Link href="/privacy">Privacy Policy</Link>
           <Link href="/terms">Terms</Link>
-          <a href="#">Disclosures</a>
+          <Link href="/disclosures">Disclosures</Link>
         </div>
         <div className={styles.socialRow}>
           <a className={styles.socialLink} href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
@@ -212,5 +220,5 @@ export default function IndexedUniversalLifePage() {
 
 /*
 ---
-*Last updated: 2026-04-14 18:15 ET | Updated by: Forge*
+*Last updated: 2026-04-14 19:00 ET | Updated by: Claude Code*
 */

@@ -1,3 +1,12 @@
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Terms and Conditions | Dustin McCormick",
+  description:
+    "Terms and conditions for dustinlife.com — usage terms, SMS program details, and legal information.",
+  path: "/terms",
+});
+
 export default function Terms() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-16 prose prose-zinc dark:prose-invert">
@@ -141,5 +150,5 @@ export default function Terms() {
 
 /*
 ---
-*Last updated: 2026-04-12 23:16 ET | Updated by: Forge*
+*Last updated: 2026-04-14 19:00 ET | Updated by: Claude Code*
 */
