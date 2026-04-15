@@ -173,6 +173,13 @@ export default function FinalExpenseClient() {
         );
       }
 
+      const fbq = (window as Window & {
+        fbq?: (...args: unknown[]) => void;
+      }).fbq;
+      fbq?.('track', 'Lead', {
+        content_name: 'Final Expense Quote Request',
+        content_category: 'final_expense',
+      });
       setSubmitted(true);
     } catch (error: unknown) {
       setSubmitError(
@@ -1408,5 +1415,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-15 02:45 ET | Updated by: Forge*
+*Last updated: 2026-04-15 12:14 ET | Updated by: Forge*
 */
