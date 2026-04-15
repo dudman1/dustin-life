@@ -29,7 +29,7 @@ const MONTHS = [
   ["12", "December"],
 ] as const;
 const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0"));
-const YEARS = Array.from({ length: 46 }, (_, i) => String(1930 + i));
+// Removed static year range; user now inputs birth year directly.
 const STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
   "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
@@ -421,12 +421,15 @@ export default function FinalExpenseClient() {
                           <option key={day} value={day}>{Number(day)}</option>
                         ))}
                       </select>
-                      <select value={dobYear} onChange={(e) => setDobYear(e.target.value)}>
-                        <option value="" disabled>Year</option>
-                        {YEARS.map((year) => (
-                          <option key={year} value={year}>{year}</option>
-                        ))}
-                      </select>
+                      <input
+                        type="number"
+                        placeholder="Birth year (e.g., 1975)"
+                        min="1900"
+                        max={new Date().getFullYear()}
+                        value={dobYear}
+                        onChange={(e) => setDobYear(e.target.value)}
+                        style={{ width: "100%", padding: "14px 10px", border: "1.5px solid var(--border)", borderRadius: "10px", fontFamily: "var(--sans)", fontSize: "15px", textAlign: "center" }}
+                      />
                     </div>
                     <button className="step-btn" onClick={() => nextStep(1)}>Next →</button>
                   </div>
@@ -1405,5 +1408,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-14 19:00 ET | Updated by: Claude Code*
+*Last updated: 2026-04-15 02:45 ET | Updated by: Forge*
 */
