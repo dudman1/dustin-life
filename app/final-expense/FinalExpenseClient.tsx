@@ -75,13 +75,29 @@ export default function FinalExpenseClient() {
   );
   const maxDob = useMemo(() => new Date().toISOString().split("T")[0], []);
 
+  const getStickyStepOffset = () => {
+    const nav = document.querySelector(".fe-page nav");
+    const navHeight = nav instanceof HTMLElement ? nav.getBoundingClientRect().height : 0;
+    return navHeight + 24;
+  };
+
   useEffect(() => {
     if (!shouldScrollStepRef.current) {
       return;
     }
 
     const frame = requestAnimationFrame(() => {
-      activeStepRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const activeStep = activeStepRef.current;
+      if (!activeStep) {
+        shouldScrollStepRef.current = false;
+        return;
+      }
+
+      const stepTop = activeStep.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: Math.max(stepTop - getStickyStepOffset(), 0),
+        behavior: "smooth",
+      });
       shouldScrollStepRef.current = false;
     });
 
@@ -694,7 +710,7 @@ export default function FinalExpenseClient() {
         }
         @media (max-width: 900px) {
           .fe-page {
-            --sticky-offset: 140px;
+            --sticky-offset: 180px;
           }
           .fe-page .nav-inner {
             justify-content: center;
@@ -1411,5 +1427,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-16 15:16 ET | Updated by: Forge*
+*Last updated: 2026-04-16 15:30 ET | Updated by: Forge*
 */
