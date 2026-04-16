@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
   dob: string;
@@ -14,22 +14,6 @@ type FormDataState = {
 };
 
 const TOTAL_STEPS = 6;
-const MONTHS = [
-  ["01", "January"],
-  ["02", "February"],
-  ["03", "March"],
-  ["04", "April"],
-  ["05", "May"],
-  ["06", "June"],
-  ["07", "July"],
-  ["08", "August"],
-  ["09", "September"],
-  ["10", "October"],
-  ["11", "November"],
-  ["12", "December"],
-] as const;
-const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0"));
-// Removed static year range; user now inputs birth year directly.
 const STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
   "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
@@ -64,7 +48,8 @@ function LinkedInIcon() {
 }
 
 export default function FinalExpenseClient() {
-  const formWrapRef = useRef<HTMLDivElement | null>(null);
+  const activeStepRef = useRef<HTMLDivElement | null>(null);
+  const shouldScrollStepRef = useRef(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -73,9 +58,6 @@ export default function FinalExpenseClient() {
   const [heroImageFailed, setHeroImageFailed] = useState(false);
   const [agentAvatarFailed, setAgentAvatarFailed] = useState(false);
   const [agentPhotoFailed, setAgentPhotoFailed] = useState(false);
-  const [dobMonth, setDobMonth] = useState("");
-  const [dobDay, setDobDay] = useState("");
-  const [dobYear, setDobYear] = useState("");
   const [tcpaConsent, setTcpaConsent] = useState(false);
   const [formData, setFormData] = useState<FormDataState>({
     dob: "",
@@ -91,18 +73,36 @@ export default function FinalExpenseClient() {
     () => Math.round((currentStep / TOTAL_STEPS) * 100),
     [currentStep],
   );
+  const maxDob = useMemo(() => new Date().toISOString().split("T")[0], []);
 
-  const scrollToFormTop = () => {
-    formWrapRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  useEffect(() => {
+    if (!shouldScrollStepRef.current) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      activeStepRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      shouldScrollStepRef.current = false;
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [currentStep]);
+
+  const formatDobForSubmission = (dob: string) => {
+    if (!dob.includes("-")) {
+      return dob;
+    }
+
+    const [year, month, day] = dob.split("-");
+    return month && day && year ? `${month}/${day}/${year}` : dob;
   };
 
   const nextStep = (step: number) => {
     if (step === 1) {
-      if (!dobMonth || !dobDay || !dobYear) {
+      if (!formData.dob) {
         window.alert("Please select your full date of birth.");
         return;
       }
-      setFormData((prev) => ({ ...prev, dob: `${dobMonth}/${dobDay}/${dobYear}` }));
     }
 
     if (step === 2 && !formData.gender) {
@@ -127,13 +127,13 @@ export default function FinalExpenseClient() {
       }
     }
 
+    shouldScrollStepRef.current = true;
     setCurrentStep(step + 1);
-    requestAnimationFrame(scrollToFormTop);
   };
 
   const prevStep = (step: number) => {
+    shouldScrollStepRef.current = true;
     setCurrentStep(step - 1);
-    requestAnimationFrame(scrollToFormTop);
   };
 
   const submitForm = async () => {
@@ -157,7 +157,7 @@ export default function FinalExpenseClient() {
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
-          dob: formData.dob,
+          dob: formatDobForSubmission(formData.dob),
           gender: formData.gender,
           coverageAmount: formData.coverage,
           state: formData.state,
@@ -401,7 +401,7 @@ export default function FinalExpenseClient() {
         </div>
 
         <section className="form-section" id="get-quote">
-          <div className="form-wrap" ref={formWrapRef}>
+          <div className="form-wrap">
             {!submitted ? (
               <>
                 <div className="form-progress">
@@ -412,36 +412,22 @@ export default function FinalExpenseClient() {
                 </div>
 
                 <div className="form-steps">
-                  <div className={`form-step${currentStep === 1 ? " active" : ""}`} data-step="1">
+                  <div ref={currentStep === 1 ? activeStepRef : undefined} className={`form-step${currentStep === 1 ? " active" : ""}`} data-step="1">
                     <p className="step-question">When were you born?</p>
                     <p className="step-why">Your age helps us find the right coverage options and accurate pricing for you.</p>
-                    <div className="dob-row">
-                      <select value={dobMonth} onChange={(e) => setDobMonth(e.target.value)}>
-                        <option value="" disabled>Month</option>
-                        {MONTHS.map(([value, label]) => (
-                          <option key={value} value={value}>{label}</option>
-                        ))}
-                      </select>
-                      <select value={dobDay} onChange={(e) => setDobDay(e.target.value)}>
-                        <option value="" disabled>Day</option>
-                        {DAYS.map((day) => (
-                          <option key={day} value={day}>{Number(day)}</option>
-                        ))}
-                      </select>
-                      <input
-                        type="number"
-                        placeholder="Birth year (e.g., 1975)"
-                        min="1900"
-                        max={new Date().getFullYear()}
-                        value={dobYear}
-                        onChange={(e) => setDobYear(e.target.value)}
-                        style={{ width: "100%", padding: "14px 10px", border: "1.5px solid var(--border)", borderRadius: "10px", fontFamily: "var(--sans)", fontSize: "15px", textAlign: "center" }}
-                      />
-                    </div>
+                    <input
+                      type="date"
+                      className="step-date-input"
+                      autoComplete="bday"
+                      min="1900-01-01"
+                      max={maxDob}
+                      value={formData.dob}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, dob: e.target.value }))}
+                    />
                     <button className="step-btn" onClick={() => nextStep(1)}>Next →</button>
                   </div>
 
-                  <div className={`form-step${currentStep === 2 ? " active" : ""}`} data-step="2">
+                  <div ref={currentStep === 2 ? activeStepRef : undefined} className={`form-step${currentStep === 2 ? " active" : ""}`} data-step="2">
                     <p className="step-question">What is your gender?</p>
                     <p className="step-why">Carriers use this to calculate premium rates, it's standard across all life insurance.</p>
                     <div className="radio-cards">
@@ -464,7 +450,7 @@ export default function FinalExpenseClient() {
                     <button className="step-back" onClick={() => prevStep(2)}>← Back</button>
                   </div>
 
-                  <div className={`form-step${currentStep === 3 ? " active" : ""}`} data-step="3">
+                  <div ref={currentStep === 3 ? activeStepRef : undefined} className={`form-step${currentStep === 3 ? " active" : ""}`} data-step="3">
                     <p className="step-question">How much coverage are you looking for?</p>
                     <p className="step-why">Most families choose $10,000–$15,000 to cover a basic funeral and final expenses.</p>
                     <div className="radio-cards">
@@ -492,7 +478,7 @@ export default function FinalExpenseClient() {
                     <button className="step-back" onClick={() => prevStep(3)}>← Back</button>
                   </div>
 
-                  <div className={`form-step${currentStep === 4 ? " active" : ""}`} data-step="4">
+                  <div ref={currentStep === 4 ? activeStepRef : undefined} className={`form-step${currentStep === 4 ? " active" : ""}`} data-step="4">
                     <p className="step-question">What state do you live in?</p>
                     <p className="step-why">Coverage availability and pricing vary by state. We're licensed in all 50 states.</p>
                     <select
@@ -509,7 +495,7 @@ export default function FinalExpenseClient() {
                     <button className="step-back" onClick={() => prevStep(4)}>← Back</button>
                   </div>
 
-                  <div className={`form-step${currentStep === 5 ? " active" : ""}`} data-step="5">
+                  <div ref={currentStep === 5 ? activeStepRef : undefined} className={`form-step${currentStep === 5 ? " active" : ""}`} data-step="5">
                     <p className="step-question">What's your name?</p>
                     <p className="step-why">So Dustin knows who's calling, that's it.</p>
                     <div className="input-row">
@@ -534,7 +520,7 @@ export default function FinalExpenseClient() {
                     <button className="step-back" onClick={() => prevStep(5)}>← Back</button>
                   </div>
 
-                  <div className={`form-step${currentStep === 6 ? " active" : ""}`} data-step="6">
+                  <div ref={currentStep === 6 ? activeStepRef : undefined} className={`form-step${currentStep === 6 ? " active" : ""}`} data-step="6">
                     <p className="step-question">What's the best number to reach you?</p>
                     <p className="step-why">Dustin will call you personally, usually within one business day.</p>
                     <input
@@ -603,6 +589,7 @@ export default function FinalExpenseClient() {
           --bg: #faf9f7;
           --bg-2: #f3f1ee;
           --bg-dark: #1c1c1e;
+          --sticky-offset: 104px;
           --text: #1c1c1e;
           --text-2: #4a4a4a;
           --text-3: #888;
@@ -706,6 +693,9 @@ export default function FinalExpenseClient() {
           height: 16px;
         }
         @media (max-width: 900px) {
+          .fe-page {
+            --sticky-offset: 140px;
+          }
           .fe-page .nav-inner {
             justify-content: center;
             padding: 12px 16px;
@@ -1083,7 +1073,11 @@ export default function FinalExpenseClient() {
           line-height: 1.65;
         }
         .fe-page .faq-item.open .faq-a { display: block; }
-        .fe-page .form-section { background: var(--bg-2); border-top: 1px solid var(--border); }
+        .fe-page .form-section {
+          background: var(--bg-2);
+          border-top: 1px solid var(--border);
+          scroll-margin-top: var(--sticky-offset);
+        }
         .fe-page .form-wrap {
           max-width: 560px;
           margin: 0 auto;
@@ -1092,6 +1086,7 @@ export default function FinalExpenseClient() {
           border-radius: 16px;
           overflow: hidden;
           box-shadow: var(--shadow-lg);
+          scroll-margin-top: var(--sticky-offset);
         }
         .fe-page .form-progress {
           background: var(--bg-2);
@@ -1117,7 +1112,10 @@ export default function FinalExpenseClient() {
         .fe-page .progress-label { font-size: 11px; color: var(--text-3); white-space: nowrap; font-weight: 500; }
         .fe-page .form-steps { padding: 36px 40px 32px; }
         @media (max-width: 480px) { .fe-page .form-steps { padding: 24px 20px 20px; } }
-        .fe-page .form-step { display: none; }
+        .fe-page .form-step {
+          display: none;
+          scroll-margin-top: var(--sticky-offset);
+        }
         .fe-page .form-step.active { display: block; animation: stepIn 0.25s ease; }
         @keyframes stepIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
         .fe-page .step-question {
@@ -1200,24 +1198,22 @@ export default function FinalExpenseClient() {
         .fe-page .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
         .fe-page .input-row .step-input { margin-bottom: 0; font-size: 16px; }
         @media (max-width: 480px) { .fe-page .input-row { grid-template-columns: 1fr; } }
-        .fe-page .dob-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px; }
-        .fe-page .dob-row select {
+        .fe-page .step-date-input {
           width: 100%;
-          padding: 14px 10px;
+          padding: 14px 16px;
           border: 1.5px solid var(--border);
           border-radius: 10px;
           font-family: var(--sans);
-          font-size: 15px;
+          font-size: 16px;
           color: var(--text);
           background: var(--white);
           outline: none;
-          text-align: center;
+          transition: border-color 0.15s, box-shadow 0.15s;
+          margin-bottom: 24px;
           -webkit-appearance: none;
-          cursor: pointer;
-          transition: border-color 0.15s;
+          appearance: none;
         }
-        .fe-page .dob-row select:focus { border-color: var(--accent); }
-        @media (max-width: 400px) { .fe-page .dob-row { grid-template-columns: 1fr 1fr; } }
+        .fe-page .step-date-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(184,134,11,0.10); }
         .fe-page .step-select {
           width: 100%;
           padding: 14px 16px;
@@ -1415,5 +1411,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-15 12:14 ET | Updated by: Forge*
+*Last updated: 2026-04-16 15:16 ET | Updated by: Forge*
 */
