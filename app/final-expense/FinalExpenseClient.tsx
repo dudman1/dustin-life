@@ -430,8 +430,8 @@ export default function FinalExpenseClient() {
           <a href="#get-quote" className="btn-white">Get My Free Quote</a>
         </div>
 
-        <section className="form-section" id="get-quote">
-          <div className="form-wrap">
+        <section className="form-section">
+          <div className="form-wrap" id="get-quote">
             {!submitted ? (
               <>
                 <div className="form-progress">
@@ -1091,7 +1091,7 @@ export default function FinalExpenseClient() {
           border-radius: 16px;
           overflow: hidden;
           box-shadow: var(--shadow-lg);
-          scroll-margin-top: var(--sticky-offset);
+          scroll-margin-top: calc(var(--sticky-offset) + 16px);
         }
         .fe-page .form-progress {
           background: var(--bg-2);
@@ -1424,5 +1424,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-17 12:20 ET | Updated by: Forge*
+*Last updated: 2026-04-17 12:26 ET | Updated by: Forge*
 */
