@@ -22,8 +22,8 @@ interface FinalExpenseLeadPayload extends BaseLeadPayload {
   firstName?: string;
   lastName?: string;
   dob?: string;
-  gender?: string;
-  coverageAmount?: string;
+  gender?: string | null;
+  coverageAmount?: string | null;
   tcpaConsent?: boolean;
 }
 
@@ -37,7 +37,7 @@ function json(body: unknown, status = 200): Response {
 }
 
 function buildLeadShape(body: LeadPayload) {
-  const isFinalExpense = Boolean(body.firstName || body.lastName || body.dob || body.gender || body.coverageAmount);
+  const isFinalExpense = Boolean(body.firstName || body.lastName || body.dob);
 
   if (isFinalExpense) {
     const firstName = body.firstName?.trim() ?? "";
@@ -48,15 +48,13 @@ function buildLeadShape(body: LeadPayload) {
     const gender = body.gender?.trim() ?? "";
     const coverageAmount = body.coverageAmount?.trim() ?? "";
 
-    if (!firstName || !lastName || !phone || !state || !dob || !gender || !coverageAmount || !body.tcpaConsent) {
+    if (!firstName || !lastName || !phone || !state || !dob || !body.tcpaConsent) {
       return { error: "Missing required final expense fields or consent." };
     }
 
     const fullName = `${firstName} ${lastName}`.trim();
     const notes = [
       `DOB: ${dob}`,
-      `Gender: ${gender}`,
-      `Coverage Amount: ${coverageAmount}`,
       "Form: final-expense",
     ].join(" | ");
 
@@ -75,8 +73,8 @@ function buildLeadShape(body: LeadPayload) {
         last_name: lastName,
         full_name: fullName,
         dob,
-        gender,
-        coverage_amount: coverageAmount,
+        gender: gender ?? "",
+        coverage_amount: coverageAmount ?? "",
         state,
         phone,
         tcpa_consent: true,
@@ -178,3 +176,8 @@ export async function onRequestPost(context: {
     return json({ error: message }, 500);
   }
 }
+
+/*
+---
+*Last updated: 2026-04-16 20:45 ET | Updated by: Forge*
+*/

@@ -5,15 +5,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
   dob: string;
-  gender: string;
-  coverage: string;
   state: string;
   firstName: string;
   lastName: string;
   phone: string;
 };
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 4;
 const STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
   "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
@@ -61,8 +59,6 @@ export default function FinalExpenseClient() {
   const [tcpaConsent, setTcpaConsent] = useState(false);
   const [formData, setFormData] = useState<FormDataState>({
     dob: "",
-    gender: "",
-    coverage: "",
     state: "",
     firstName: "",
     lastName: "",
@@ -115,32 +111,20 @@ export default function FinalExpenseClient() {
 
   const nextStep = (step: number) => {
     if (step === 1) {
-      if (!formData.dob) {
-        window.alert("Please select your full date of birth.");
-        return;
-      }
-    }
-
-    if (step === 2 && !formData.gender) {
-      window.alert("Please select your gender.");
-      return;
-    }
-
-    if (step === 3 && !formData.coverage) {
-      window.alert("Please select a coverage amount.");
-      return;
-    }
-
-    if (step === 4 && !formData.state) {
-      window.alert("Please select your state.");
-      return;
-    }
-
-    if (step === 5) {
       if (!formData.firstName.trim() || !formData.lastName.trim()) {
         window.alert("Please enter your full name.");
         return;
       }
+    }
+
+    if (step === 2 && !formData.state) {
+      window.alert("Please select your state.");
+      return;
+    }
+
+    if (step === 3 && !formData.dob) {
+      window.alert("Please select your full date of birth.");
+      return;
     }
 
     shouldScrollStepRef.current = true;
@@ -174,8 +158,8 @@ export default function FinalExpenseClient() {
           firstName: formData.firstName,
           lastName: formData.lastName,
           dob: formatDobForSubmission(formData.dob),
-          gender: formData.gender,
-          coverageAmount: formData.coverage,
+          gender: "",
+          coverageAmount: "",
           state: formData.state,
           phone: formData.phone,
           tcpaConsent,
@@ -204,10 +188,6 @@ export default function FinalExpenseClient() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const selectCard = (field: "gender" | "coverage", value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -429,91 +409,8 @@ export default function FinalExpenseClient() {
 
                 <div className="form-steps">
                   <div ref={currentStep === 1 ? activeStepRef : undefined} className={`form-step${currentStep === 1 ? " active" : ""}`} data-step="1">
-                    <p className="step-question">When were you born?</p>
-                    <p className="step-why">Your age helps us find the right coverage options and accurate pricing for you.</p>
-                    <input
-                      type="date"
-                      className="step-date-input"
-                      autoComplete="bday"
-                      min="1900-01-01"
-                      max={maxDob}
-                      value={formData.dob}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, dob: e.target.value }))}
-                    />
-                    <button className="step-btn" onClick={() => nextStep(1)}>Next →</button>
-                  </div>
-
-                  <div ref={currentStep === 2 ? activeStepRef : undefined} className={`form-step${currentStep === 2 ? " active" : ""}`} data-step="2">
-                    <p className="step-question">What is your gender?</p>
-                    <p className="step-why">Carriers use this to calculate premium rates, it's standard across all life insurance.</p>
-                    <div className="radio-cards">
-                      {[
-                        ["Male", "Male"],
-                        ["Female", "Female"],
-                      ].map(([value, label]) => (
-                        <label
-                          key={value}
-                          className={`radio-card${formData.gender === value ? " selected" : ""}`}
-                          onClick={() => selectCard("gender", value)}
-                        >
-                          <input type="radio" name="gender" value={value} checked={formData.gender === value} readOnly />
-                          <div className="radio-dot" />
-                          <div className="radio-card-label">{label}</div>
-                        </label>
-                      ))}
-                    </div>
-                    <button className="step-btn" onClick={() => nextStep(2)}>Next →</button>
-                    <button className="step-back" onClick={() => prevStep(2)}>← Back</button>
-                  </div>
-
-                  <div ref={currentStep === 3 ? activeStepRef : undefined} className={`form-step${currentStep === 3 ? " active" : ""}`} data-step="3">
-                    <p className="step-question">How much coverage are you looking for?</p>
-                    <p className="step-why">Most families choose $10,000–$15,000 to cover a basic funeral and final expenses.</p>
-                    <div className="radio-cards">
-                      {[
-                        ["$10,000 or less", "Covers basic funeral costs"],
-                        ["$10,000–$20,000", "Most popular range"],
-                        ["$20,000–$30,000", ""],
-                        ["Not sure", "We'll walk you through it"],
-                      ].map(([value, sub]) => (
-                        <label
-                          key={value}
-                          className={`radio-card${formData.coverage === value ? " selected" : ""}`}
-                          onClick={() => selectCard("coverage", value)}
-                        >
-                          <input type="radio" name="coverage" value={value} checked={formData.coverage === value} readOnly />
-                          <div className="radio-dot" />
-                          <div className="radio-card-label">
-                            {value === "Not sure" ? "Not sure — help me decide" : value}
-                            {sub ? <div className="radio-card-sub">{sub}</div> : null}
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                    <button className="step-btn" onClick={() => nextStep(3)}>Next →</button>
-                    <button className="step-back" onClick={() => prevStep(3)}>← Back</button>
-                  </div>
-
-                  <div ref={currentStep === 4 ? activeStepRef : undefined} className={`form-step${currentStep === 4 ? " active" : ""}`} data-step="4">
-                    <p className="step-question">What state do you live in?</p>
-                    <p className="step-why">Coverage availability and pricing vary by state. We're licensed in all 50 states.</p>
-                    <select
-                      className="step-select"
-                      value={formData.state}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
-                    >
-                      <option value="" disabled>Select your state</option>
-                      {STATES.map((state) => (
-                        <option key={state} value={state}>{state}</option>
-                      ))}
-                    </select>
-                    <button className="step-btn" onClick={() => nextStep(4)}>Next →</button>
-                    <button className="step-back" onClick={() => prevStep(4)}>← Back</button>
-                  </div>
-
-                  <div ref={currentStep === 5 ? activeStepRef : undefined} className={`form-step${currentStep === 5 ? " active" : ""}`} data-step="5">
                     <p className="step-question">What's your name?</p>
-                    <p className="step-why">So Dustin knows who's calling, that's it.</p>
+                    <p className="step-why">So Dustin knows who he's helping, that's it.</p>
                     <div className="input-row">
                       <input
                         type="text"
@@ -532,11 +429,43 @@ export default function FinalExpenseClient() {
                         onChange={(e) => setFormData((prev) => ({ ...prev, lastName: e.target.value }))}
                       />
                     </div>
-                    <button className="step-btn" onClick={() => nextStep(5)}>Next →</button>
-                    <button className="step-back" onClick={() => prevStep(5)}>← Back</button>
+                    <button className="step-btn" onClick={() => nextStep(1)}>Next →</button>
                   </div>
 
-                  <div ref={currentStep === 6 ? activeStepRef : undefined} className={`form-step${currentStep === 6 ? " active" : ""}`} data-step="6">
+                  <div ref={currentStep === 2 ? activeStepRef : undefined} className={`form-step${currentStep === 2 ? " active" : ""}`} data-step="2">
+                    <p className="step-question">What state do you live in?</p>
+                    <p className="step-why">Coverage availability and pricing vary by state. We're licensed in all 50 states.</p>
+                    <select
+                      className="step-select"
+                      value={formData.state}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
+                    >
+                      <option value="" disabled>Select your state</option>
+                      {STATES.map((state) => (
+                        <option key={state} value={state}>{state}</option>
+                      ))}
+                    </select>
+                    <button className="step-btn" onClick={() => nextStep(2)}>Next →</button>
+                    <button className="step-back" onClick={() => prevStep(2)}>← Back</button>
+                  </div>
+
+                  <div ref={currentStep === 3 ? activeStepRef : undefined} className={`form-step${currentStep === 3 ? " active" : ""}`} data-step="3">
+                    <p className="step-question">When were you born?</p>
+                    <p className="step-why">Your age helps us find the right final expense options and accurate pricing for you.</p>
+                    <input
+                      type="date"
+                      className="step-date-input"
+                      autoComplete="bday"
+                      min="1900-01-01"
+                      max={maxDob}
+                      value={formData.dob}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, dob: e.target.value }))}
+                    />
+                    <button className="step-btn" onClick={() => nextStep(3)}>Next →</button>
+                    <button className="step-back" onClick={() => prevStep(3)}>← Back</button>
+                  </div>
+
+                  <div ref={currentStep === 4 ? activeStepRef : undefined} className={`form-step${currentStep === 4 ? " active" : ""}`} data-step="4">
                     <p className="step-question">What's the best number to reach you?</p>
                     <p className="step-why">Dustin will call you personally, usually within one business day.</p>
                     <input
@@ -553,7 +482,7 @@ export default function FinalExpenseClient() {
                     </div>
                     {submitError ? <p className="submit-error">{submitError}</p> : null}
                     <button className="step-btn" onClick={submitForm} disabled={submitting}>{submitting ? "Submitting..." : "Get My Free Quote →"}</button>
-                    <button className="step-back" onClick={() => prevStep(6)}>← Back</button>
+                    <button className="step-back" onClick={() => prevStep(4)}>← Back</button>
                   </div>
                 </div>
               </>
@@ -1427,5 +1356,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-16 15:30 ET | Updated by: Forge*
+*Last updated: 2026-04-16 20:45 ET | Updated by: Forge*
 */
