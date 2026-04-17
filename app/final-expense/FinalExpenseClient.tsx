@@ -27,10 +27,7 @@ const MONTHS = [
   ["12", "December"],
 ] as const;
 const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0"));
-const YEARS = [
-  ...Array.from({ length: 1965 - 1940 + 1 }, (_, i) => String(1965 - i)),
-  ...Array.from({ length: 2008 - 1965 }, (_, i) => String(2008 - i)),
-];
+const YEARS = Array.from({ length: 2008 - 1940 + 1 }, (_, i) => String(2008 - i));
 const STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
   "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
@@ -1427,5 +1424,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-17 12:10 ET | Updated by: Forge*
+*Last updated: 2026-04-17 12:20 ET | Updated by: Forge*
 */
