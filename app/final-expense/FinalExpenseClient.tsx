@@ -12,6 +12,25 @@ type FormDataState = {
 };
 
 const TOTAL_STEPS = 4;
+const MONTHS = [
+  ["01", "January"],
+  ["02", "February"],
+  ["03", "March"],
+  ["04", "April"],
+  ["05", "May"],
+  ["06", "June"],
+  ["07", "July"],
+  ["08", "August"],
+  ["09", "September"],
+  ["10", "October"],
+  ["11", "November"],
+  ["12", "December"],
+] as const;
+const DAYS = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, "0"));
+const YEARS = [
+  ...Array.from({ length: 1965 - 1940 + 1 }, (_, i) => String(1965 - i)),
+  ...Array.from({ length: 2008 - 1965 }, (_, i) => String(2008 - i)),
+];
 const STATES = [
   "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
   "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
@@ -56,6 +75,9 @@ export default function FinalExpenseClient() {
   const [heroImageFailed, setHeroImageFailed] = useState(false);
   const [agentAvatarFailed, setAgentAvatarFailed] = useState(false);
   const [agentPhotoFailed, setAgentPhotoFailed] = useState(false);
+  const [dobMonth, setDobMonth] = useState("");
+  const [dobDay, setDobDay] = useState("");
+  const [dobYear, setDobYear] = useState("");
   const [tcpaConsent, setTcpaConsent] = useState(false);
   const [formData, setFormData] = useState<FormDataState>({
     dob: "",
@@ -69,7 +91,6 @@ export default function FinalExpenseClient() {
     () => Math.round((currentStep / TOTAL_STEPS) * 100),
     [currentStep],
   );
-  const maxDob = useMemo(() => new Date().toISOString().split("T")[0], []);
 
   const getStickyStepOffset = () => {
     const nav = document.querySelector(".fe-page nav");
@@ -100,13 +121,23 @@ export default function FinalExpenseClient() {
     return () => cancelAnimationFrame(frame);
   }, [currentStep]);
 
-  const formatDobForSubmission = (dob: string) => {
-    if (!dob.includes("-")) {
-      return dob;
+  const buildDobFromParts = (year: string, month: string, day: string) => {
+    if (!year || !month || !day) {
+      return "";
     }
 
-    const [year, month, day] = dob.split("-");
-    return month && day && year ? `${month}/${day}/${year}` : dob;
+    const candidate = `${year}-${month}-${day}`;
+    const date = new Date(`${candidate}T00:00:00Z`);
+
+    if (Number.isNaN(date.getTime())) {
+      return "";
+    }
+
+    const validYear = String(date.getUTCFullYear()) === year;
+    const validMonth = String(date.getUTCMonth() + 1).padStart(2, "0") === month;
+    const validDay = String(date.getUTCDate()).padStart(2, "0") === day;
+
+    return validYear && validMonth && validDay ? candidate : "";
   };
 
   const nextStep = (step: number) => {
@@ -122,9 +153,15 @@ export default function FinalExpenseClient() {
       return;
     }
 
-    if (step === 3 && !formData.dob) {
-      window.alert("Please select your full date of birth.");
-      return;
+    if (step === 3) {
+      const dob = buildDobFromParts(dobYear, dobMonth, dobDay);
+
+      if (!dob) {
+        window.alert("Please select a valid full date of birth.");
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, dob }));
     }
 
     shouldScrollStepRef.current = true;
@@ -157,7 +194,7 @@ export default function FinalExpenseClient() {
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
-          dob: formatDobForSubmission(formData.dob),
+          dob: formData.dob,
           gender: "",
           coverageAmount: "",
           state: formData.state,
@@ -452,15 +489,41 @@ export default function FinalExpenseClient() {
                   <div ref={currentStep === 3 ? activeStepRef : undefined} className={`form-step${currentStep === 3 ? " active" : ""}`} data-step="3">
                     <p className="step-question">When were you born?</p>
                     <p className="step-why">Your age helps us find the right final expense options and accurate pricing for you.</p>
-                    <input
-                      type="date"
-                      className="step-date-input"
-                      autoComplete="bday"
-                      min="1900-01-01"
-                      max={maxDob}
-                      value={formData.dob}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, dob: e.target.value }))}
-                    />
+                    <div className="dob-row">
+                      <select
+                        className="step-select dob-select dob-select-month"
+                        autoComplete="bday-month"
+                        value={dobMonth}
+                        onChange={(e) => setDobMonth(e.target.value)}
+                      >
+                        <option value="" disabled>Month</option>
+                        {MONTHS.map(([value, label]) => (
+                          <option key={value} value={value}>{value} · {label}</option>
+                        ))}
+                      </select>
+                      <select
+                        className="step-select dob-select dob-select-day"
+                        autoComplete="bday-day"
+                        value={dobDay}
+                        onChange={(e) => setDobDay(e.target.value)}
+                      >
+                        <option value="" disabled>Day</option>
+                        {DAYS.map((day) => (
+                          <option key={day} value={day}>{day}</option>
+                        ))}
+                      </select>
+                      <select
+                        className="step-select dob-select dob-select-year"
+                        autoComplete="bday-year"
+                        value={dobYear}
+                        onChange={(e) => setDobYear(e.target.value)}
+                      >
+                        <option value="" disabled>Year</option>
+                        {YEARS.map((year) => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
                     <button className="step-btn" onClick={() => nextStep(3)}>Next →</button>
                     <button className="step-back" onClick={() => prevStep(3)}>← Back</button>
                   </div>
@@ -1143,22 +1206,30 @@ export default function FinalExpenseClient() {
         .fe-page .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
         .fe-page .input-row .step-input { margin-bottom: 0; font-size: 16px; }
         @media (max-width: 480px) { .fe-page .input-row { grid-template-columns: 1fr; } }
-        .fe-page .step-date-input {
-          width: 100%;
-          padding: 14px 16px;
-          border: 1.5px solid var(--border);
-          border-radius: 10px;
-          font-family: var(--sans);
-          font-size: 16px;
-          color: var(--text);
-          background: var(--white);
-          outline: none;
-          transition: border-color 0.15s, box-shadow 0.15s;
+        .fe-page .dob-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1.7fr) minmax(84px, 0.8fr) minmax(110px, 1fr);
+          gap: 12px;
           margin-bottom: 24px;
-          -webkit-appearance: none;
-          appearance: none;
         }
-        .fe-page .step-date-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(184,134,11,0.10); }
+        .fe-page .dob-select {
+          margin-bottom: 0;
+          text-align: center;
+        }
+        .fe-page .dob-select-month { text-align: left; }
+        .fe-page .dob-select-day,
+        .fe-page .dob-select-year { text-align-last: center; }
+        @media (max-width: 480px) {
+          .fe-page .dob-row {
+            grid-template-columns: 1.45fr 0.9fr 1fr;
+            gap: 8px;
+          }
+          .fe-page .dob-select {
+            padding-left: 12px;
+            padding-right: 12px;
+            font-size: 15px;
+          }
+        }
         .fe-page .step-select {
           width: 100%;
           padding: 14px 16px;
@@ -1356,5 +1427,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-16 20:45 ET | Updated by: Forge*
+*Last updated: 2026-04-17 12:10 ET | Updated by: Forge*
 */
