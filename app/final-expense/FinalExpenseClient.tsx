@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
   dob: string;
@@ -63,7 +63,9 @@ function LinkedInIcon() {
 
 export default function FinalExpenseClient() {
   const activeStepRef = useRef<HTMLDivElement | null>(null);
+  const formWrapRef = useRef<HTMLDivElement | null>(null);
   const shouldScrollStepRef = useRef(false);
+  const formStartedRef = useRef(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -95,6 +97,45 @@ export default function FinalExpenseClient() {
     return navHeight + 24;
   };
 
+  const scrollToQuote = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const formWrap = formWrapRef.current;
+    if (!formWrap) {
+      return;
+    }
+
+    const formTop = formWrap.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: Math.max(formTop - getStickyStepOffset(), 0),
+      behavior,
+    });
+  }, []);
+
+  const syncQuoteHashPosition = useCallback((behavior: ScrollBehavior = "auto") => {
+    if (window.location.hash !== "#get-quote") {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollToQuote(behavior);
+      });
+    });
+
+    window.setTimeout(() => {
+      scrollToQuote(behavior);
+    }, 250);
+
+    window.setTimeout(() => {
+      scrollToQuote(behavior);
+    }, 900);
+  }, [scrollToQuote]);
+
+  const handleQuoteLinkClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    window.history.pushState(null, "", "#get-quote");
+    scrollToQuote("smooth");
+  }, [scrollToQuote]);
+
   useEffect(() => {
     if (!shouldScrollStepRef.current) {
       return;
@@ -117,6 +158,23 @@ export default function FinalExpenseClient() {
 
     return () => cancelAnimationFrame(frame);
   }, [currentStep]);
+
+  useEffect(() => {
+    const handleHashSync = () => {
+      syncQuoteHashPosition("auto");
+    };
+
+    handleHashSync();
+    window.addEventListener("hashchange", handleHashSync);
+    window.addEventListener("load", handleHashSync);
+    window.addEventListener("pageshow", handleHashSync);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashSync);
+      window.removeEventListener("load", handleHashSync);
+      window.removeEventListener("pageshow", handleHashSync);
+    };
+  }, [syncQuoteHashPosition]);
 
   const buildDobFromParts = (year: string, month: string, day: string) => {
     if (!year || !month || !day) {
@@ -260,7 +318,7 @@ export default function FinalExpenseClient() {
               <h1>Help protect your family from an <em>unexpected bill.</em></h1>
               <p className="hero-sub">Final expense insurance helps cover funeral costs, medical bills, and other end-of-life expenses, so your loved ones don't have to worry about money during one of the hardest moments of their lives.</p>
               <div className="hero-actions">
-                <a href="#get-quote" className="btn-primary">Get My Free Quote</a>
+                <a href="#get-quote" className="btn-primary" onClick={handleQuoteLinkClick}>Get My Free Quote</a>
               </div>
             </div>
 
@@ -427,11 +485,11 @@ export default function FinalExpenseClient() {
         <div className="cta-section">
           <h2>Give your family peace of mind.</h2>
           <p>Coverage that's affordable, simple, and built to last.</p>
-          <a href="#get-quote" className="btn-white">Get My Free Quote</a>
+          <a href="#get-quote" className="btn-white" onClick={handleQuoteLinkClick}>Get My Free Quote</a>
         </div>
 
         <section className="form-section">
-          <div className="form-wrap" id="get-quote">
+          <div ref={formWrapRef} className="form-wrap" id="get-quote">
             {!submitted ? (
               <>
                 <div className="form-progress">
@@ -452,6 +510,16 @@ export default function FinalExpenseClient() {
                         placeholder="First name"
                         autoComplete="given-name"
                         value={formData.firstName}
+                        onFocus={() => {
+                          if (!formStartedRef.current) {
+                            formStartedRef.current = true;
+                            const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
+                            fbq?.("track", "InitiateCheckout", {
+                              content_name: "Final Expense Quote Request",
+                              content_category: "final_expense",
+                            });
+                          }
+                        }}
                         onChange={(e) => setFormData((prev) => ({ ...prev, firstName: e.target.value }))}
                       />
                       <input
@@ -583,7 +651,7 @@ export default function FinalExpenseClient() {
         </footer>
 
         <div className="mobile-cta">
-          <a href="#get-quote">Get My Free Quote — No Obligation</a>
+          <a href="#get-quote" onClick={handleQuoteLinkClick}>Get My Free Quote — No Obligation</a>
         </div>
       </div>
 
@@ -1424,5 +1492,5 @@ export default function FinalExpenseClient() {
 
 /*
 ---
-*Last updated: 2026-04-17 12:26 ET | Updated by: Forge*
+*Last updated: 2026-04-19 13:58 ET | Updated by: Forge*
 */
