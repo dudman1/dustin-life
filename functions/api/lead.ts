@@ -27,7 +27,24 @@ interface FinalExpenseLeadPayload extends BaseLeadPayload {
   tcpaConsent?: boolean;
 }
 
-type LeadPayload = IulLeadPayload & FinalExpenseLeadPayload;
+interface IulCompassLeadPayload extends BaseLeadPayload {
+  tool?: string;
+  profile?: {
+    age?: number | string;
+    income?: number | string;
+    premium?: number | string;
+    years?: number | string;
+    posture?: string;
+  };
+  lead?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    consent?: boolean;
+  };
+}
+
+type LeadPayload = IulLeadPayload & FinalExpenseLeadPayload & IulCompassLeadPayload;
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -37,6 +54,61 @@ function json(body: unknown, status = 200): Response {
 }
 
 function buildLeadShape(body: LeadPayload) {
+  // IUL Compass calculator (dustinlife.com/iul-compass) — carries a projection profile.
+  if (body.tool === "iul-compass" && body.lead) {
+    const name = body.lead.name?.trim() ?? "";
+    const email = body.lead.email?.trim() ?? "";
+    const phone = body.lead.phone?.trim() ?? "";
+    const consent = Boolean(body.lead.consent);
+
+    if (!name || !email || !consent) {
+      return { error: "Missing required IUL Compass lead fields or consent." };
+    }
+
+    const p = body.profile ?? {};
+    const age = p.age ?? "";
+    const income = p.income ?? "";
+    const premium = p.premium ?? "";
+    const years = p.years ?? "";
+    const posture = p.posture ?? "";
+
+    const notes = [
+      `Email: ${email}`,
+      age ? `Age: ${age}` : "Age: not provided",
+      income ? `Income: $${income}` : "Income: not provided",
+      premium ? `Premium: $${premium}/yr` : "Premium: not provided",
+      years ? `Horizon: ${years}y` : "Horizon: not provided",
+      posture ? `Posture: ${posture}` : "Posture: not provided",
+      "Form: iul-compass",
+    ].join(" | ");
+
+    return {
+      product: "IUL",
+      source: "dustinlife.com/iul-compass",
+      fullName: name,
+      email,
+      phone,
+      state: "",
+      notes,
+      ghlPayload: {
+        source: "dustinlife.com/iul-compass",
+        product: "IUL",
+        name,
+        full_name: name,
+        email,
+        phone,
+        age,
+        income,
+        premium,
+        years,
+        posture,
+        sms_consent: consent,
+        terms_consent: consent,
+        form_name: "iul-compass",
+      },
+    };
+  }
+
   const isFinalExpense = Boolean(body.firstName || body.lastName || body.dob);
 
   if (isFinalExpense) {

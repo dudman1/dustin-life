@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IUL Compass — Indexed Universal Life Illustration Tool</title>
+<style>
+  :root{
+    --bg:#0a0f1d; --bg2:#0d1425; --panel:#111b31; --panel2:#0f1729;
+    --line:rgba(148,163,184,.16); --line2:rgba(148,163,184,.09);
+    --txt:#dbe4f3; --mut:#8496af; --dim:#5c6d87;
+    --indigo:#818cf8; --indigo-d:#6366f1; --emerald:#34d399; --emerald-d:#10b981;
+    --danger:#f87171;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1100px 500px at 85% -10%, rgba(99,102,241,.13), transparent 60%),
+      radial-gradient(900px 420px at 0% 110%, rgba(16,185,129,.08), transparent 55%),
+      var(--bg);
+    color:var(--txt); font-family:var(--sans); font-size:15px; line-height:1.55;
+    min-height:100vh;
+  }
+  ::selection{background:rgba(99,102,241,.35)}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+  /* ---------- ribbon ---------- */
+  .ribbon{
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(99,102,241,.14), rgba(99,102,241,.05));
+  }
+  .ribbon-inner{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:10px 0;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:#c3cdf5;
+  }
+  .ribbon-inner .tag{color:var(--emerald)}
+  .ribbon-inner .sep{color:var(--dim)}
+
+  /* ---------- header ---------- */
+  header{padding:26px 0 18px;border-bottom:1px solid var(--line2)}
+  .brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .logo{
+    font-family:var(--mono);font-weight:700;font-size:24px;letter-spacing:.04em;color:#fff;
+  }
+  .logo b{color:var(--emerald);font-weight:700}
+  .logo span{color:var(--indigo)}
+  .subline{font-family:var(--mono);font-size:11.5px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+  header p.lede{margin-top:10px;color:var(--mut);max-width:70ch}
+
+  /* ---------- layout ---------- */
+  main{display:grid;grid-template-columns:370px 1fr;gap:22px;padding:24px 0 40px}
+  @media(max-width:940px){main{grid-template-columns:1fr}}
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:8px;padding:18px;
+  }
+  .panel h2{
+    font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.14em;color:var(--indigo);margin-bottom:14px;
+  }
+  .stack>*+*{margin-top:14px}
+
+  /* ---------- inputs ---------- */
+  label.field{display:block}
+  label.field .lbl{
+    display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
+  }
+  label.field .lbl span.name{font-size:13px;color:var(--txt);font-weight:600}
+  label.field .lbl span.hint{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+  input[type=number],input[type=text],input[type=email],input[type=tel]{
+    width:100%;background:#0b1322;border:1px solid var(--line);border-radius:5px;
+    color:var(--txt);padding:9px 11px;font-family:var(--mono);font-size:14px;outline:none;
+  }
+  input:focus{border-color:var(--indigo-d);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+  input[type=range]{width:100%;accent-color:var(--emerald-d);height:28px;background:transparent}
+  .rangeline{display:flex;align-items:center;gap:12px}
+  .rangeline output{
+    font-family:var(--mono);font-size:14px;color:var(--emerald);min-width:52px;text-align:right;
+  }
+  .note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:6px}
+  .note.warn{color:var(--indigo)}
+
+  /* posture segmented */
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .seg button{
+    background:#0b1322;border:1px solid var(--line);border-radius:5px;color:var(--mut);
+    font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+    padding:9px 4px;cursor:pointer;transition:all .15s ease;
+  }
+  .seg button:hover{color:var(--txt);border-color:var(--indigo-d)}
+  .seg button.active{
+    background:linear-gradient(180deg,rgba(52,211,153,.16),rgba(52,211,153,.06));
+    border-color:var(--emerald-d);color:var(--emerald);
+  }
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{padding:7px 8px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  thead th{
+    font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+    color:var(--mut);border-bottom:1px solid var(--line);
+  }
+  td.num,th.num{font-family:var(--mono)}
+  tbody tr:hover{background:rgba(129,140,248,.05)}
+  th.active{color:var(--emerald);box-shadow:inset 0 -2px 0 var(--emerald-d)}
+  td.active{color:var(--txt);background:rgba(52,211,153,.06)}
+  td.lapsed{color:var(--danger)}
+  .tbl-scroll{overflow:auto;max-height:320px;border:1px solid var(--line2);border-radius:6px}
+  .tbl-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
+  .assump-note{
+    margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.7;
+  }
+
+  /* ---------- results ---------- */
+  .disclaim{
+    border:1px solid rgba(99,102,241,.45);border-left:4px solid var(--indigo-d);
+    background:rgba(99,102,241,.08);border-radius:6px;padding:12px 14px;margin-bottom:16px;
+  }
+  .disclaim strong{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#c3cdf5;display:block;margin-bottom:4px}
+  .disclaim p{font-size:12.5px;color:var(--mut)}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+  .card{
+    border:1px solid var(--line);border-radius:7px;padding:12px 14px;background:#0c1526;
+  }
+  .card .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .card .v{font-family:var(--mono);font-size:21px;font-weight:700;margin-top:4px;color:#fff}
+  .card.em .v{color:var(--emerald)}
+  .card.in .v{color:var(--indigo)}
+
+  .badge-lapse{
+    display:none;border:1px solid rgba(248,113,113,.5);background:rgba(248,113,113,.08);
+    color:#fca5a5;border-radius:6px;padding:9px 12px;font-size:12.5px;margin-bottom:16px;
+  }
+  .badge-lapse.show{display:block}
+
+  .chartbox{border:1px solid var(--line2);border-radius:7px;padding:10px;background:#0b1324;overflow-x:auto}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;padding:8px 6px 2px;font-family:var(--mono);font-size:11px;color:var(--mut)}
+  .legend .sw{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
+
+  /* ---------- lead form ---------- */
+  .lead-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .lead-grid .full{grid-column:1/-1}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--mut)}
+  .consent input{margin-top:3px;accent-color:var(--emerald-d)}
+  button.primary{
+    width:100%;cursor:pointer;border:none;border-radius:6px;padding:13px;
+    background:linear-gradient(135deg,var(--emerald-d),#0ea371);
+    color:#04120c;font-family:var(--mono);font-weight:700;font-size:13px;
+    letter-spacing:.08em;text-transform:uppercase;transition:filter .15s ease;
+  }
+  button.primary:hover{filter:brightness(1.12)}
+  button.primary:disabled{opacity:.55;cursor:wait}
+  .status{font-family:var(--mono);font-size:12px;margin-top:10px;min-height:18px}
+  .status.ok{color:var(--emerald)} .status.err{color:var(--danger)} .status.busy{color:var(--indigo)}
+
+  /* ---------- selftest ---------- */
+  #selftest-panel{display:none;margin-top:26px}
+  #selftest-panel.show{display:block}
+  #selftest-panel h2{color:var(--emerald)}
+  .st-item{font-family:var(--mono);font-size:12.5px;padding:6px 10px;border-bottom:1px solid var(--line2)}
+  .st-pass{color:var(--emerald)} .st-fail{color:var(--danger)}
+  .st-sum{font-family:var(--mono);font-size:13px;padding:10px;color:#fff}
+
+  footer{
+    border-top:1px solid var(--line2);padding:22px 0 42px;color:var(--dim);
+    font-size:11.5px;line-height:1.75;
+  }
+  footer .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="ribbon">
+  <div class="wrap ribbon-inner">
+    <span class="tag">&#9888; Illustration only</span><span class="sep">·</span>
+    <span>Not financial advice</span><span class="sep">·</span>
+    <span>Not an offer</span><span class="sep">·</span>
+    <span>Projections are hypothetical and not guarantees</span>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <div class="brandrow">
+      <div class="logo">IUL<span>_</span>COMPASS<b>&gt;</b></div>
+      <div class="subline">Indexed Universal Life — educational projection tool</div>
+    </div>
+    <p class="lede">Model how indexed universal life cash value and death benefit could evolve over time under simplified,
+    level assumptions. Adjust the inputs, review the assumptions table, and request a personalized follow-up.
+    Everything runs locally in your browser.</p>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+  <!-- ================= INPUTS ================= -->
+  <div class="stack">
+    <section class="panel">
+      <h2>// Your Profile</h2>
+      <div class="stack">
+        <label class="field">
+          <div class="lbl"><span class="name">Current age</span><span class="hint">18–80</span></div>
+          <input type="number" id="in-age" min="18" max="80" step="1" value="35">
+        </label>
+        <label class="field">
+          <div class="lbl"><span class="name">Annual household income</span><span class="hint">USD</span></div>
+          <input type="number" id="in-income" min="0" step="1000" value="85000">
+        </label>
+        <label class="field">
+          <div class="lbl"><span class="name">Annual premium</span><span class="hint">USD / yr</span></div>
+          <input type="number" id="in-premium" min="600" max="250000" step="100" value="6000">
+          <div class="note" id="prem-note"></div>
+        </label>
+        <label class="field">
+          <div class="lbl"><span class="name">Years to project</span><span class="hint">5–40</span></div>
+          <div class="rangeline">
+            <input type="range" id="in-years" min="5" max="40" step="1" value="20">
+            <output id="out-years">20</output>
+          </div>
+        </label>
+        <div class="field">
+          <div class="lbl"><span class="name">Risk posture</span></div>
+          <div class="seg" role="group" aria-label="Risk posture">
+            <button type="button" data-posture="conservative" id="pg-conservative">Conservative</button>
+            <button type="button" data-posture="balanced" id="pg-balanced" class="active">Balanced</button>
+            <button type="button" data-posture="growth" id="pg-growth">Growth</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>// Index Credit Assumptions</h2>
+      <div id="assumptions"></div>
+      <div class="assump-note">
+        Fixed admin fee $120/yr · cost-of-insurance = $0.20 + $0.02 per year over age 18,
+        per $1,000 of coverage · face amount = greater of 25&times; premium or $50,000 ·
+        credits applied once annually; fees deducted after crediting.
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= RESULTS ================= -->
+  <div class="stack">
+    <section class="panel">
+      <h2>// Projection Results</h2>
+
+      <div class="disclaim">
+        <strong>&#9888; Illustration only — not financial advice, not an offer</strong>
+        <p>All figures below are hypothetical illustrations generated from fixed, simplified assumptions.
+        They are <u>not guarantees</u> of future performance and do not represent any actual insurance product,
+        insurer quote, or contract. Index-based crediting in real policies varies by carrier, product, and market year.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card em"><div class="k">Projected cash value</div><div class="v" id="sum-cv">—</div></div>
+        <div class="card in"><div class="k">Death benefit</div><div class="v" id="sum-db">—</div></div>
+        <div class="card"><div class="k">Total premiums in</div><div class="v" id="sum-prem">—</div></div>
+        <div class="card"><div class="k">Net credited rate</div><div class="v" id="sum-rate">—</div></div>
+        <div class="card"><div class="k">Horizon</div><div class="v" id="sum-horizon" style="font-size:16px">—</div></div>
+      </div>
+
+      <div class="badge-lapse" id="lapse-badge"></div>
+
+      <div class="chartbox">
+        <div id="chart" role="img" aria-label="Line chart of projected cash value and death benefit over time"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--emerald)"></span>Cash value</span>
+          <span><span class="sw" style="background:var(--indigo)"></span>Death benefit</span>
+          <span style="margin-left:auto">illustration only · not a guarantee</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>// Annual Schedule</h2>
+      <div class="tbl-scroll">
+        <table id="sched">
+          <thead>
+            <tr><th>Yr</th><th>Age</th><th class="num">Premium</th><th class="num">Credit&nbsp;%</th>
+                <th class="num">Fees</th><th class="num">Cash value</th><th class="num">Death benefit</th></tr>
+          </thead>
+          <tbody id="sched-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="lead-panel">
+      <h2>// Request My Personalized Illustration</h2>
+      <form id="lead-form" novalidate>
+        <div class="lead-grid">
+          <label class="field full">
+            <div class="lbl"><span class="name">Full name</span></div>
+            <input type="text" id="lead-name" autocomplete="name" placeholder="Jordan Doe">
+          </label>
+          <label class="field">
+            <div class="lbl"><span class="name">Email</span></div>
+            <input type="email" id="lead-email" autocomplete="email" placeholder="you@example.com">
+          </label>
+          <label class="field">
+            <div class="lbl"><span class="name">Phone</span></div>
+            <input type="tel" id="lead-phone" autocomplete="tel" placeholder="(555) 010-1234">
+          </label>
+          <div class="full consent">
+            <input type="checkbox" id="lead-consent">
+            <label for="lead-consent">I agree to be contacted about life insurance options and understand this tool is an
+            illustration only — projections are hypothetical and not guarantees, and this is not financial advice or an offer.</label>
+          </div>
+          <div class="full"><button type="submit" class="primary" id="lead-submit">Send My Request &#8594;</button></div>
+        </div>
+        <div class="status" id="lead-status" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<!-- ================= SELFTEST ================= -->
+<section class="panel" id="selftest-panel">
+  <h2>// Selftest (?selftest=1)</h2>
+  <div class="st-sum" id="selftest-summary"></div>
+  <div id="selftest-list"></div>
+</section>
+
+<footer>
+  <div class="mono">Important disclosures</div>
+  <p>This tool is provided for educational and illustrative purposes only. It is <strong>not financial advice,
+  not tax or legal advice, and not an offer</strong> to sell or solicit any insurance product. All projections are
+  <strong>hypothetical, rely on fixed simplifying assumptions, and are not guarantees</strong> of future results.
+  Actual policy performance depends on insurer-specific charges, crediting methods, caps, participation rates,
+  loan provisions, market performance, and factors not modeled here. Indexed Universal Life policies are long-term
+  contracts and may lapse if insufficient premiums are paid; a lapse can have tax consequences. Consult a licensed
+  insurance professional before making any decision. This tool is unaffiliated with any insurer and stores data only
+  in your own browser (localStorage).</p>
+</footer>
+</div>
+
+<script>
+'use strict';
+/*__PURE_MATH_START__*/
+// ===== deterministic projection core (pure, no DOM) =====
+const ADMIN_FEE = 120;
+const FACE_MULT = 25, FACE_MIN = 50000;
+const COI_BASE = 0.20, COI_STEP = 0.02, COI_AGE0 = 18;
+
+const POSTURES = {
+  conservative: { key:'conservative', label:'Conservative', grossIndex:0.060, participation:0.55, cap:0.08, floor:0.0, drag:0.0100, premiumLoad:0.05 },
+  balanced:     { key:'balanced',     label:'Balanced',     grossIndex:0.075, participation:0.65, cap:0.10, floor:0.0, drag:0.0085, premiumLoad:0.04 },
+  growth:       { key:'growth',       label:'Growth',       grossIndex:0.090, participation:0.75, cap:0.12, floor:0.0, drag:0.0070, premiumLoad:0.03 }
+};
+
+function creditedRate(gross, part, cap, floor){
+  const raw = gross * part;
+  return Math.min(cap, Math.max(floor, raw));
+}
+function faceAmount(premium){
+  return Math.max(FACE_MULT * premium, FACE_MIN);
+}
+function coiPerUnit(age){ // $ per $1,000 of death benefit
+  return COI_BASE + COI_STEP * Math.max(0, age - COI_AGE0);
+}
+function project(inp){
+  const P = POSTURES[inp.posture];
+  const rate = creditedRate(P.grossIndex, P.participation, P.cap, P.floor);
+  const face = faceAmount(inp.premium);
+  const rows = [];
+  let cv = 0, cumNet = 0;
+  for(let y = 1; y <= inp.years; y++){
+    const age = inp.startAge + y - 1;
+    const net = inp.premium * (1 - P.premiumLoad);
+    cumNet += net;
+    cv = (cv + net) * (1 + rate);
+    const coi = (face / 1000) * coiPerUnit(age);
+    const drag = cv * P.drag;
+    const fee = ADMIN_FEE + coi + drag;
+    cv -= fee;
+    let lapsed = false;
+    if(cv <= 0){ cv = 0; lapsed = true; }
+    const db = Math.max(face, cv + cumNet);
+    rows.push({ year:y, age, premium:inp.premium, net, credit:rate, fee, cv, db, lapsed });
+  }
+  return { rows, creditRate:rate, face, totalPremium:inp.premium * inp.years };
+}
+/*__PURE_MATH_END__*/
+
+// ===== DOM helpers =====
+const $ = id => document.getElementById(id);
+const usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+const fmt$ = v => usd0.format(Math.round(v));
+const pct1 = v => (v*100).toFixed(v*100 % 1 === 0 ? 0 : (Math.round(v*1000)/10 % 1 === 0 ? 1 : 2)) + '%';
+
+function niceCeil(v){
+  if(v <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  for(const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]){ if(m*p >= v) return m*p; }
+  return 10*p;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ===== state =====
+const state = { posture:'balanced' };
+
+function readState(){
+  let age = parseInt($('in-age').value, 10); if(!Number.isFinite(age)) age = 35;
+  age = Math.min(80, Math.max(18, age));
+  let inc = parseFloat($('in-income').value); if(!Number.isFinite(inc) || inc < 0) inc = 0;
+  let prem = parseFloat($('in-premium').value); if(!Number.isFinite(prem)) prem = 6000;
+  prem = Math.min(250000, Math.max(600, prem));
+  let yrs = parseInt($('in-years').value, 10); if(!Number.isFinite(yrs)) yrs = 20;
+  yrs = Math.min(40, Math.max(5, yrs));
+  if(age + yrs > 94) yrs = Math.max(1, 94 - age);
+  $('out-years').textContent = String(yrs);
+  return { startAge:age, income:inc, premium:prem, years:yrs, posture:state.posture };
+}
+
+// ===== assumptions table =====
+function renderAssumptions(){
+  const keys = ['conservative','balanced','growth'];
+  const rowsSpec = [
+    ['Assumed index return', p => pct1(p.grossIndex)],
+    ['Participation rate',   p => pct1(p.participation)],
+    ['Cap rate',             p => pct1(p.cap)],
+    ['Floor rate',           p => pct1(p.floor)],
+    ['Policy drag (% of CV)',p => pct1(p.drag)],
+    ['Premium load',         p => pct1(p.premiumLoad)],
+    ['Net credited rate',    p => pct1(creditedRate(p.grossIndex,p.participation,p.cap,p.floor))]
+  ];
+  let h = '<table><thead><tr><th>Assumption</th>';
+  for(const k of keys){
+    h += '<th class="num'+(k===state.posture?' active':'')+'">'+POSTURES[k].label+'</th>';
+  }
+  h += '</tr></thead><tbody>';
+  for(const [name, fn] of rowsSpec){
+    h += '<tr><td>'+esc(name)+'</td>';
+    for(const k of keys){
+      h += '<td class="num'+(k===state.posture?' active':'')+'">'+fn(POSTURES[k])+'</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody></table>';
+  $('assumptions').innerHTML = h;
+}
+
+// ===== chart =====
+function buildChart(rows){
+  const W=760,H=330,L=72,R=92,T=16,B=38;
+  const n = rows.length;
+  if(n < 1) return '<svg width="'+W+'" height="'+H+'"></svg>';
+  const xmax = Math.max(1, n-1);
+  const ymax = niceCeil(Math.max.apply(null, rows.map(r => Math.max(r.db, r.cv))) * 1.04 || 1);
+  const X = i => L + (i/xmax)*(W-L-R);
+  const Y = v => T + (1 - v/ymax)*(H-T-B);
+
+  let s = '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="min-width:560px;display:block" xmlns="http://www.w3.org/2000/svg">';
+  s += '<defs><linearGradient id="gcv" x1="0" y1="0" x2="0" y2="1">'
+     + '<stop offset="0%" stop-color="#34d399" stop-opacity=".28"/>'
+     + '<stop offset="100%" stop-color="#34d399" stop-opacity="0"/></linearGradient></defs>';
+
+  // grid + y labels
+  for(let g=0; g<=4; g++){
+    const v = ymax*g/4, yy = Y(v);
+    s += '<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="rgba(148,163,184,.12)" stroke-width="1"/>';
+    s += '<text x="'+(L-8)+'" y="'+(yy+3)+'" text-anchor="end" fill="#5c6d87" font-family="ui-monospace,monospace" font-size="10">$'+compact(v)+'</text>';
+  }
+  // x labels
+  const step = Math.max(1, Math.ceil(n/8));
+  for(let i=0;i<n;i+=step){
+    s += '<text x="'+X(i)+'" y="'+(H-B+18)+'" text-anchor="middle" fill="#5c6d87" font-family="ui-monospace,monospace" font-size="10">Y'+rows[i].year+'</text>';
+  }
+  s += '<text x="'+(L+(W-L-R)/2)+'" y="'+(H-6)+'" text-anchor="middle" fill="#8496af" font-family="ui-monospace,monospace" font-size="10">POLICY YEAR</text>';
+
+  // cv area + lines
+  let dArea='M '+X(0)+' '+Y(rows[0].cv);
+  let dCv='', dDb='';
+  rows.forEach((r,i)=>{ const px=X(i), py=Y(r.cv), qy=Y(r.db);
+    if(i===0){ dCv+='M '+px+' '+py; dDb+='M '+px+' '+qy; }
+    else { dCv+=' L '+px+' '+py; dDb+=' L '+px+' '+qy; }
+  });
+  dArea += ' L '+X(n-1)+' '+Y(rows[n-1].cv)+' L '+X(n-1)+' '+(H-B)+' L '+X(0)+' '+(H-B)+' Z';
+  s += '<path d="'+dArea+'" fill="url(#gcv)" stroke="none"/>';
+  s += '<path d="'+dDb+'" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-linejoin="round"/>';
+  s += '<path d="'+dCv+'" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linejoin="round"/>';
+
+  // lapse markers
+  rows.forEach((r,i)=>{
+    if(r.lapsed) s += '<circle cx="'+X(i)+'" cy="'+Y(0)+'" r="3.5" fill="#f87171"/>';
+  });
+
+  // endpoint dots + labels
+  const last = rows[n-1];
+  s += '<circle cx="'+X(n-1)+'" cy="'+Y(last.cv)+'" r="4" fill="#34d399"><title>Cash value year '+last.year+': '+fmt$(last.cv)+'</title></circle>';
+  s += '<circle cx="'+X(n-1)+'" cy="'+Y(last.db)+'" r="4" fill="#818cf8"><title>Death benefit year '+last.year+': '+fmt$(last.db)+'</title></circle>';
+  s += '<text x="'+(X(n-1)+10)+'" y="'+(Y(last.cv)+4)+'" fill="#34d399" font-family="ui-monospace,monospace" font-size="11" font-weight="700">CV '+compact(last.cv)+'</text>';
+  s += '<text x="'+(X(n-1)+10)+'" y="'+(Y(last.db)+4)+'" fill="#818cf8" font-family="ui-monospace,monospace" font-size="11" font-weight="700">DB '+compact(last.db)+'</text>';
+
+  s += '</svg>';
+  return s;
+
+  function compact(v){
+    if(v >= 1e6) return (v/1e6).toFixed(v>=1e7?0:1)+'M';
+    if(v >= 1e3) return Math.round(v/1e3)+'k';
+    return String(Math.round(v));
+  }
+}
+
+// ===== render =====
+function render(){
+  const st = readState();
+  const proj = project(st);
+  const rows = proj.rows, last = rows[rows.length-1];
+
+  $('sum-cv').textContent = fmt$(last.cv);
+  $('sum-db').textContent = fmt$(last.db);
+  $('sum-prem').textContent = fmt$(proj.totalPremium);
+  $('sum-rate').textContent = pct1(proj.creditRate);
+  $('sum-horizon').textContent = 'AGE ' + last.age + ' · YR ' + last.year;
+
+  const lapseYears = rows.filter(r => r.lapsed).map(r => r.year);
+  const badge = $('lapse-badge');
+  if(lapseYears.length){
+    badge.classList.add('show');
+    badge.textContent = '&#9888; Modeled charges exceed value in year(s) ' + lapseYears.join(', ') +
+      ' — under these assumptions the policy could lapse. Illustration only, not a guarantee.';
+    badge.textContent = '\u26A0 Modeled charges exceed value in year(s) ' + lapseYears.join(', ') +
+      ' — under these assumptions the policy could lapse. Illustration only, not a guarantee.';
+  } else {
+    badge.classList.remove('show');
+  }
+
+  $('chart').innerHTML = buildChart(rows);
+
+  let tb = '';
+  rows.forEach(r=>{
+    tb += '<tr'+(r.lapsed?' class="lapsed-row"':'')+'><td class="num">'+r.year+'</td>'
+        + '<td class="num">'+r.age+'</td>'
+        + '<td class="num">'+fmt$(r.premium)+'</td>'
+        + '<td class="num">'+pct1(r.credit)+'</td>'
+        + '<td class="num">'+fmt$(r.fee)+'</td>'
+        + '<td class="num'+(r.lapsed?' lapsed':'')+'">'+fmt$(r.cv)+(r.lapsed?' ⚠':'')+'</td>'
+        + '<td class="num">'+fmt$(r.db)+'</td></tr>';
+  });
+  $('sched-body').innerHTML = tb;
+
+  const ratio = st.income > 0 ? (st.premium/st.income) : 0;
+  const pn = $('prem-note');
+  pn.textContent = '≈ ' + pct1(ratio) + ' of stated income' + (ratio > 0.25 ? ' — above common 25% suitability guideline' : '');
+  pn.className = 'note' + (ratio > 0.25 ? ' warn' : '');
+
+  renderAssumptions();
+  saveDraft(st);
+}
+
+// ===== draft persistence =====
+const DRAFT_KEY = 'iulc_draft_v1';
+function saveDraft(st){
+  try{
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      age:$('in-age').value, income:$('in-income').value, premium:$('in-premium').value,
+      years:$('in-years').value, posture:state.posture,
+      lead:{ name:$('lead-name').value, email:$('lead-email').value, phone:$('lead-phone').value }
+    }));
+  }catch(e){}
+}
+function loadDraft(){
+  try{
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if(!d) return;
+    if(d.age != null) $('in-age').value = d.age;
+    if(d.income != null) $('in-income').value = d.income;
+    if(d.premium != null) $('in-premium').value = d.premium;
+    if(d.years != null) $('in-years').value = d.years;
+    if(d.posture && POSTURES[d.posture]){ state.posture = d.posture; }
+    if(d.lead){
+      if(d.lead.name) $('lead-name').value = d.lead.name;
+      if(d.lead.email) $('lead-email').value = d.lead.email;
+      if(d.lead.phone) $('lead-phone').value = d.lead.phone;
+    }
+  }catch(e){}
+}
+
+// ===== lead capture (stubbed transport — zero network by design) =====
+const WEBHOOK_URL = '/api/lead';
+const ALLOW_NETWORK = true; // wired to dustinlife.com/api/lead (server-side GHL + Convex relay)
+
+function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function isValidPhone(p){ return /^[\d\s()+.\-]{7,}$/.test(p.trim()); }
+
+async function deliverLead(payload){
+  const isPlaceholder = /example\.com|REPLACE/i.test(WEBHOOK_URL);
+  if(!ALLOW_NETWORK || isPlaceholder){
+    // STUBBED transport: simulate latency + success, queue locally. No network call is made.
+    await new Promise(res => setTimeout(res, 550));
+    try{
+      const box = JSON.parse(localStorage.getItem('iulc_outbox_v1') || '[]');
+      box.push({ queuedAt:new Date().toISOString(), payload });
+      localStorage.setItem('iulc_outbox_v1', JSON.stringify(box));
+    }catch(e){}
+    return { ok:true, mocked:true };
+  }
+  // Real transport (only reachable if owner sets ALLOW_NETWORK=true AND replaces URL):
+  try{
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    const res = await fetch(WEBHOOK_URL, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload), signal: ctrl.signal
+    });
+    clearTimeout(t);
+    return { ok: res.ok };
+  }catch(err){
+    return { ok:false, error:String(err) };
+  }
+}
+
+function bindLeadForm(){
+  $('lead-form').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const name = $('lead-name').value.trim();
+    const email = $('lead-email').value.trim();
+    const phone = $('lead-phone').value.trim();
+    const consent = $('lead-consent').checked;
+    const statusEl = $('lead-status');
+    const problems = [];
+    if(name.length < 2) problems.push('name');
+    if(!isValidEmail(email)) problems.push('email');
+    if(phone && !isValidPhone(phone)) problems.push('phone');
+    if(!consent) problems.push('consent');
+    if(problems.length){
+      statusEl.className = 'status err';
+      statusEl.textContent = '✗ Please fix: ' + problems.join(', ');
+      return;
+    }
+    const btn = $('lead-submit');
+    btn.disabled = true;
+    statusEl.className = 'status busy';
+    statusEl.textContent = 'Sending…';
+    const st = readState();
+    const payload = {
+      tool:'iul-compass', submittedAt:new Date().toISOString(),
+      profile:{ age:st.startAge, income:st.income, premium:st.premium, years:st.years, posture:st.posture },
+      lead:{ name, email, phone, consent }
+    };
+    const res = await deliverLead(payload);
+    btn.disabled = false;
+    if(res.ok){
+      statusEl.className = 'status ok';
+      statusEl.textContent = res.mocked
+        ? '✓ Request captured (demo mode — stored locally, no network call made).'
+        : '✓ Request sent. A licensed agent will follow up.';
+    }else{
+      statusEl.className = 'status err';
+      statusEl.textContent = '⚠ Send failed — your draft is saved locally and can be resubmitted later.';
+    }
+  });
+  ['lead-name','lead-email','lead-phone'].forEach(id =>
+    $(id).addEventListener('input', () => saveDraft(readState())));
+}
+
+// ===== selftest =====
+function runSelftest(){
+  const approx = (a,b,e) => Math.abs(a-b) <= (e||0.01);
+  const T = [];
+  const t = (name, fn) => { try{ T.push({ name, pass: !!fn() }); }catch(e){ T.push({ name, pass:false }); } };
+
+  t('net credited rate (balanced) = 4.875%',
+    () => approx(creditedRate(POSTURES.balanced.grossIndex,POSTURES.balanced.participation,POSTURES.balanced.cap,POSTURES.balanced.floor), 0.04875, 1e-12));
+  t('cap binds: 20% index, 100% part, 12% cap -> 12%',
+    () => creditedRate(0.20, 1.0, 0.12, 0) === 0.12);
+  t('floor binds: -5% index -> 0%',
+    () => creditedRate(-0.05, 0.55, 0.08, 0) === 0);
+  t('face = 25x premium (6000 -> 150,000)',
+    () => faceAmount(6000) === 150000);
+  t('face floor ($1,500 prem -> 50,000)',
+    () => faceAmount(1500) === 50000);
+  t('year-1 cash value (bal, age 35, $6k) = $5,788.45',
+    () => { const p = project({startAge:35,premium:6000,years:1,posture:'balanced'}); return approx(p.rows[0].cv, 5788.45); });
+  t('year-1 death benefit = face amount',
+    () => project({startAge:35,premium:6000,years:1,posture:'balanced'}).rows[0].db === 150000);
+  t('growth CV(year 10) > conservative CV(year 10)',
+    () => { const g = project({startAge:35,premium:6000,years:10,posture:'growth'});
+            const c = project({startAge:35,premium:6000,years:10,posture:'conservative'});
+            return g.rows[9].cv > c.rows[9].cv; });
+  t('underfunded policy (age 70, $100/yr) lapses',
+    () => project({startAge:70,premium:100,years:5,posture:'conservative'}).rows[0].lapsed === true);
+  t('invariant: DB >= CV and CV >= 0 across 20-yr run',
+    () => { const p = project({startAge:35,premium:6000,years:20,posture:'balanced'});
+            return p.rows.every(r => r.db >= r.cv && r.cv >= 0); });
+
+  const passed = T.filter(x => x.pass).length;
+  const allOk = passed === T.length;
+  let html = '<div class="st-item ' + (allOk ? 'st-pass':'st-fail') + '">SUMMARY: '
+    + passed + '/' + T.length + ' passed — ' + (allOk ? 'ALL PASS' : 'FAILURES PRESENT') + '</div>';
+  T.forEach(x => {
+    html += '<div class="st-item ' + (x.pass?'st-pass':'st-fail') + '">[' + (x.pass?'PASS':'FAIL') + '] ' + esc(x.name) + '</div>';
+  });
+  $('selftest-summary').textContent = '';
+  $('selftest-summary').innerHTML = html.split('</div>')[0] + '</div>';
+  $('selftest-list').innerHTML = html.substring(html.indexOf('</div>')+6);
+  console.log('[IUL Compass] selftest:', passed + '/' + T.length, allOk ? 'ALL PASS' : 'FAIL');
+  window.__IUL_SELFTEST_RESULTS = T;
+}
+
+// ===== boot =====
+document.addEventListener('DOMContentLoaded', () => {
+  loadDraft();
+  document.querySelectorAll('.seg button').forEach(b => {
+    if(b.dataset.posture === state.posture){ document.querySelectorAll('.seg button').forEach(x => x.classList.remove('active')); b.classList.add('active'); }
+  });
+  document.querySelectorAll('.seg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      state.posture = b.dataset.posture;
+      render();
+    });
+  });
+  ['in-age','in-income','in-premium','in-years'].forEach(id =>
+    $(id).addEventListener('input', render));
+  bindLeadForm();
+  render();
+
+  const params = new URLSearchParams(location.search);
+  if(params.get('selftest') === '1'){
+    $('selftest-panel').classList.add('show');
+    $('selftest-panel').scrollIntoView({ behavior:'smooth', block:'start' });
+    runSelftest();
+  }
+});
+</script>
+</body>
+</html>
