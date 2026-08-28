@@ -82,7 +82,7 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
             <Link href="/" data-active={current === "home"}>Home</Link>
             <Link href="/final-expense" data-active={current === "final-expense"}>Final Expense</Link>
             <Link href="/indexed-universal-life" data-active={current === "iul"}>Indexed Universal Life</Link>
-            <Link href="/iul-compass/">IUL Compass</Link>
+            <a href="/iul-compass/">IUL Compass</a>
             <Link href="/faq" data-active={current === "faq"}>FAQ</Link>
           </nav>
 

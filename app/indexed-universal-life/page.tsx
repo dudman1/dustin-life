@@ -61,7 +61,7 @@ function SiteHeader() {
             <Link href="/">Home</Link>
             <Link href="/final-expense">Final Expense</Link>
             <Link href="/indexed-universal-life" data-active="true">Indexed Universal Life</Link>
-            <Link href="/iul-compass/">IUL Compass</Link>
+            <a href="/iul-compass/">IUL Compass</a>
             <Link href="/faq">FAQ</Link>
           </nav>
 
@@ -221,7 +221,7 @@ export default function IndexedUniversalLifePage() {
                   request a personalized illustration. Everything runs locally in your browser.
                 </p>
                 <div className={styles.heroActions}>
-                  <Link className={styles.primaryLink} href="/iul-compass/">Open IUL Compass</Link>
+                  <a className={styles.primaryLink} href="/iul-compass/">Open IUL Compass</a>
                   <Link className={styles.outlineLink} href="/#assessment">Get My Free Assessment</Link>
                 </div>
               </div>

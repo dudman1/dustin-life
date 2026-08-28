@@ -298,7 +298,7 @@ export default function FinalExpenseClient() {
               <Link href="/" className="nav-link">Home</Link>
               <Link href="/final-expense" className="nav-link active">Final Expense</Link>
               <Link href="/indexed-universal-life" className="nav-link">Indexed Universal Life</Link>
-              <Link href="/iul-compass/" className="nav-link">IUL Compass</Link>
+              <a href="/iul-compass/" className="nav-link">IUL Compass</a>
               <Link href="/faq" className="nav-link">FAQ</Link>
             </div>
             <div className="nav-icons">

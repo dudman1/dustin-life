@@ -100,7 +100,7 @@ function SiteHeader() {
             <Link href="/">Home</Link>
             <Link href="/final-expense">Final Expense</Link>
             <Link href="/indexed-universal-life">Indexed Universal Life</Link>
-            <Link href="/iul-compass/">IUL Compass</Link>
+            <a href="/iul-compass/">IUL Compass</a>
             <Link href="/faq" data-active="true">FAQ</Link>
           </nav>
 
