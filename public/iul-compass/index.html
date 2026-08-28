@@ -4,174 +4,192 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IUL Compass — Indexed Universal Life Illustration Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0a0f1d; --bg2:#0d1425; --panel:#111b31; --panel2:#0f1729;
-    --line:rgba(148,163,184,.16); --line2:rgba(148,163,184,.09);
-    --txt:#dbe4f3; --mut:#8496af; --dim:#5c6d87;
+    --bg:#f6f1e8; --bg2:#f1e9dc; --panel:#ffffff; --panel2:#faf6f0;
+    --line:#e6dccf; --line2:rgba(230,220,207,.65);
+    --txt:#1d1b18; --mut:#6e675c; --dim:#a39a8c;
+    --gold:#b9965b; --gold-d:#8f6d34; --gold-bg:#f5ede2;
     --indigo:#818cf8; --indigo-d:#6366f1; --emerald:#34d399; --emerald-d:#10b981;
-    --danger:#f87171;
+    --danger:#c0392b;
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Playfair Display",Georgia,"Times New Roman",serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     background:
-      radial-gradient(1100px 500px at 85% -10%, rgba(99,102,241,.13), transparent 60%),
-      radial-gradient(900px 420px at 0% 110%, rgba(16,185,129,.08), transparent 55%),
+      radial-gradient(1100px 500px at 85% -10%, rgba(185,150,91,.10), transparent 60%),
+      radial-gradient(900px 420px at 0% 110%, rgba(185,150,91,.06), transparent 55%),
       var(--bg);
     color:var(--txt); font-family:var(--sans); font-size:15px; line-height:1.55;
     min-height:100vh;
   }
-  ::selection{background:rgba(99,102,241,.35)}
+  ::selection{background:rgba(185,150,91,.28)}
   .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 
   /* ---------- ribbon ---------- */
   .ribbon{
     border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg, rgba(99,102,241,.14), rgba(99,102,241,.05));
+    background:linear-gradient(180deg, rgba(185,150,91,.12), rgba(185,150,91,.04));
   }
   .ribbon-inner{
     display:flex;align-items:center;gap:10px;flex-wrap:wrap;
     padding:10px 0;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
-    text-transform:uppercase;color:#c3cdf5;
+    text-transform:uppercase;color:var(--gold-d);
   }
-  .ribbon-inner .tag{color:var(--emerald)}
+  .ribbon-inner .tag{color:var(--gold)}
   .ribbon-inner .sep{color:var(--dim)}
 
   /* ---------- header ---------- */
   header{padding:26px 0 18px;border-bottom:1px solid var(--line2)}
   .brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .logo{
-    font-family:var(--mono);font-weight:700;font-size:24px;letter-spacing:.04em;color:#fff;
+  .brandmark{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--txt)}
+  .brandmark img{
+    width:56px;height:56px;object-fit:cover;border-radius:12px;
+    border:1px solid rgba(185,150,91,.28);background:#fff;
   }
-  .logo b{color:var(--emerald);font-weight:700}
-  .logo span{color:var(--indigo)}
-  .subline{font-family:var(--mono);font-size:11.5px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
-  header p.lede{margin-top:10px;color:var(--mut);max-width:70ch}
+  .brandtext{display:flex;flex-direction:column;gap:2px}
+  .logo{
+    font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:-.01em;
+    color:var(--txt);line-height:1.05;
+  }
+  .subline{font-family:var(--mono);font-size:11px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase}
+  header p.lede{margin-top:14px;color:var(--mut);max-width:72ch}
 
   /* ---------- layout ---------- */
   main{display:grid;grid-template-columns:370px 1fr;gap:22px;padding:24px 0 40px}
   @media(max-width:940px){main{grid-template-columns:1fr}}
   .panel{
-    background:linear-gradient(180deg,var(--panel),var(--panel2));
-    border:1px solid var(--line);border-radius:8px;padding:18px;
+    background:var(--panel);
+    border:1px solid var(--line);border-radius:18px;padding:20px;
+    box-shadow:0 14px 34px rgba(38,29,16,.06);
   }
   .panel h2{
-    font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;
-    letter-spacing:.14em;color:var(--indigo);margin-bottom:14px;
+    font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.16em;color:var(--gold-d);margin-bottom:16px;
   }
-  .stack>*+*{margin-top:14px}
+  .stack>*+*{margin-top:16px}
 
   /* ---------- inputs ---------- */
   label.field{display:block}
   label.field .lbl{
     display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
   }
-  label.field .lbl span.name{font-size:13px;color:var(--txt);font-weight:600}
+  label.field .lbl span.name{font-size:13.5px;color:var(--txt);font-weight:700}
   label.field .lbl span.hint{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
   input[type=number],input[type=text],input[type=email],input[type=tel]{
-    width:100%;background:#0b1322;border:1px solid var(--line);border-radius:5px;
-    color:var(--txt);padding:9px 11px;font-family:var(--mono);font-size:14px;outline:none;
+    width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;
+    color:var(--txt);padding:10px 12px;font-family:var(--mono);font-size:14px;outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
   }
-  input:focus{border-color:var(--indigo-d);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
-  input[type=range]{width:100%;accent-color:var(--emerald-d);height:28px;background:transparent}
+  input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(185,150,91,.18)}
+  input[type=range]{width:100%;accent-color:var(--gold);height:28px;background:transparent}
   .rangeline{display:flex;align-items:center;gap:12px}
   .rangeline output{
-    font-family:var(--mono);font-size:14px;color:var(--emerald);min-width:52px;text-align:right;
+    font-family:var(--mono);font-size:14px;color:var(--gold-d);min-width:52px;text-align:right;
   }
   .note{font-family:var(--mono);font-size:10.5px;color:var(--mut);margin-top:6px}
-  .note.warn{color:var(--indigo)}
+  .note.warn{color:#a16207}
 
   /* posture segmented */
   .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
   .seg button{
-    background:#0b1322;border:1px solid var(--line);border-radius:5px;color:var(--mut);
+    background:#fff;border:1px solid var(--line);border-radius:10px;color:var(--mut);
     font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
-    padding:9px 4px;cursor:pointer;transition:all .15s ease;
+    padding:10px 4px;cursor:pointer;transition:all .15s ease;
   }
-  .seg button:hover{color:var(--txt);border-color:var(--indigo-d)}
+  .seg button:hover{color:var(--txt);border-color:var(--gold)}
   .seg button.active{
-    background:linear-gradient(180deg,rgba(52,211,153,.16),rgba(52,211,153,.06));
-    border-color:var(--emerald-d);color:var(--emerald);
+    background:var(--gold-bg);
+    border-color:var(--gold);color:var(--gold-d);font-weight:700;
   }
 
   /* ---------- tables ---------- */
   table{width:100%;border-collapse:collapse;font-size:12.5px}
-  th,td{padding:7px 8px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap}
   th:first-child,td:first-child{text-align:left}
   thead th{
     font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;
     color:var(--mut);border-bottom:1px solid var(--line);
   }
   td.num,th.num{font-family:var(--mono)}
-  tbody tr:hover{background:rgba(129,140,248,.05)}
-  th.active{color:var(--emerald);box-shadow:inset 0 -2px 0 var(--emerald-d)}
-  td.active{color:var(--txt);background:rgba(52,211,153,.06)}
+  tbody tr:hover{background:rgba(185,150,91,.06)}
+  th.active{color:var(--gold-d);box-shadow:inset 0 -2px 0 var(--gold)}
+  td.active{color:var(--txt);background:rgba(185,150,91,.10)}
   td.lapsed{color:var(--danger)}
-  .tbl-scroll{overflow:auto;max-height:320px;border:1px solid var(--line2);border-radius:6px}
+  .tbl-scroll{overflow:auto;max-height:320px;border:1px solid var(--line);border-radius:12px;background:#fff}
   .tbl-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
   .assump-note{
-    margin-top:10px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.7;
+    margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.75;
   }
 
   /* ---------- results ---------- */
   .disclaim{
-    border:1px solid rgba(99,102,241,.45);border-left:4px solid var(--indigo-d);
-    background:rgba(99,102,241,.08);border-radius:6px;padding:12px 14px;margin-bottom:16px;
+    border:1px solid rgba(185,150,91,.4);border-left:4px solid var(--gold);
+    background:rgba(185,150,91,.09);border-radius:12px;padding:14px 16px;margin-bottom:18px;
   }
-  .disclaim strong{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#c3cdf5;display:block;margin-bottom:4px}
+  .disclaim strong{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-d);display:block;margin-bottom:4px}
   .disclaim p{font-size:12.5px;color:var(--mut)}
 
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
   .card{
-    border:1px solid var(--line);border-radius:7px;padding:12px 14px;background:#0c1526;
+    border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--panel2);
   }
   .card .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
-  .card .v{font-family:var(--mono);font-size:21px;font-weight:700;margin-top:4px;color:#fff}
-  .card.em .v{color:var(--emerald)}
-  .card.in .v{color:var(--indigo)}
+  .card .v{font-family:var(--serif);font-size:22px;font-weight:700;margin-top:4px;color:var(--txt)}
+  .card.em .v{color:var(--gold-d)}
+  .card.in .v{color:#1d1b18}
 
   .badge-lapse{
-    display:none;border:1px solid rgba(248,113,113,.5);background:rgba(248,113,113,.08);
-    color:#fca5a5;border-radius:6px;padding:9px 12px;font-size:12.5px;margin-bottom:16px;
+    display:none;border:1px solid rgba(192,57,43,.4);background:rgba(192,57,43,.07);
+    color:#b03a2e;border-radius:10px;padding:10px 14px;font-size:12.5px;margin-bottom:18px;
   }
   .badge-lapse.show{display:block}
 
-  .chartbox{border:1px solid var(--line2);border-radius:7px;padding:10px;background:#0b1324;overflow-x:auto}
+  .chartbox{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff;overflow-x:auto}
   .legend{display:flex;gap:18px;flex-wrap:wrap;padding:8px 6px 2px;font-family:var(--mono);font-size:11px;color:var(--mut)}
   .legend .sw{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
 
   /* ---------- lead form ---------- */
   .lead-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .lead-grid .full{grid-column:1/-1}
-  .consent{display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--mut)}
-  .consent input{margin-top:3px;accent-color:var(--emerald-d)}
+  .consent{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--mut)}
+  .consent input{margin-top:3px;accent-color:var(--gold)}
   button.primary{
-    width:100%;cursor:pointer;border:none;border-radius:6px;padding:13px;
-    background:linear-gradient(135deg,var(--emerald-d),#0ea371);
-    color:#04120c;font-family:var(--mono);font-weight:700;font-size:13px;
-    letter-spacing:.08em;text-transform:uppercase;transition:filter .15s ease;
+    width:100%;cursor:pointer;border:none;border-radius:999px;padding:14px;
+    background:var(--gold);
+    color:#fff;font-weight:800;font-size:13px;
+    letter-spacing:.06em;text-transform:uppercase;transition:filter .15s ease, transform .15s ease;
   }
-  button.primary:hover{filter:brightness(1.12)}
+  button.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
   button.primary:disabled{opacity:.55;cursor:wait}
   .status{font-family:var(--mono);font-size:12px;margin-top:10px;min-height:18px}
-  .status.ok{color:var(--emerald)} .status.err{color:var(--danger)} .status.busy{color:var(--indigo)}
+  .status.ok{color:var(--emerald-d)} .status.err{color:var(--danger)} .status.busy{color:var(--gold-d)}
 
   /* ---------- selftest ---------- */
   #selftest-panel{display:none;margin-top:26px}
   #selftest-panel.show{display:block}
-  #selftest-panel h2{color:var(--emerald)}
+  #selftest-panel h2{color:var(--gold-d)}
   .st-item{font-family:var(--mono);font-size:12.5px;padding:6px 10px;border-bottom:1px solid var(--line2)}
-  .st-pass{color:var(--emerald)} .st-fail{color:var(--danger)}
-  .st-sum{font-family:var(--mono);font-size:13px;padding:10px;color:#fff}
+  .st-pass{color:var(--emerald-d)} .st-fail{color:var(--danger)}
+  .st-sum{font-family:var(--mono);font-size:13px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--txt)}
 
   footer{
-    border-top:1px solid var(--line2);padding:22px 0 42px;color:var(--dim);
+    border-top:1px solid var(--line);padding:22px 0 42px;color:var(--mut);
     font-size:11.5px;line-height:1.75;
   }
-  footer .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+  footer .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-d);margin-bottom:8px}
+  .backlink{
+    display:inline-block;margin-bottom:14px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--gold-d);
+    text-decoration:none;font-weight:700;
+  }
+  .backlink:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -188,8 +206,13 @@
 <header>
   <div class="wrap">
     <div class="brandrow">
-      <div class="logo">IUL<span>_</span>COMPASS<b>&gt;</b></div>
-      <div class="subline">Indexed Universal Life — educational projection tool</div>
+      <a class="brandmark" href="https://dustinlife.com/">
+        <img src="/dm-monogram.jpg" alt="Dustin McCormick - DM">
+        <span class="brandtext">
+          <span class="logo">IUL Compass</span>
+          <span class="subline">Indexed Universal Life — educational projection tool</span>
+        </span>
+      </a>
     </div>
     <p class="lede">Model how indexed universal life cash value and death benefit could evolve over time under simplified,
     level assumptions. Adjust the inputs, review the assumptions table, and request a personalized follow-up.
@@ -328,6 +351,7 @@
 </section>
 
 <footer>
+  <a class="backlink" href="https://dustinlife.com/">← Back to dustinlife.com</a>
   <div class="mono">Important disclosures</div>
   <p>This tool is provided for educational and illustrative purposes only. It is <strong>not financial advice,
   not tax or legal advice, and not an offer</strong> to sell or solicit any insurance product. All projections are

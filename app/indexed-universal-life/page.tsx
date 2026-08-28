@@ -61,6 +61,7 @@ function SiteHeader() {
             <Link href="/">Home</Link>
             <Link href="/final-expense">Final Expense</Link>
             <Link href="/indexed-universal-life" data-active="true">Indexed Universal Life</Link>
+            <Link href="/iul-compass/">IUL Compass</Link>
             <Link href="/faq">FAQ</Link>
           </nav>
 
@@ -208,6 +209,22 @@ export default function IndexedUniversalLifePage() {
                   <li>A practical path forward if another option fits better</li>
                 </ul>
               </aside>
+            </div>
+          </section>
+          <section className={styles.section}>
+            <div className={styles.centerCard}>
+              <div className={styles.centerCardInner}>
+                <div className={styles.eyebrow}>Free calculator</div>
+                <h3 className={styles.intentionalTitle}>See your own numbers with the <span className={styles.intentionalAccent}>IUL Compass</span></h3>
+                <p className={styles.cardText}>
+                  Model how IUL cash value and death benefit could evolve under simplified, level assumptions — then
+                  request a personalized illustration. Everything runs locally in your browser.
+                </p>
+                <div className={styles.heroActions}>
+                  <Link className={styles.primaryLink} href="/iul-compass/">Open IUL Compass</Link>
+                  <Link className={styles.outlineLink} href="/#assessment">Get My Free Assessment</Link>
+                </div>
+              </div>
             </div>
           </section>
         </div>
