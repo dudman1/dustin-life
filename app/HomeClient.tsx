@@ -146,12 +146,17 @@ export default function HomeClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [checkboxError, setCheckboxError] = useState({ sms: false, terms: false });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setCheckboxError({ sms: false, terms: false });
 
-    if (!formState.smsConsent || !formState.termsConsent) {
+    let valid = true;
+    if (!formState.smsConsent) { setCheckboxError((p) => ({ ...p, sms: true })); valid = false; }
+    if (!formState.termsConsent) { setCheckboxError((p) => ({ ...p, terms: true })); valid = false; }
+    if (!valid) {
       setError("Please accept both consent checkboxes to continue.");
       return;
     }
@@ -315,23 +320,23 @@ export default function HomeClient() {
                 <p className={styles.sectionIntro}>Takes 60 seconds. No spam. Ever.</p>
 
                 {!submitted ? (
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={handleSubmit} noValidate>
                     <div className={styles.formGrid}>
                       <div>
-                        <label className={styles.label}>Full Name</label>
-                        <input className={styles.input} type="text" required value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} placeholder="John Smith" />
+                        <label className={styles.label} htmlFor="form-name">Full Name</label>
+                        <input id="form-name" name="name" className={styles.input} type="text" required autoComplete="name" value={formState.name} onChange={(e) => setFormState({ ...formState, name: e.target.value })} placeholder="Your full name" />
                       </div>
                       <div>
-                        <label className={styles.label}>Email Address</label>
-                        <input className={styles.input} type="email" required value={formState.email} onChange={(e) => setFormState({ ...formState, email: e.target.value })} placeholder="john@example.com" />
+                        <label className={styles.label} htmlFor="form-email">Email Address</label>
+                        <input id="form-email" name="email" className={styles.input} type="email" required autoComplete="email" inputMode="email" value={formState.email} onChange={(e) => setFormState({ ...formState, email: e.target.value })} placeholder="you@email.com" />
                       </div>
                       <div>
-                        <label className={styles.label}>Phone Number</label>
-                        <input className={styles.input} type="tel" required value={formState.phone} onChange={(e) => setFormState({ ...formState, phone: e.target.value })} placeholder="(248) 555-0100" />
+                        <label className={styles.label} htmlFor="form-phone">Phone Number</label>
+                        <input id="form-phone" name="phone" className={styles.input} type="tel" required autoComplete="tel" inputMode="tel" value={formState.phone} onChange={(e) => setFormState({ ...formState, phone: e.target.value })} placeholder="Best number to reach you" />
                       </div>
                       <div>
-                        <label className={styles.label}>State</label>
-                        <select className={styles.select} required value={formState.state} onChange={(e) => setFormState({ ...formState, state: e.target.value })}>
+                        <label className={styles.label} htmlFor="form-state">State</label>
+                        <select id="form-state" name="state" className={styles.select} required autoComplete="address-level1" value={formState.state} onChange={(e) => setFormState({ ...formState, state: e.target.value })}>
                           <option value="" disabled>Select your state</option>
                           {STATES.map((state) => (
                             <option key={state} value={state}>{state}</option>
@@ -341,14 +346,16 @@ export default function HomeClient() {
                     </div>
 
                     <label className={styles.checkboxRow}>
-                      <input className={styles.checkbox} type="checkbox" checked={formState.smsConsent} onChange={(e) => setFormState({ ...formState, smsConsent: e.target.checked })} />
+                      <input id="form-sms-consent" name="smsConsent" className={styles.checkbox} type="checkbox" required checked={formState.smsConsent} onChange={(e) => { setFormState({ ...formState, smsConsent: e.target.checked }); if (e.target.checked) setCheckboxError((p) => ({ ...p, sms: false })); }} />
                       <span className={styles.smallNote}>I agree to receive text messages from Dustin McCormick at the phone number provided, including insurance quotes, appointment reminders, and follow-up communications related to my inquiry. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for assistance at any time. Consent is not a condition of purchase.</span>
                     </label>
+                    {checkboxError.sms ? <p className={styles.fieldError} role="alert">You must accept SMS consent to continue.</p> : null}
 
                     <label className={styles.checkboxRow}>
-                      <input className={styles.checkbox} type="checkbox" checked={formState.termsConsent} onChange={(e) => setFormState({ ...formState, termsConsent: e.target.checked })} />
+                      <input id="form-terms-consent" name="termsConsent" className={styles.checkbox} type="checkbox" required checked={formState.termsConsent} onChange={(e) => { setFormState({ ...formState, termsConsent: e.target.checked }); if (e.target.checked) setCheckboxError((p) => ({ ...p, terms: false })); }} />
                       <span className={styles.smallNote}>I have reviewed and accept Dustin McCormick&apos;s <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms and Conditions</Link>.</span>
                     </label>
+                    {checkboxError.terms ? <p className={styles.fieldError} role="alert">You must accept the terms to continue.</p> : null}
 
                     {error ? <p className={styles.error}>{error}</p> : null}
 
