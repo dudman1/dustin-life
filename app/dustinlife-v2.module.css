@@ -101,10 +101,19 @@
   transition: 0.2s ease;
 }
 
-.navMain a:hover,
-.navMain a[data-active="true"] {
-  background: #b9965b;
+.navMain a:focus-visible {
+  outline: 3px solid #8F6D34;
+  outline-offset: 2px;
+}
+
+.navMain a:hover {
+  background: #8F6D34;
   color: #fff;
+}
+
+.navMain a[data-active="true"] {
+  background: #EFE3CC;
+  color: #1D1B18;
 }
 
 .navRight {
@@ -162,9 +171,15 @@
 }
 
 .primaryLink {
-  background: #b9965b;
+  background: #8F6D34;
   color: #fff;
-  box-shadow: 0 14px 30px rgba(185, 150, 91, 0.18);
+  box-shadow: 0 14px 30px rgba(143, 109, 52, 0.18);
+}
+
+.primaryLink:focus-visible,
+.outlineLink:focus-visible {
+  outline: 3px solid #8F6D34;
+  outline-offset: 2px;
 }
 
 .outlineLink {
@@ -492,14 +507,15 @@
 .input:focus,
 .select:focus,
 .textarea:focus {
-  outline: 2px solid rgba(185, 150, 91, 0.18);
-  border-color: #b9965b;
+  outline: 3px solid #8F6D34;
+  outline-offset: 2px;
+  border-color: #d8cdbc;
 }
 
 .checkboxRow {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
   margin-top: 14px;
 }
 
@@ -521,7 +537,20 @@
 }
 
 .checkbox {
+  inline-size: 22px;
+  block-size: 22px;
+  min-inline-size: 22px;
+  min-block-size: 22px;
   margin-top: 3px;
+  accent-color: #8F6D34;
+}
+
+.fieldError {
+  color: #c0362c;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 4px;
+  padding-left: 34px;
 }
 
 .error {

@@ -123,7 +123,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply text-foreground;
@@ -132,7 +132,20 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    scroll-padding-top: 236px;
   }
+
+  @media (min-width: 761px) {
+    html {
+      scroll-padding-top: 108px;
+    }
+  }
+}
+
+/* Global keyboard focus indicator */
+html :focus-visible {
+  outline: 3px solid #8F6D34;
+  outline-offset: 2px;
 }
 
 .font-playfair {
