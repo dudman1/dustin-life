@@ -75,7 +75,7 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
 
       <header className={styles.header}>
         <div className={`${styles.wrap} ${styles.navRow}`}>
-          <Link href="/" className={styles.brand}>
+          <Link href="/" className={styles.brand} aria-label="Dustin McCormick — home">
             <DmLogo />
           </Link>
 

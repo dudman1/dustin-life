@@ -292,8 +292,8 @@ export default function FinalExpenseClient() {
 
         <nav>
           <div className="nav-inner">
-            <Link href="/" className="nav-logo">
-              <DmLogo height={40} />
+            <Link href="/" className="nav-logo" aria-label="Dustin McCormick — home">
+              <DmLogo height={48} />
             </Link>
             <div className="nav-main">
               <Link href="/" className="nav-link">Home</Link>

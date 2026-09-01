@@ -64,6 +64,8 @@
 
 .brand svg {
   color: var(--color-brand-gold);
+  height: 48px;
+  width: auto;
 }
 
 .brandCopy {
