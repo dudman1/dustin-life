@@ -644,40 +644,18 @@ function render(){
   $('sched-body').innerHTML = tb;
 
   renderAssumptions();
-  saveDraft(st);
 }
 
-// ===== draft persistence =====
-const DRAFT_KEY = 'iulc_draft_v1';
-function saveDraft(st){
+// ===== stale localStorage cleanup (one-time, every load) =====
+function cleanupStaleStorage(){
   try{
-    localStorage.setItem(DRAFT_KEY, JSON.stringify({
-      age:$('in-age').value, premium:readAnnualPremium(),
-      years:$('in-years').value, posture:state.posture, premMode:state.premMode,
-      coverage:$('in-coverage').value,
-      lead:{ name:$('lead-name').value, email:$('lead-email').value, phone:$('lead-phone').value }
-    }));
-  }catch(e){}
-}
-function loadDraft(){
-  try{
-    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
-    if(!d) return;
-    if(d.age != null) $('in-age').value = d.age;
-    if(d.premium != null){
-      state.premMode = d.premMode || 'annual';
-      updatePremiumUI();
-      setPremiumDisplay(parseInt(d.premium, 10) || 6000);
+    const keys = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith('iulc_')) keys.push(k);
     }
-    if(d.years != null) $('in-years').value = d.years;
-    if(d.posture && POSTURES[d.posture]){ state.posture = d.posture; }
-    if(d.premMode === 'annual' || d.premMode === 'monthly'){ state.premMode = d.premMode; }
-    if(d.coverage != null) $('in-coverage').value = d.coverage;
-    if(d.lead){
-      if(d.lead.name) $('lead-name').value = d.lead.name;
-      if(d.lead.email) $('lead-email').value = d.lead.email;
-      if(d.lead.phone) $('lead-phone').value = d.lead.phone;
-    }
+    for(const k of keys){ localStorage.removeItem(k); }
+    if(keys.length > 0) console.log('[IUL Compass] cleaned up ' + keys.length + ' stale key(s): ' + keys.join(', '));
   }catch(e){}
 }
 
@@ -756,7 +734,7 @@ function bindLeadForm(){
     }
   });
   ['lead-name','lead-email','lead-phone'].forEach(id =>
-    $(id).addEventListener('input', () => saveDraft(readState())));
+    $(id).addEventListener('input', render));
 }
 
 // ===== selftest =====
@@ -805,7 +783,7 @@ function runSelftest(){
 
 // ===== boot =====
 document.addEventListener('DOMContentLoaded', () => {
-  loadDraft();
+  cleanupStaleStorage();
   updatePremiumUI();
   // Restore active state for all segmented controls
   document.querySelectorAll('.seg button').forEach(b => {
