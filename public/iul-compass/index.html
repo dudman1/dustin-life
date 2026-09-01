@@ -730,7 +730,7 @@ function bindLeadForm(){
         : '✓ Request sent. A licensed agent will follow up.';
     }else{
       statusEl.className = 'status err';
-      statusEl.textContent = '⚠ Send failed — your draft is saved locally and can be resubmitted later.';
+      statusEl.textContent = '⚠ Send failed — please try again, or call/text me directly.';
     }
   });
   ['lead-name','lead-email','lead-phone'].forEach(id =>
