@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import DmLogo from "@/app/components/DmLogo";
 import { type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
@@ -292,7 +293,7 @@ export default function FinalExpenseClient() {
         <nav>
           <div className="nav-inner">
             <Link href="/" className="nav-logo">
-              <img src="/dm-monogram.jpg" alt="DM" />
+              <DmLogo height={40} />
             </Link>
             <div className="nav-main">
               <Link href="/" className="nav-link">Home</Link>
@@ -719,6 +720,7 @@ export default function FinalExpenseClient() {
         }
         .fe-page .nav-logo { display: inline-flex; }
         .fe-page .nav-logo img { height: 48px; width: auto; border-radius: 4px; }
+        .fe-page .nav-logo svg { color: var(--accent); }
         .fe-page .nav-main {
           display: flex;
           align-items: center;

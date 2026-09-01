@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
+import DmLogo from "@/app/components/DmLogo";
 import styles from "../dustinlife-v2.module.css";
 
 export const metadata = pageMetadata({
@@ -54,7 +55,7 @@ function SiteHeader() {
       <header className={styles.header}>
         <div className={`${styles.wrap} ${styles.navRow}`}>
           <Link href="/" className={styles.brand}>
-            <img src="/dm-monogram.jpg" alt="DM" />
+            <DmLogo />
           </Link>
 
           <nav className={styles.navMain} aria-label="Primary">

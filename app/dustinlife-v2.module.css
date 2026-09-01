@@ -62,6 +62,10 @@
   background: #fff;
 }
 
+.brand svg {
+  color: var(--color-brand-gold);
+}
+
 .brandCopy {
   line-height: 1.2;
 }

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "Dustin McCormick helps families nationwide protect what matters most with life insurance options including Indexed Universal Life and Final Expense coverage.",
   icons: {
     icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    apple: "/favicon_gold_180.png",
   },
 };
 

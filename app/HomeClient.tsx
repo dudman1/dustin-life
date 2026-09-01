@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import Link from "next/link";
+import DmLogo from "@/app/components/DmLogo";
 import styles from "./dustinlife-v2.module.css";
 
 const STATES = [
@@ -75,7 +76,7 @@ function SiteHeader({ current }: { current: "home" | "iul" | "faq" | "final-expe
       <header className={styles.header}>
         <div className={`${styles.wrap} ${styles.navRow}`}>
           <Link href="/" className={styles.brand}>
-            <img src="/dm-monogram.jpg" alt="DM" />
+            <DmLogo />
           </Link>
 
           <nav className={styles.navMain} aria-label="Primary">
