@@ -222,6 +222,22 @@ export function SiteFooter() {
   );
 }
 
+
+function StickyMobileCta() {
+  return (
+    <div className={styles.stickyMobileCta} role="region" aria-label="Quick actions">
+      <div className={styles.stickyMobileCtaInner}>
+        <a className={styles.stickyMobilePrimary} href="/#assessment">
+          Free Assessment
+        </a>
+        <a className={styles.stickyMobileCall} href="tel:+12489709094">
+          Call 248-970-9094
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function SiteChrome({
   current = null,
   children,
@@ -234,6 +250,7 @@ export default function SiteChrome({
       <SiteHeader current={current} />
       {children}
       <SiteFooter />
+      <StickyMobileCta />
     </div>
   );
 }
