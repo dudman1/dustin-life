@@ -31,6 +31,15 @@ function PinIcon() {
   );
 }
 
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z" />
+    </svg>
+  );
+}
+
 function CheckIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -114,29 +123,38 @@ export default function HomeClient() {
               </div>
 
               <aside className={styles.heroChecklistCard}>
-                <div className={styles.heroChecklistHeader}>Fast, clean coverage signals.</div>
+                <div className={styles.heroChecklistHeader}>What you can expect.</div>
                 <ul className={styles.heroChecklist}>
-                  <li className={styles.heroChecklistItem}><CheckIcon />Instant underwriting</li>
-                  <li className={styles.heroChecklistItem}><CheckIcon />No medical exams</li>
-                  <li className={styles.heroChecklistItem}><CheckIcon />Same-day coverage</li>
-                  <li className={styles.heroChecklistItem}><CheckIcon />Trusted carriers</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Independent agent, licensed nationwide</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Final Expense and IUL paths</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />Human guidance, no pressure</li>
+                  <li className={styles.heroChecklistItem}><CheckIcon />No obligation to buy</li>
                 </ul>
               </aside>
             </div>
           </section>
 
-          <section className={`${styles.section} ${styles.trustStrip}`}>
-            <div className={styles.trustItem}>
-              <ShieldIcon />
-              Independent Agent
-            </div>
-            <div className={styles.trustItem}>
-              <PinIcon />
-              Licensed Nationwide
-            </div>
-            <div className={styles.trustItem}>
-              <CheckIcon />
-              No Pressure, No Obligation
+          <section className={`${styles.section} ${styles.humanTrustStrip}`} aria-label="Why people trust working with Dustin">
+            <div className={styles.humanTrustInner}>
+              <p className={styles.humanTrustLead}>Real people. Honest process. No chatbots.</p>
+              <div className={styles.humanTrustChips}>
+                <div className={styles.humanTrustChip}>
+                  <ShieldIcon />
+                  <span>Licensed independent agent</span>
+                </div>
+                <div className={styles.humanTrustChip}>
+                  <CheckIcon />
+                  <span>Talk to a real person — no chatbots</span>
+                </div>
+                <a className={styles.humanTrustChip} href="tel:+12489709094">
+                  <PhoneIcon />
+                  <span>Call 248-970-9094</span>
+                </a>
+                <div className={styles.humanTrustChip}>
+                  <PinIcon />
+                  <span>Clear next steps, no pressure</span>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -175,6 +193,50 @@ export default function HomeClient() {
                   </div>
                 </article>
               </div>
+            </div>
+          </section>
+
+          <section className={styles.section} id="how-it-works">
+            <div className={styles.sectionCard}>
+              <div className={styles.sectionHead}>
+                <div className={styles.eyebrow}>How it works</div>
+                <h2 className={styles.sectionTitle}>A calm process with a real expert guiding you.</h2>
+                <p className={styles.sectionIntro}>
+                  This is not an automated bind-online funnel. You choose a path, share a little context,
+                  talk options through with Dustin, and decide when you are ready.
+                </p>
+              </div>
+
+              <ol className={styles.processSteps}>
+                <li className={styles.processStep}>
+                  <span className={styles.processNum} aria-hidden="true">1</span>
+                  <div>
+                    <h3 className={styles.cardTitle}>Choose your path</h3>
+                    <p className={styles.cardText}>Final Expense for burial and final bills, or Indexed Universal Life when permanent coverage and cash value are worth exploring.</p>
+                  </div>
+                </li>
+                <li className={styles.processStep}>
+                  <span className={styles.processNum} aria-hidden="true">2</span>
+                  <div>
+                    <h3 className={styles.cardTitle}>Share a bit about your situation</h3>
+                    <p className={styles.cardText}>A short free assessment covers the basics so the conversation starts in the right place — not a hard sell.</p>
+                  </div>
+                </li>
+                <li className={styles.processStep}>
+                  <span className={styles.processNum} aria-hidden="true">3</span>
+                  <div>
+                    <h3 className={styles.cardTitle}>Talk through options with Dustin</h3>
+                    <p className={styles.cardText}>Compare carriers and tradeoffs with a licensed independent agent who can explain what fits and what does not.</p>
+                  </div>
+                </li>
+                <li className={styles.processStep}>
+                  <span className={styles.processNum} aria-hidden="true">4</span>
+                  <div>
+                    <h3 className={styles.cardTitle}>Decide when you are ready</h3>
+                    <p className={styles.cardText}>No pressure and no obligation. Move forward only if the coverage and the timing make sense for you.</p>
+                  </div>
+                </li>
+              </ol>
             </div>
           </section>
 
