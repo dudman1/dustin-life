@@ -509,7 +509,7 @@ function readState(){
   const covRaw = $('in-coverage').value.trim();
   if(covRaw !== ''){
     const covVal = parseFloat(covRaw);
-    if(Number.isFinite(covVal) && covVal >= 50000){
+    if(Number.isFinite(covVal) && covVal > 0){
       faceOverride = Math.min(FACE_MAX, Math.max(FACE_MIN, Math.round(covVal)));
     }
   }
