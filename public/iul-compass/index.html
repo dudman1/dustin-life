@@ -99,7 +99,9 @@
   .note.warn{color:#a16207}
 
   /* posture segmented */
-  .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .seg{display:grid;gap:6px}
+  .seg.columns3{grid-template-columns:repeat(3,1fr)}
+  .seg.columns2{grid-template-columns:repeat(2,1fr)}
   .seg button{
     background:#fff;border:1px solid var(--line);border-radius:10px;color:var(--mut);
     font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
@@ -128,6 +130,9 @@
   .tbl-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
   .assump-note{
     margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.75;
+  }
+  .assump-coi{
+    font-family:var(--mono);font-size:9.5px;color:var(--dim);line-height:1.75;text-align:left;white-space:normal;padding:10px 10px 0;
   }
 
   /* ---------- results ---------- */
@@ -250,8 +255,22 @@
           </div>
         </label>
         <div class="field">
+          <div class="lbl"><span class="name">Gender</span></div>
+          <div class="seg columns2" role="group" aria-label="Gender">
+            <button type="button" data-gender="male" id="pg-male" class="active">Male</button>
+            <button type="button" data-gender="female" id="pg-female">Female</button>
+          </div>
+        </div>
+        <div class="field">
+          <div class="lbl"><span class="name">Tobacco use</span></div>
+          <div class="seg columns2" role="group" aria-label="Tobacco use">
+            <button type="button" data-tobacco="no" id="pg-tobacco-no" class="active">No</button>
+            <button type="button" data-tobacco="yes" id="pg-tobacco-yes">Yes</button>
+          </div>
+        </div>
+        <div class="field">
           <div class="lbl"><span class="name">Risk posture</span></div>
-          <div class="seg" role="group" aria-label="Risk posture">
+          <div class="seg columns3" role="group" aria-label="Risk posture">
             <button type="button" data-posture="conservative" id="pg-conservative">Conservative</button>
             <button type="button" data-posture="balanced" id="pg-balanced" class="active">Balanced</button>
             <button type="button" data-posture="growth" id="pg-growth">Growth</button>
@@ -373,6 +392,8 @@
 const ADMIN_FEE = 120;
 const FACE_MULT = 25, FACE_MIN = 50000;
 const COI_BASE = 0.20, COI_STEP = 0.02, COI_AGE0 = 18;
+const GENDER_FACTOR = { male: 1.00, female: 0.85 };
+const TOBACCO_FACTOR = { no: 1.00, yes: 2.10 };
 
 const POSTURES = {
   conservative: { key:'conservative', label:'Conservative', grossIndex:0.060, participation:0.55, cap:0.08, floor:0.0, drag:0.0100, premiumLoad:0.05 },
@@ -394,6 +415,7 @@ function project(inp){
   const P = POSTURES[inp.posture];
   const rate = creditedRate(P.grossIndex, P.participation, P.cap, P.floor);
   const face = faceAmount(inp.premium);
+  const coiMul = (GENDER_FACTOR[inp.gender] || 1) * (TOBACCO_FACTOR[inp.tobacco] || 1);
   const rows = [];
   let cv = 0, cumNet = 0;
   for(let y = 1; y <= inp.years; y++){
@@ -401,7 +423,7 @@ function project(inp){
     const net = inp.premium * (1 - P.premiumLoad);
     cumNet += net;
     cv = (cv + net) * (1 + rate);
-    const coi = (face / 1000) * coiPerUnit(age);
+    const coi = (face / 1000) * coiPerUnit(age) * coiMul;
     const drag = cv * P.drag;
     const fee = ADMIN_FEE + coi + drag;
     cv -= fee;
@@ -429,7 +451,7 @@ function niceCeil(v){
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 // ===== state =====
-const state = { posture:'balanced' };
+const state = { posture:'balanced', gender:'male', tobacco:'no' };
 
 function readState(){
   let age = parseInt($('in-age').value, 10); if(!Number.isFinite(age)) age = 35;
@@ -441,7 +463,9 @@ function readState(){
   yrs = Math.min(40, Math.max(5, yrs));
   if(age + yrs > 94) yrs = Math.max(1, 94 - age);
   $('out-years').textContent = String(yrs);
-  return { startAge:age, income:inc, premium:prem, years:yrs, posture:state.posture };
+  state.gender = document.querySelector('.seg[aria-label=\"Gender\"] button.active')?.dataset?.gender || 'male';
+  state.tobacco = document.querySelector('.seg[aria-label=\"Tobacco use\"] button.active')?.dataset?.tobacco || 'no';
+  return { startAge:age, income:inc, premium:prem, years:yrs, posture:state.posture, gender:state.gender, tobacco:state.tobacco };
 }
 
 // ===== assumptions table =====
@@ -468,6 +492,7 @@ function renderAssumptions(){
     }
     h += '</tr>';
   }
+  h += '<tr><td colspan="4" class="assump-coi">Cost of insurance: modeled rates increase with age and are adjusted by generic relative factors for gender (female 0.85×) and tobacco use (2.10×) representative of industry-typical pricing. Not based on any specific rate tables.</td></tr>';
   h += '</tbody></table>';
   $('assumptions').innerHTML = h;
 }
@@ -587,7 +612,7 @@ function saveDraft(st){
   try{
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       age:$('in-age').value, income:$('in-income').value, premium:$('in-premium').value,
-      years:$('in-years').value, posture:state.posture,
+      years:$('in-years').value, posture:state.posture, gender:state.gender, tobacco:state.tobacco,
       lead:{ name:$('lead-name').value, email:$('lead-email').value, phone:$('lead-phone').value }
     }));
   }catch(e){}
@@ -601,6 +626,8 @@ function loadDraft(){
     if(d.premium != null) $('in-premium').value = d.premium;
     if(d.years != null) $('in-years').value = d.years;
     if(d.posture && POSTURES[d.posture]){ state.posture = d.posture; }
+    if(d.gender === 'male' || d.gender === 'female'){ state.gender = d.gender; }
+    if(d.tobacco === 'no' || d.tobacco === 'yes'){ state.tobacco = d.tobacco; }
     if(d.lead){
       if(d.lead.name) $('lead-name').value = d.lead.name;
       if(d.lead.email) $('lead-email').value = d.lead.email;
@@ -668,7 +695,7 @@ function bindLeadForm(){
     const st = readState();
     const payload = {
       tool:'iul-compass', submittedAt:new Date().toISOString(),
-      profile:{ age:st.startAge, income:st.income, premium:st.premium, years:st.years, posture:st.posture },
+      profile:{ age:st.startAge, income:st.income, premium:st.premium, years:st.years, posture:st.posture, gender:st.gender, tobacco:st.tobacco },
       lead:{ name, email, phone, consent }
     };
     const res = await deliverLead(payload);
@@ -734,14 +761,34 @@ function runSelftest(){
 // ===== boot =====
 document.addEventListener('DOMContentLoaded', () => {
   loadDraft();
+  // Restore active state for all segmented controls
   document.querySelectorAll('.seg button').forEach(b => {
-    if(b.dataset.posture === state.posture){ document.querySelectorAll('.seg button').forEach(x => x.classList.remove('active')); b.classList.add('active'); }
+    if(b.dataset.posture === state.posture) b.classList.add('active');
+    if(b.dataset.gender === state.gender) b.classList.add('active');
+    if(b.dataset.tobacco === state.tobacco) b.classList.add('active');
   });
-  document.querySelectorAll('.seg button').forEach(b => {
+  // Posture buttons
+  document.querySelectorAll('.seg[aria-label="Risk posture"] button').forEach(b => {
     b.addEventListener('click', () => {
-      document.querySelectorAll('.seg button').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.seg[aria-label="Risk posture"] button').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
       state.posture = b.dataset.posture;
+      render();
+    });
+  });
+  // Gender buttons
+  document.querySelectorAll('.seg[aria-label="Gender"] button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg[aria-label="Gender"] button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      render();
+    });
+  });
+  // Tobacco buttons
+  document.querySelectorAll('.seg[aria-label="Tobacco use"] button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.seg[aria-label="Tobacco use"] button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
       render();
     });
   });
