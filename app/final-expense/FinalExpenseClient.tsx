@@ -353,9 +353,9 @@ export default function FinalExpenseClient() {
         <div className="carriers">
           <div className="carriers-inner">
             <div className="carrier-points">
-              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Instant underwriting</span>
+              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Guided underwriting, case by case</span>
               <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>No medical exam</span>
-              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Same-day coverage</span>
+              <span className="carrier-point"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>Timelines vary by carrier</span>
             </div>
           </div>
         </div>
