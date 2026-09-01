@@ -65,6 +65,7 @@
   /* ---------- layout ---------- */
   main{display:grid;grid-template-columns:370px 1fr;gap:22px;padding:24px 0 40px}
   @media(max-width:940px){main{grid-template-columns:1fr}}
+  main>.stack:first-child{align-self:start}
   .panel{
     background:var(--panel);
     border:1px solid var(--line);border-radius:18px;padding:20px;
