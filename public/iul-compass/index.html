@@ -612,7 +612,7 @@ function saveDraft(st){
   try{
     localStorage.setItem(DRAFT_KEY, JSON.stringify({
       age:$('in-age').value, income:$('in-income').value, premium:$('in-premium').value,
-      years:$('in-years').value, posture:state.posture, gender:state.gender, tobacco:state.tobacco,
+      years:$('in-years').value, posture:state.posture,
       lead:{ name:$('lead-name').value, email:$('lead-email').value, phone:$('lead-phone').value }
     }));
   }catch(e){}
@@ -626,8 +626,6 @@ function loadDraft(){
     if(d.premium != null) $('in-premium').value = d.premium;
     if(d.years != null) $('in-years').value = d.years;
     if(d.posture && POSTURES[d.posture]){ state.posture = d.posture; }
-    if(d.gender === 'male' || d.gender === 'female'){ state.gender = d.gender; }
-    if(d.tobacco === 'no' || d.tobacco === 'yes'){ state.tobacco = d.tobacco; }
     if(d.lead){
       if(d.lead.name) $('lead-name').value = d.lead.name;
       if(d.lead.email) $('lead-email').value = d.lead.email;
