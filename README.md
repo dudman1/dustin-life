@@ -57,6 +57,10 @@ Do **not** change Convex/GHL project config from application polish PRs.
 - `npm run build` – static export to `out/`
 - `npm run lint` – ESLint
 
+## Known duplication
+
+The static IUL Compass page at `public/iul-compass/index.html` includes a **hand-maintained duplicate** of the site chrome from `app/components/SiteChrome.tsx` (and related styles in `app/dustinlife-v2.module.css`). When nav items, footer links, or chrome behavior change, update **both** the React component and the Compass HTML.
+
 ## Branch / deploy policy
 
 Permanent production changes only after human review of a PR against `main`. Do not merge, push to `main`, or deploy from automated polish agents unless explicitly asked.
