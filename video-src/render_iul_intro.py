@@ -87,9 +87,15 @@ SEGMENTS = [
     },
     {
         "id": "b6",
+        # Caption / SCRIPT display keeps hyphenated phone; Kokoro gets spoken form only.
         "text": (
             "Let's figure out whether it actually fits — no pressure, no obligation. "
             "Call 248-970-9094."
+        ),
+        # Space-separated digits with brief group pauses (periods) for natural phone rhythm.
+        "tts_text": (
+            "Let's figure out whether it actually fits — no pressure, no obligation. "
+            "Call 2 4 8. 9 7 0. 9 0 9 4."
         ),
     },
 ]
@@ -742,7 +748,7 @@ def main() -> None:
             ext = ".wav" if engine == "kokoro" else ".aiff"
             out = td_path / f"{seg['id']}{ext}"
             print(f"TTS {seg['id']} via {engine}/{voice}...")
-            synthesize_segment(seg["text"], out, engine, voice)
+            synthesize_segment(seg.get("tts_text", seg["text"]), out, engine, voice)
             parts.append(out)
 
         wav = td_path / "narration.wav"
