@@ -1021,3 +1021,174 @@
     width: auto;
   }
 }
+
+
+/* Human trust strip under hero */
+.humanTrustStrip {
+  margin-top: 18px;
+}
+
+.humanTrustInner {
+  padding: 20px 22px;
+  border-radius: 24px;
+  border: 1px solid #e6dccf;
+  background: linear-gradient(180deg, #fff 0%, #f8f1e6 100%);
+  box-shadow: 0 18px 45px rgba(38, 29, 16, 0.06);
+}
+
+.humanTrustLead {
+  margin: 0 0 14px;
+  text-align: center;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(18px, 2.4vw, 22px);
+  color: #1d1b18;
+  letter-spacing: -0.02em;
+}
+
+.humanTrustChips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.humanTrustChip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(185, 150, 91, 0.28);
+  background: rgba(255, 255, 255, 0.85);
+  color: #4e463c;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.25;
+}
+
+.humanTrustChip svg {
+  width: 16px;
+  height: 16px;
+  color: #8F6D34;
+  flex: 0 0 auto;
+}
+
+/* Honest process steps */
+.processSteps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.processStep {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid #e6dccf;
+  background: #fff;
+}
+
+.processNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #EFE3CC;
+  color: #8F6D34;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.processStep .cardTitle {
+  margin-bottom: 6px;
+  font-size: 20px;
+}
+
+.processStep .cardText {
+  margin: 0;
+}
+
+/* Mobile sticky Assessment + Call bar */
+.stickyMobileCta {
+  display: none;
+}
+
+.stickyMobileCtaInner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 10px;
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.stickyMobilePrimary,
+.stickyMobileCall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+
+.stickyMobilePrimary {
+  background: #8F6D34;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(143, 109, 52, 0.22);
+}
+
+.stickyMobileCall {
+  background: #fff;
+  color: #1d1b18;
+  border: 1px solid #e6dccf;
+}
+
+.stickyMobilePrimary:focus-visible,
+.stickyMobileCall:focus-visible {
+  outline: 3px solid #8F6D34;
+  outline-offset: 2px;
+}
+
+@media (max-width: 1080px) {
+  .humanTrustChips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .humanTrustChips {
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .stickyMobileCta {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 35;
+    padding: 10px 0 calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(246, 241, 232, 0.96);
+    backdrop-filter: blur(14px);
+    border-top: 1px solid #e6dccf;
+    box-shadow: 0 -12px 30px rgba(38, 29, 16, 0.1);
+  }
+}
+

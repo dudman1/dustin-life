@@ -134,11 +134,13 @@
     @apply font-sans;
     scroll-behavior: smooth;
     scroll-padding-top: 236px;
+    scroll-padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
 
   @media (min-width: 761px) {
     html {
       scroll-padding-top: 108px;
+      scroll-padding-bottom: 0;
     }
   }
 }
