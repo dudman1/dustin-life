@@ -572,19 +572,70 @@
   font-weight: 600;
 }
 
+.videoSection {
+  /* Clear sticky header (topbar sits above; header is sticky) */
+  scroll-margin-top: 112px;
+}
+
 .videoFrame {
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid #e6dccf;
-  background: #000;
+  background: #1d1b18;
   margin-top: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 780px;
 }
 
 .videoFrame video {
   width: 100%;
   aspect-ratio: 16 / 9;
   display: block;
-  background: #000;
+  background: #1d1b18;
+}
+
+/* WebVTT captions: bottom band, readable on whiteboard */
+.videoFrame video::cue {
+  font-size: 1rem;
+  line-height: 1.25;
+  color: #f6f1e8;
+  background-color: rgba(29, 27, 24, 0.72);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.iulIntroVideo {
+  /* hook for cue scoping / future player tweaks */
+}
+
+.videoDisclaimer {
+  color: #6e675c;
+  max-width: 780px;
+  margin: 12px auto 0;
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .videoSection {
+    /* Sticky header + a little air; bottom sticky CTA handled by page padding */
+    scroll-margin-top: 96px;
+  }
+
+  .videoFrame {
+    max-width: 100%;
+  }
+
+  .videoFrame video::cue {
+    font-size: 0.85rem;
+  }
+
+  .videoDisclaimer {
+    font-size: 12px;
+    padding: 0 4px;
+  }
 }
 
 .callout {

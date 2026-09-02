@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 import SiteChrome from "@/app/components/SiteChrome";
+import ScrollToVideo from "@/app/indexed-universal-life/ScrollToVideo";
 import styles from "../dustinlife-v2.module.css";
 
 export const metadata = pageMetadata({
@@ -34,21 +35,37 @@ export default function IndexedUniversalLifePage() {
                 IUL is permanent life insurance first. The cash value potential is real, but it depends entirely on how the policy is designed and funded. I&apos;ll help you understand whether it actually fits before you commit to anything.
               </p>
               <div className={styles.heroActions}>
-                <a className={styles.primaryLink} href="#video">Watch the Quick Intro</a>
+                <ScrollToVideo className={styles.primaryLink}>Watch the Quick Intro</ScrollToVideo>
                 <Link className={styles.outlineLink} href="/#assessment">Get My Free Assessment</Link>
               </div>
             </div>
           </section>
 
-          <section className={styles.section} id="video">
+          <section className={`${styles.section} ${styles.videoSection}`} id="video">
             <div className={styles.videoCard}>
               <h2 className={styles.sectionTitle}>Quick Intro</h2>
               <p className={styles.sectionIntro}>Start here if you want a fast overview before looking at the details.</p>
               <div className={styles.videoFrame}>
-                <video controls playsInline poster="/iul-performance.jpg">
-                  <source src="/iul-explainer.mp4" type="video/mp4" />
+                <video
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster="/video/iul-intro-poster.png"
+                  className={styles.iulIntroVideo}
+                >
+                  <source src="/video/iul-intro.mp4" type="video/mp4" />
+                  <track
+                    kind="captions"
+                    src="/video/iul-intro.vtt"
+                    srcLang="en"
+                    label="English"
+                    default
+                  />
                 </video>
               </div>
+              <p className={styles.videoDisclaimer}>
+                Hypothetical illustration for education only. Not an offer. Guarantees are subject to the claims-paying ability of the issuing insurer.
+              </p>
             </div>
           </section>
 
