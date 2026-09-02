@@ -51,6 +51,7 @@ export default function IndexedUniversalLifePage() {
                   playsInline
                   preload="metadata"
                   poster="/video/iul-intro-poster.png"
+                  className={styles.iulIntroVideo}
                 >
                   <source src="/video/iul-intro.mp4" type="video/mp4" />
                   <track
@@ -62,6 +63,9 @@ export default function IndexedUniversalLifePage() {
                   />
                 </video>
               </div>
+              <p className={styles.videoDisclaimer}>
+                Hypothetical illustration for education only. Not an offer. Guarantees are subject to the claims-paying ability of the issuing insurer.
+              </p>
             </div>
           </section>
 

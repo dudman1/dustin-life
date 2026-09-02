@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-IUL whiteboard intro renderer (draft v1).
+IUL whiteboard intro renderer.
 
 Pipeline:
-  1) macOS `say` -> AIFF narration (Samantha, calm rate)
+  1) Kokoro-82M local TTS (fallback: macOS Premium/Enhanced say voices — never Samantha)
   2) Pillow frames (hand-drawn ink on off-white, gold accent only)
   3) ffmpeg: frames + audio -> H.264 MP4; also poster PNG + WebVTT
 
@@ -24,6 +24,7 @@ import random
 import shutil
 import subprocess
 import tempfile
+import wave
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -32,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "public" / "video"
 FPS = 24
 WIDTH, HEIGHT = 1280, 720
+# Keep bottom ~15% clear for captions (VTT line/size + CSS ::cue)
+CAPTION_CLEAR_TOP = int(HEIGHT * 0.85)  # 612
 BG = (246, 241, 232)  # off-white board
 INK = (29, 27, 24)  # dark ink
 INK_SOFT = (70, 64, 56)
@@ -62,7 +65,8 @@ SEGMENTS = [
             "That cash value may receive indexed crediting — tied to how an index moves, "
             "but not invested in the index itself. Policies typically use a floor so "
             "credited interest does not go below zero for that period, and a cap or "
-            "participation rate that limits the upside. Any numbers you see here are hypothetical."
+            "participation rate that limits the upside. Policy charges still come out, "
+            "so cash value can still decline in a flat year. Any numbers you see here are hypothetical."
         ),
     },
     {
@@ -90,8 +94,18 @@ SEGMENTS = [
     },
 ]
 
-SAY_VOICE = "Samantha"
-SAY_RATE = 160  # calmer than default
+# Kokoro: af_heart is warm/calm and most natural among candidates tested.
+KOKORO_VOICE = os.environ.get("IUL_KOKORO_VOICE", "af_heart")
+KOKORO_SPEED = float(os.environ.get("IUL_KOKORO_SPEED", "0.98"))  # unhurried ~150–160 wpm
+SAY_FALLBACK_VOICES = [
+    "Ava (Premium)",
+    "Zoe (Premium)",
+    "Evan (Premium)",
+    "Ava (Enhanced)",
+    "Zoe (Enhanced)",
+    "Evan (Enhanced)",
+]
+SAY_RATE = 155
 
 
 def which(cmd: str) -> str | None:
@@ -160,18 +174,24 @@ def text_size(draw, text, font):
 def draw_board_base(progress_label: str = "") -> Image.Image:
     img = Image.new("RGB", (WIDTH, HEIGHT), BG)
     draw = ImageDraw.Draw(img)
-    # subtle board frame
-    sketch_rect(draw, (28, 24, WIDTH - 28, HEIGHT - 24), BOARD_LINE, width=2, seed=3, radius=18)
-    # faint ruled hint
-    for y in range(110, HEIGHT - 60, 42):
+    # Board frame stops above caption band
+    sketch_rect(
+        draw,
+        (28, 24, WIDTH - 28, CAPTION_CLEAR_TOP - 8),
+        BOARD_LINE,
+        width=2,
+        seed=3,
+        radius=18,
+    )
+    # faint ruled hint — never into caption zone
+    for y in range(100, CAPTION_CLEAR_TOP - 36, 40):
         draw.line([(60, y), (WIDTH - 60, y)], fill=(238, 231, 220), width=1)
     font_s = load_font(22)
-    draw.text((56, 40), "IUL — without the sales pitch", fill=INK_SOFT, font=font_s)
+    draw.text((56, 36), "IUL — without the sales pitch", fill=INK_SOFT, font=font_s)
     if progress_label:
         tw, _ = text_size(draw, progress_label, font_s)
-        draw.text((WIDTH - 56 - tw, 40), progress_label, fill=GOLD_DEEP, font=font_s)
-    # gold accent underline under title
-    wobble_line(draw, [(56, 72), (320, 72)], GOLD, width=3, seed=11)
+        draw.text((WIDTH - 56 - tw, 36), progress_label, fill=GOLD_DEEP, font=font_s)
+    wobble_line(draw, [(56, 68), (320, 68)], GOLD, width=3, seed=11)
     return img
 
 
@@ -185,40 +205,38 @@ def render_beat1(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("1 / Permanent first")
     draw = ImageDraw.Draw(img)
-    title = load_font(64, bold=True)
-    body = load_font(32)
-    small = load_font(24)
+    title = load_font(58, bold=True)
+    body = load_font(30)
+    small = load_font(22)
 
     if p > 0.05:
-        draw.text((140, 140), "IUL", fill=INK, font=title)
-        wobble_line(draw, [(140, 215), (280, 215)], GOLD, width=4, seed=21)
+        draw.text((140, 120), "IUL", fill=INK, font=title)
+        wobble_line(draw, [(140, 190), (280, 190)], GOLD, width=4, seed=21)
     if p > 0.2:
-        # shield sketch
-        cx, cy = 200, 320
+        cx, cy = 200, 290
         shield = [
-            (cx, cy - 70),
-            (cx + 55, cy - 50),
-            (cx + 50, cy + 20),
-            (cx, cy + 70),
-            (cx - 50, cy + 20),
-            (cx - 55, cy - 50),
-            (cx, cy - 70),
+            (cx, cy - 60),
+            (cx + 50, cy - 42),
+            (cx + 45, cy + 18),
+            (cx, cy + 60),
+            (cx - 45, cy + 18),
+            (cx - 50, cy - 42),
+            (cx, cy - 60),
         ]
         wobble_line(draw, shield, INK, width=4, seed=22)
-        draw.text((cx - 30, cy - 12), "life", fill=INK_SOFT, font=small)
+        draw.text((cx - 28, cy - 10), "life", fill=INK_SOFT, font=small)
     if p > 0.4:
-        sketch_rect(draw, (360, 240, 620, 360), INK, width=3, seed=23)
-        draw.text((380, 270), "Death benefit", fill=INK, font=body)
-        draw.text((380, 315), "for people you love", fill=INK_SOFT, font=small)
+        sketch_rect(draw, (360, 210, 620, 320), INK, width=3, seed=23)
+        draw.text((380, 235), "Death benefit", fill=INK, font=body)
+        draw.text((380, 275), "for people you love", fill=INK_SOFT, font=small)
     if p > 0.65:
-        sketch_rect(draw, (680, 240, 1040, 360), INK, width=3, seed=24)
-        draw.text((700, 270), "Cash value", fill=INK, font=body)
-        draw.text((700, 315), "can grow inside", fill=INK_SOFT, font=small)
-        # gold plus
-        wobble_line(draw, [(630, 300), (670, 300)], GOLD_DEEP, width=4, seed=25)
-        wobble_line(draw, [(650, 280), (650, 320)], GOLD_DEEP, width=4, seed=26)
+        sketch_rect(draw, (680, 210, 1040, 320), INK, width=3, seed=24)
+        draw.text((700, 235), "Cash value", fill=INK, font=body)
+        draw.text((700, 275), "can grow inside", fill=INK_SOFT, font=small)
+        wobble_line(draw, [(630, 265), (670, 265)], GOLD_DEEP, width=4, seed=25)
+        wobble_line(draw, [(650, 245), (650, 285)], GOLD_DEEP, width=4, seed=26)
     if p > 0.85:
-        draw.text((360, 420), "Permanent life insurance first.", fill=INK, font=body)
+        draw.text((360, 380), "Permanent life insurance first.", fill=INK, font=body)
     return img
 
 
@@ -226,29 +244,25 @@ def render_beat2(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("2 / Premium split")
     draw = ImageDraw.Draw(img)
-    body = load_font(34)
-    small = load_font(24)
-    draw.text((120, 130), "Your premium", fill=INK, font=body)
+    body = load_font(32)
+    small = load_font(22)
+    draw.text((120, 110), "Your premium", fill=INK, font=body)
 
-    # full bar
-    x0, y0, x1, y1 = 120, 220, 1160, 300
+    x0, y0, x1, y1 = 120, 190, 1160, 265
     if p > 0.1:
         sketch_rect(draw, (x0, y0, x1, y1), INK, width=3, seed=31)
-    # split reveal
     split = x0 + int((x1 - x0) * 0.62)
     if p > 0.35:
-        # left fill hatch for COI
         for x in range(x0 + 8, split - 4, 14):
             draw.line([(x, y0 + 8), (x + 8, y1 - 8)], fill=INK_SOFT, width=2)
         wobble_line(draw, [(split, y0), (split, y1)], GOLD_DEEP, width=4, seed=32)
         draw.text((x0 + 20, y0 + 22), "COI / charges", fill=INK, font=small)
     if p > 0.55:
         draw.text((split + 20, y0 + 22), "to cash value", fill=INK, font=small)
-        # arrow down to cash value note
-        wobble_line(draw, [(split + 120, y1 + 10), (split + 120, y1 + 70)], GOLD, width=3, seed=33)
+        wobble_line(draw, [(split + 120, y1 + 10), (split + 120, y1 + 55)], GOLD, width=3, seed=33)
     if p > 0.75:
-        draw.text((120, 380), "Simplified picture — design and charges vary.", fill=INK_SOFT, font=small)
-        draw.text((120, 430), "What remains after costs can build cash value.", fill=INK, font=body)
+        draw.text((120, 340), "Simplified picture — design and charges vary.", fill=INK_SOFT, font=small)
+        draw.text((120, 390), "What remains after costs can build cash value.", fill=INK, font=body)
     return img
 
 
@@ -256,49 +270,55 @@ def render_beat3(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("3 / Indexed crediting")
     draw = ImageDraw.Draw(img)
-    body = load_font(30)
-    small = load_font(22)
-    tiny = load_font(20)
+    body = load_font(26)
+    small = load_font(20)
+    tiny = load_font(18)
 
-    draw.text((100, 120), "Tied to index movement — not invested in the index", fill=INK, font=body)
+    draw.text((100, 100), "Tied to index movement — not invested in the index", fill=INK, font=body)
 
-    # chart frame
-    cx0, cy0, cx1, cy1 = 100, 200, 860, 520
-    if p > 0.1:
-        wobble_line(draw, [(cx0, cy1), (cx1, cy1)], INK, width=3, seed=41)  # x
-        wobble_line(draw, [(cx0, cy0), (cx0, cy1)], INK, width=3, seed=42)  # y
+    # Chart kept well above caption band
+    cx0, cy0, cx1, cy1 = 100, 160, 820, 430
+    if p > 0.08:
+        wobble_line(draw, [(cx0, cy1), (cx1, cy1)], INK, width=3, seed=41)
+        wobble_line(draw, [(cx0, cy0), (cx0, cy1)], INK, width=3, seed=42)
 
-    floor_y = cy1 - 70
-    cap_y = cy0 + 70
+    floor_y = cy1 - 55
+    cap_y = cy0 + 55
 
-    if p > 0.25:
-        # index wavy line
+    if p > 0.18:
         pts = []
         for i in range(0, 21):
             x = cx0 + 20 + i * ((cx1 - cx0 - 40) / 20)
-            wave = math.sin(i * 0.55) * 55 + math.sin(i * 0.2) * 20
+            wave = math.sin(i * 0.55) * 45 + math.sin(i * 0.2) * 16
             y = (cy0 + cy1) / 2 - wave
             pts.append((x, y))
-        visible = max(2, int(len(pts) * min(1.0, (p - 0.25) / 0.35)))
+        visible = max(2, int(len(pts) * min(1.0, (p - 0.18) / 0.28)))
         wobble_line(draw, pts[:visible], INK_SOFT, width=3, seed=43)
 
-    if p > 0.55:
+    if p > 0.42:
         wobble_line(draw, [(cx0 + 10, floor_y), (cx1 - 10, floor_y)], GOLD_DEEP, width=3, seed=44)
-        draw.text((cx1 + 10, floor_y - 12), "typical floor (hyp.)", fill=GOLD_DEEP, font=tiny)
-    if p > 0.7:
-        # dashed cap
+        draw.text((cx1 + 8, floor_y - 10), "typical floor (hyp.)", fill=GOLD_DEEP, font=tiny)
+    if p > 0.52:
         x = cx0 + 10
         while x < cx1 - 10:
             draw.line([(x, cap_y), (min(x + 12, cx1 - 10), cap_y)], fill=GOLD, width=3)
             x += 22
-        draw.text((cx1 + 10, cap_y - 12), "cap / participation (hyp.)", fill=GOLD, font=tiny)
+        draw.text((cx1 + 8, cap_y - 10), "cap / participation (hyp.)", fill=GOLD, font=tiny)
 
-    if p > 0.85:
-        # hypothetical stamp
-        sketch_rect(draw, (920, 240, 1180, 340), GOLD_DEEP, width=3, seed=45)
-        draw.text((945, 270), "HYPOTHETICAL", fill=GOLD_DEEP, font=small)
-        draw.text((940, 370), "Numbers are examples only.", fill=INK_SOFT, font=tiny)
-        draw.text((940, 405), "Not a real offer or projection.", fill=INK_SOFT, font=tiny)
+    # Charges note (new beat-3 content)
+    if p > 0.68:
+        draw.text(
+            (100, 460),
+            "Charges still come out — cash value can decline in a flat year.",
+            fill=INK,
+            font=small,
+        )
+
+    if p > 0.82:
+        sketch_rect(draw, (900, 200, 1180, 290), GOLD_DEEP, width=3, seed=45)
+        draw.text((925, 225), "HYPOTHETICAL", fill=GOLD_DEEP, font=small)
+        draw.text((900, 320), "Numbers are examples only.", fill=INK_SOFT, font=tiny)
+        draw.text((900, 350), "Not a real offer or projection.", fill=INK_SOFT, font=tiny)
     return img
 
 
@@ -306,10 +326,10 @@ def render_beat4(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("4 / Common mistakes")
     draw = ImageDraw.Draw(img)
-    body = load_font(34)
-    item = load_font(28)
-    draw.text((110, 120), "What people get wrong", fill=INK, font=body)
-    wobble_line(draw, [(110, 165), (520, 165)], GOLD, width=3, seed=51)
+    body = load_font(32)
+    item = load_font(26)
+    draw.text((110, 100), "What people get wrong", fill=INK, font=body)
+    wobble_line(draw, [(110, 145), (520, 145)], GOLD, width=3, seed=51)
 
     items = [
         "Illustration ≠ guarantee",
@@ -321,10 +341,11 @@ def render_beat4(local_t: float, dur: float) -> Image.Image:
         threshold = 0.2 + i * 0.18
         if p < threshold:
             continue
-        y = 210 + i * 90
-        # checkbox
-        sketch_rect(draw, (120, y, 160, y + 40), INK, width=3, seed=52 + i, radius=6)
-        wobble_line(draw, [(128, y + 22), (140, y + 34), (155, y + 10)], GOLD_DEEP, width=3, seed=60 + i)
+        y = 175 + i * 80
+        if y + 40 > CAPTION_CLEAR_TOP - 20:
+            continue
+        sketch_rect(draw, (120, y, 158, y + 36), INK, width=3, seed=52 + i, radius=6)
+        wobble_line(draw, [(128, y + 20), (138, y + 30), (152, y + 10)], GOLD_DEEP, width=3, seed=60 + i)
         draw.text((180, y + 4), label, fill=INK, font=item)
     return img
 
@@ -333,14 +354,13 @@ def render_beat5(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("5 / Fit vs usually not")
     draw = ImageDraw.Draw(img)
-    head = load_font(32)
-    item = load_font(24)
+    head = load_font(30)
+    item = load_font(22)
 
-    # columns
     if p > 0.1:
-        draw.text((120, 120), "Can fit", fill=GOLD_DEEP, font=head)
-        draw.text((700, 120), "Usually doesn't", fill=INK, font=head)
-        wobble_line(draw, [(640, 160), (640, 560)], GOLD, width=3, seed=71)
+        draw.text((120, 100), "Can fit", fill=GOLD_DEEP, font=head)
+        draw.text((700, 100), "Usually doesn't", fill=INK, font=head)
+        wobble_line(draw, [(640, 140), (640, CAPTION_CLEAR_TOP - 40)], GOLD, width=3, seed=71)
 
     left = [
         "Wants permanent coverage",
@@ -355,10 +375,14 @@ def render_beat5(local_t: float, dur: float) -> Image.Image:
     ]
     if p > 0.3:
         for i, t in enumerate(left):
-            draw.text((120, 200 + i * 70), f"•  {t}", fill=INK, font=item)
+            y = 170 + i * 60
+            if y < CAPTION_CLEAR_TOP - 30:
+                draw.text((120, y), f"•  {t}", fill=INK, font=item)
     if p > 0.6:
         for i, t in enumerate(right):
-            draw.text((700, 200 + i * 55), f"•  {t}" if not t.startswith(" ") else t, fill=INK, font=item)
+            y = 170 + i * 48
+            if y < CAPTION_CLEAR_TOP - 30:
+                draw.text((700, y), f"•  {t}" if not t.startswith(" ") else t, fill=INK, font=item)
     return img
 
 
@@ -366,21 +390,21 @@ def render_beat6(local_t: float, dur: float) -> Image.Image:
     p = beat_progress(local_t, dur)
     img = draw_board_base("6 / Next step")
     draw = ImageDraw.Draw(img)
-    head = load_font(40, bold=True)
-    body = load_font(30)
-    phone = load_font(54, bold=True)
-    small = load_font(24)
+    head = load_font(36, bold=True)
+    body = load_font(28)
+    phone = load_font(50, bold=True)
+    small = load_font(22)
 
     if p > 0.1:
-        draw.text((160, 180), "Let's figure out whether it actually fits.", fill=INK, font=head)
+        draw.text((160, 140), "Let's figure out whether it actually fits.", fill=INK, font=head)
     if p > 0.35:
-        draw.text((160, 260), "No pressure. No obligation.", fill=INK_SOFT, font=body)
+        draw.text((160, 210), "No pressure. No obligation.", fill=INK_SOFT, font=body)
     if p > 0.55:
-        sketch_rect(draw, (160, 340, 820, 470), INK, width=3, seed=81, radius=16)
-        draw.text((200, 375), "248-970-9094", fill=INK, font=phone)
-        wobble_line(draw, [(200, 445), (620, 445)], GOLD_DEEP, width=4, seed=82)
+        sketch_rect(draw, (160, 280, 820, 400), INK, width=3, seed=81, radius=16)
+        draw.text((200, 310), "248-970-9094", fill=INK, font=phone)
+        wobble_line(draw, [(200, 375), (620, 375)], GOLD_DEEP, width=4, seed=82)
     if p > 0.8:
-        draw.text((160, 520), "Dustin McCormick  ·  dustinlife.com", fill=INK_SOFT, font=small)
+        draw.text((160, 440), "Dustin McCormick  ·  dustinlife.com", fill=INK_SOFT, font=small)
     return img
 
 
@@ -399,14 +423,17 @@ def run(cmd: list[str]) -> None:
     subprocess.check_call(cmd)
 
 
-def say_to_aiff(text: str, out_aiff: Path) -> None:
-    say = which("say")
-    if not say:
-        raise RuntimeError("macOS `say` not found — required for free TTS on Mini")
-    run([say, "-v", SAY_VOICE, "-r", str(SAY_RATE), "-o", str(out_aiff), text])
+def wav_duration(path: Path) -> float:
+    with wave.open(str(path), "rb") as w:
+        return w.getnframes() / float(w.getframerate())
 
 
-def aiff_duration(path: Path) -> float:
+def aiff_or_wav_duration(path: Path) -> float:
+    if path.suffix.lower() == ".wav":
+        try:
+            return wav_duration(path)
+        except Exception:
+            pass
     ffprobe = which("ffprobe") or "/usr/local/bin/ffprobe"
     out = subprocess.check_output(
         [
@@ -424,43 +451,168 @@ def aiff_duration(path: Path) -> float:
     return float(out)
 
 
-def concat_audio(aiffs: list[Path], out_wav: Path, gap_sec: float = 0.35) -> list[tuple[str, float, float]]:
+def list_say_voices() -> set[str]:
+    say = which("say")
+    if not say:
+        return set()
+    out = subprocess.check_output([say, "-v", "?"], text=True, stderr=subprocess.STDOUT)
+    names = set()
+    for line in out.splitlines():
+        # "Name                lang    # sample"
+        if not line.strip():
+            continue
+        name = line.split("  ")[0].strip()
+        if name:
+            names.add(name)
+    return names
+
+
+def pick_say_fallback_voice() -> str:
+    installed = list_say_voices()
+    for cand in SAY_FALLBACK_VOICES:
+        if cand in installed:
+            return cand
+    # Partial match (some macOS builds vary the label)
+    lowered = {n.lower(): n for n in installed}
+    for cand in SAY_FALLBACK_VOICES:
+        key = cand.lower()
+        if key in lowered:
+            return lowered[key]
+        for n in installed:
+            if "samantha" in n.lower() or "compact" in n.lower():
+                continue
+            if cand.split()[0].lower() in n.lower() and (
+                "premium" in n.lower() or "enhanced" in n.lower()
+            ):
+                return n
+    raise RuntimeError(
+        "Kokoro unavailable and no Premium/Enhanced Ava/Zoe/Evan say voice installed. "
+        "Refusing Samantha/compact voices."
+    )
+
+
+def kokoro_to_wav(text: str, out_wav: Path, voice: str, speed: float) -> None:
+    import numpy as np
+    import soundfile as sf
+    from kokoro import KPipeline
+
+    if not hasattr(kokoro_to_wav, "_pipeline"):
+        print(f"Loading Kokoro pipeline (voice={voice}, speed={speed})...")
+        kokoro_to_wav._pipeline = KPipeline(lang_code="a")
+    pipeline = kokoro_to_wav._pipeline
+    chunks = []
+    for result in pipeline(text, voice=voice, speed=speed):
+        if hasattr(result, "audio"):
+            chunks.append(np.asarray(result.audio, dtype=np.float32))
+        elif isinstance(result, (tuple, list)) and len(result) >= 3:
+            chunks.append(np.asarray(result[2], dtype=np.float32))
+        else:
+            raise RuntimeError(f"Unexpected Kokoro result: {type(result)}")
+    if not chunks:
+        raise RuntimeError("Kokoro produced no audio")
+    audio = np.concatenate(chunks)
+    sf.write(str(out_wav), audio, 24000)
+
+
+def say_to_audio(text: str, out_aiff: Path, voice: str) -> None:
+    say = which("say")
+    if not say:
+        raise RuntimeError("macOS `say` not found")
+    if "samantha" in voice.lower():
+        raise RuntimeError("Refusing Samantha voice")
+    run([say, "-v", voice, "-r", str(SAY_RATE), "-o", str(out_aiff), text])
+
+
+def synthesize_segment(text: str, out_path: Path, engine: str, voice: str) -> None:
+    if engine == "kokoro":
+        # always wav for kokoro
+        wav = out_path.with_suffix(".wav")
+        kokoro_to_wav(text, wav, voice=voice, speed=KOKORO_SPEED)
+        if wav != out_path:
+            shutil.move(str(wav), str(out_path))
+    else:
+        aiff = out_path.with_suffix(".aiff")
+        say_to_audio(text, aiff, voice=voice)
+        if aiff != out_path:
+            shutil.move(str(aiff), str(out_path))
+
+
+def choose_tts_engine() -> tuple[str, str]:
+    """Return (engine, voice). Prefer Kokoro; else Premium say."""
+    try:
+        import soundfile  # noqa: F401
+        from kokoro import KPipeline  # noqa: F401
+
+        # quick sanity: voice id string
+        voice = KOKORO_VOICE
+        print(f"TTS engine: Kokoro-82M voice={voice} speed={KOKORO_SPEED}")
+        return "kokoro", voice
+    except Exception as e:
+        print(f"Kokoro unavailable ({type(e).__name__}: {e}); trying Premium say fallback")
+        voice = pick_say_fallback_voice()
+        print(f"TTS engine: macOS say voice={voice!r} rate={SAY_RATE}")
+        return "say", voice
+
+
+def concat_audio(parts: list[Path], out_wav: Path, gap_sec: float = 0.35) -> list[tuple[str, float, float]]:
     """Return list of (segment_id, start, end) timeline after concat with gaps."""
     ffmpeg = which("ffmpeg") or "/usr/local/bin/ffmpeg"
-    # Build filter that concatenates with short silences between beats
     timeline = []
     t = 0.0
     filter_parts = []
     inputs = []
     idx = 0
-    for i, aiff in enumerate(aiffs):
-        inputs.extend(["-i", str(aiff)])
-        dur = aiff_duration(aiff)
+    for i, part in enumerate(parts):
+        inputs.extend(["-i", str(part)])
+        dur = aiff_or_wav_duration(part)
         timeline.append((SEGMENTS[i]["id"], t, t + dur))
         filter_parts.append(f"[{idx}:a]")
         idx += 1
         t += dur
-        if i < len(aiffs) - 1:
-            # synthetic silence
-            inputs.extend(["-f", "lavfi", "-t", str(gap_sec), "-i", "anullsrc=r=22050:cl=mono"])
+        if i < len(parts) - 1:
+            inputs.extend(["-f", "lavfi", "-t", str(gap_sec), "-i", "anullsrc=r=24000:cl=mono"])
             filter_parts.append(f"[{idx}:a]")
             idx += 1
             t += gap_sec
     n = idx
     filt = "".join(filter_parts) + f"concat=n={n}:v=0:a=1[aout]"
-    cmd = [ffmpeg, "-y", *inputs, "-filter_complex", filt, "-map", "[aout]", str(out_wav)]
+    cmd = [
+        ffmpeg,
+        "-y",
+        *inputs,
+        "-filter_complex",
+        filt,
+        "-map",
+        "[aout]",
+        "-ar",
+        "24000",
+        str(out_wav),
+    ]
     run(cmd)
     return timeline
 
 
-def write_vtt(timeline: list[tuple[str, float, float]], path: Path) -> None:
-    def ts(sec: float) -> str:
-        h = int(sec // 3600)
-        m = int((sec % 3600) // 60)
-        s = sec % 60
-        return f"{h:02d}:{m:02d}:{s:06.3f}".replace(".", ",") if False else f"{h:02d}:{m:02d}:{s:06.3f}"
+def split_caption_lines(text: str, max_len: int = 45) -> list[str]:
+    """Split into short single-line caption cues (≤ max_len chars)."""
+    # Normalize whitespace
+    text = " ".join(text.replace("—", "—").split())
+    words = text.split(" ")
+    lines: list[str] = []
+    cur: list[str] = []
+    for w in words:
+        trial = (" ".join(cur + [w])).strip()
+        if cur and len(trial) > max_len:
+            lines.append(" ".join(cur))
+            cur = [w]
+        else:
+            cur.append(w)
+    if cur:
+        lines.append(" ".join(cur))
+    # Prefer breaking on punctuation when a line is still long-ish
+    return lines
 
-    # WebVTT uses . as decimal separator
+
+def write_vtt(timeline: list[tuple[str, float, float]], path: Path) -> None:
     def vtt_ts(sec: float) -> str:
         h = int(sec // 3600)
         m = int((sec % 3600) // 60)
@@ -468,32 +620,44 @@ def write_vtt(timeline: list[tuple[str, float, float]], path: Path) -> None:
         return f"{h:02d}:{m:02d}:{s:06.3f}"
 
     lines = ["WEBVTT", ""]
+    cue_i = 1
     for i, seg in enumerate(SEGMENTS):
         _id, start, end = timeline[i]
-        lines.append(str(i + 1))
-        lines.append(f"{vtt_ts(start)} --> {vtt_ts(end)}")
-        # Cap cue length a bit for readability
-        text = seg["text"]
-        if len(text) > 120:
-            # split on sentence boundary near middle
-            cut = text.find(". ", len(text) // 3)
-            if cut == -1:
-                cut = text.find(", ", len(text) // 3)
-            if cut != -1:
-                text = text[: cut + 1] + "\n" + text[cut + 2 :]
-        lines.append(text)
-        lines.append("")
+        # Small pad so cues don't touch neighbors
+        seg_start = start + 0.05
+        seg_end = max(seg_start + 0.2, end - 0.05)
+        captions = split_caption_lines(seg["text"], max_len=45)
+        # Weight by character length for timing
+        weights = [max(1, len(c)) for c in captions]
+        total_w = float(sum(weights))
+        dur = seg_end - seg_start
+        t = seg_start
+        for j, (cap, w) in enumerate(zip(captions, weights)):
+            piece = dur * (w / total_w)
+            c_start = t
+            c_end = seg_end if j == len(captions) - 1 else min(seg_end, t + piece)
+            # Ensure strictly increasing, non-overlapping
+            if c_end <= c_start:
+                c_end = c_start + 0.15
+            # position: bottom ~15% via line 85% + size
+            lines.append(str(cue_i))
+            lines.append(
+                f"{vtt_ts(c_start)} --> {vtt_ts(c_end)} line:85% position:50% size:90% align:middle"
+            )
+            lines.append(cap)
+            lines.append("")
+            cue_i += 1
+            t = c_end
     path.write_text("\n".join(lines))
     print("Wrote", path)
 
 
 def render_frames(timeline: list[tuple[str, float, float]], frames_dir: Path) -> int:
     frames_dir.mkdir(parents=True, exist_ok=True)
-    total_dur = timeline[-1][2] + 0.6  # brief hold on last
+    total_dur = timeline[-1][2] + 0.6
     n_frames = int(math.ceil(total_dur * FPS))
     for fi in range(n_frames):
         t = fi / FPS
-        # find beat
         beat_id = timeline[-1][0]
         local_t = t - timeline[-1][1]
         dur = timeline[-1][2] - timeline[-1][1]
@@ -505,7 +669,6 @@ def render_frames(timeline: list[tuple[str, float, float]], frames_dir: Path) ->
                 break
             if t < start:
                 break
-        # during gaps, hold previous beat at end
         if all(not (start <= t <= end) for _, start, end in timeline):
             prev = None
             for bid, start, end in timeline:
@@ -559,7 +722,6 @@ def encode_mp4(frames_dir: Path, audio_wav: Path, out_mp4: Path) -> None:
 
 
 def make_poster(timeline, out_png: Path) -> None:
-    # Use a mid-beat-1 frame look as brand poster
     img = render_beat1(10.0, 12.0)
     img.save(out_png)
     print("Wrote poster", out_png)
@@ -570,27 +732,33 @@ def main() -> None:
     ffmpeg = which("ffmpeg") or ("/usr/local/bin/ffmpeg" if os.path.exists("/usr/local/bin/ffmpeg") else None)
     if not ffmpeg:
         raise RuntimeError("ffmpeg not found")
-    if not which("say"):
-        raise RuntimeError("macOS say not found")
+
+    engine, voice = choose_tts_engine()
 
     with tempfile.TemporaryDirectory(prefix="iul-intro-") as td:
         td_path = Path(td)
-        aiffs = []
+        parts = []
         for seg in SEGMENTS:
-            out = td_path / f"{seg['id']}.aiff"
-            print(f"TTS {seg['id']}...")
-            say_to_aiff(seg["text"], out)
-            aiffs.append(out)
+            ext = ".wav" if engine == "kokoro" else ".aiff"
+            out = td_path / f"{seg['id']}{ext}"
+            print(f"TTS {seg['id']} via {engine}/{voice}...")
+            synthesize_segment(seg["text"], out, engine, voice)
+            parts.append(out)
 
         wav = td_path / "narration.wav"
-        timeline = concat_audio(aiffs, wav)
+        timeline = concat_audio(parts, wav)
         total = timeline[-1][2]
         print("Timeline:")
         for bid, s, e in timeline:
             print(f"  {bid}: {s:.2f} -> {e:.2f} ({e-s:.2f}s)")
         print(f"Total narration ~{total:.1f}s")
-        if total < 75 or total > 105:
-            print("WARNING: length outside 75–100s target (allowing small slack to 105)")
+        words = sum(len(s["text"].split()) for s in SEGMENTS)
+        print(f"Approx WPM: {words / (total / 60):.0f}")
+        if total < 75 or total > 110:
+            print("WARNING: length outside ~75–100s target (slack to 110)")
+
+        # Persist engine choice note
+        (td_path / "tts_choice.txt").write_text(f"{engine}\t{voice}\t{KOKORO_SPEED if engine=='kokoro' else SAY_RATE}\n")
 
         frames_dir = td_path / "frames"
         print("Rendering frames...")
@@ -605,6 +773,12 @@ def main() -> None:
 
         out_poster = OUT_DIR / "iul-intro-poster.png"
         make_poster(timeline, out_poster)
+
+        # Copy TTS choice next to outputs for reporting
+        (OUT_DIR / "iul-intro-tts.txt").write_text(
+            f"engine={engine}\nvoice={voice}\nspeed_or_rate={KOKORO_SPEED if engine=='kokoro' else SAY_RATE}\n"
+            f"total_sec={total:.2f}\n"
+        )
 
         size_mb = out_mp4.stat().st_size / (1024 * 1024)
         print(f"Done. {out_mp4} ({size_mb:.1f} MB)")
