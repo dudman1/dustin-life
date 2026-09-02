@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+<!--
+  Site chrome below is a hand-maintained duplicate of app/components/SiteChrome.tsx
+  (+ related styles from app/dustinlife-v2.module.css). Update BOTH when nav changes.
+  Fonts: Playfair Display still loaded via Google Fonts (same family as next/font on the
+  React site). No woff2 files exist under public/; Next hashed media fonts under
+  out/_next/static/media/ are build artifacts and would bloat/break on rebuild if copied.
+  Body/UI chrome uses system-ui stack (close to Geist Sans) to avoid shipping Geist files.
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
+
   :root{
     --bg:#f6f1e8; --bg2:#f1e9dc; --panel:#ffffff; --panel2:#faf6f0;
     --line:#e6dccf; --line2:rgba(230,220,207,.65);
@@ -45,22 +54,15 @@
   .ribbon-inner .tag{color:var(--gold)}
   .ribbon-inner .sep{color:var(--dim)}
 
-  /* ---------- header ---------- */
-  header{padding:26px 0 18px;border-bottom:1px solid var(--line2)}
-  .brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  .brandmark{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--txt)}
-  .brandmark img{
-    width:56px;height:56px;object-fit:cover;border-radius:12px;
-    border:1px solid rgba(185,150,91,.28);background:#fff;
-  }
-  .brandmark svg{width:56px;height:56px;flex-shrink:0}
-  .brandtext{display:flex;flex-direction:column;gap:2px}
-  .logo{
+  /* ---------- compass page intro (below site chrome) ---------- */
+  .compass-intro{padding:26px 0 18px;border-bottom:1px solid var(--line2)}
+  .compass-intro .brandtext{display:flex;flex-direction:column;gap:2px}
+  .compass-intro .logo{
     font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:-.01em;
     color:var(--txt);line-height:1.05;
   }
-  .subline{font-family:var(--mono);font-size:11px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase}
-  header p.lede{margin-top:14px;color:var(--mut);max-width:72ch}
+  .compass-intro .subline{font-family:var(--mono);font-size:11px;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase}
+  .compass-intro p.lede{margin-top:14px;color:var(--mut);max-width:72ch}
 
   /* ---------- layout ---------- */
   main{display:grid;grid-template-columns:370px 1fr;gap:22px;padding:24px 0 40px}
@@ -186,17 +188,119 @@
   .st-pass{color:var(--emerald-d)} .st-fail{color:var(--danger)}
   .st-sum{font-family:var(--mono);font-size:13px;padding:12px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--txt)}
 
-  footer{
-    border-top:1px solid var(--line);padding:22px 0 42px;color:var(--mut);
+  .compass-disclosures{
+    border-top:1px solid var(--line);padding:22px 0 28px;color:var(--mut);
     font-size:11.5px;line-height:1.75;
   }
-  footer .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-d);margin-bottom:8px}
-  .backlink{
-    display:inline-block;margin-bottom:14px;font-family:var(--mono);font-size:11px;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--gold-d);
-    text-decoration:none;font-weight:700;
+  .compass-disclosures .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-d);margin-bottom:8px}
+
+
+  /* ========== SiteChrome port (hand-maintained; mirror app/components/SiteChrome.tsx) ========== */
+  .sc-page{min-height:100vh;background:var(--bg);color:var(--txt)}
+  .sc-wrap{width:min(1180px,calc(100% - 32px));margin:0 auto}
+  .sc-topbar{background:#f8f4ee;border-bottom:1px solid #e6dccf;color:#6e675c;font-size:14px}
+  .sc-topbar-inner{padding:10px 0;text-align:center}
+  .sc-topbar-inner a{color:#8f6d34;font-weight:700;text-decoration:none}
+  .sc-header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(246,241,232,.94);backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(230,220,207,.92);
   }
-  .backlink:hover{text-decoration:underline}
+  .sc-nav-row{
+    display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;padding:16px 0;
+  }
+  .sc-brand{display:inline-flex;align-items:center;gap:0;text-decoration:none;color:inherit}
+  .sc-brand svg{color:#8F6D34;height:48px;width:48px;flex:0 0 auto;display:block}
+  .sc-nav-main{
+    display:flex;align-items:center;justify-content:center;gap:6px;margin:0 auto;
+    padding:6px;border:1px solid #e6dccf;background:rgba(255,255,255,.74);
+    border-radius:999px;box-shadow:0 18px 45px rgba(38,29,16,.08);
+  }
+  .sc-nav-main a{
+    text-decoration:none;padding:10px 16px;border-radius:999px;color:#6e675c;
+    font-size:14px;font-weight:600;white-space:nowrap;transition:.2s ease;
+  }
+  .sc-nav-main a:focus-visible{outline:3px solid #8F6D34;outline-offset:2px}
+  .sc-nav-main a:hover{background:#8F6D34;color:#fff}
+  .sc-nav-main a[data-active="true"]{background:#EFE3CC;color:#1D1B18}
+  .sc-nav-right{display:flex;align-items:center;gap:12px;justify-self:end}
+  .sc-nav-icons{display:inline-flex;align-items:center;gap:10px}
+  .sc-nav-icon{
+    display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+    border-radius:999px;border:1px solid #e6dccf;background:#fff;color:#7a6641;
+    box-shadow:0 10px 24px rgba(38,29,16,.06);
+  }
+  .sc-nav-icon svg{width:18px;height:18px}
+  .sc-nav-toggle{
+    display:none;align-items:center;justify-content:center;width:44px;height:44px;
+    border-radius:12px;border:1px solid #e6dccf;background:rgba(255,255,255,.9);
+    color:#1d1b18;cursor:pointer;
+  }
+  .sc-nav-toggle svg{width:20px;height:20px}
+  .sc-nav-toggle:focus-visible{outline:3px solid #8F6D34;outline-offset:2px}
+  .sc-mobile-nav{
+    display:none;border-top:1px solid #e6dccf;background:rgba(255,252,247,.98);
+    box-shadow:0 18px 40px rgba(38,29,16,.12);
+  }
+  .sc-mobile-nav.is-open{display:block}
+  .sc-mobile-nav-links{display:grid;gap:8px;padding:16px 0 8px}
+  .sc-mobile-nav-links a{
+    text-decoration:none;padding:14px 16px;border-radius:14px;border:1px solid #e6dccf;
+    background:#fff;color:#4e463c;font-size:15px;font-weight:600;
+  }
+  .sc-mobile-nav-links a[data-active="true"]{
+    background:#EFE3CC;color:#1D1B18;border-color:rgba(185,150,91,.35);
+  }
+  .sc-mobile-nav-links a:focus-visible{outline:3px solid #8F6D34;outline-offset:2px}
+  .sc-mobile-nav-hint{margin:0;padding:8px 0 18px;color:#6e675c;font-size:14px}
+  .sc-mobile-nav-hint a{color:#8F6D34;font-weight:600;text-decoration:none}
+  .sc-footer{background:#f3ecdf;border-top:1px solid #deceb7}
+  .sc-footer-inner{padding:34px 0 46px;text-align:center}
+  .sc-footer-name{
+    font-family:var(--serif);font-size:13px;font-weight:800;letter-spacing:.16em;
+    text-transform:uppercase;color:#7a6641;
+  }
+  .sc-footer-address{font-size:13px;color:#6e675c}
+  .sc-footer-links{
+    display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:16px 0;
+  }
+  .sc-footer-links a{text-decoration:none;color:#7a6641;font-weight:600}
+  .sc-social-row{display:flex;align-items:center;justify-content:center;gap:14px}
+  .sc-social-link{
+    display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+    border-radius:999px;color:#7a6641;background:#fff;border:1px solid #deceb7;
+  }
+  .sc-social-link svg{width:18px;height:18px}
+  .sc-footer-copy{color:#6e675c;font-size:13px}
+  .sc-sticky-cta{display:none}
+  .sc-sticky-cta-inner{
+    display:grid;grid-template-columns:1.15fr .85fr;gap:10px;
+    width:min(1180px,calc(100% - 24px));margin:0 auto;
+  }
+  .sc-sticky-primary,.sc-sticky-call{
+    display:inline-flex;align-items:center;justify-content:center;min-height:48px;
+    padding:12px 14px;border-radius:999px;font-size:14px;font-weight:700;
+    text-decoration:none;text-align:center;
+  }
+  .sc-sticky-primary{background:#8F6D34;color:#fff;box-shadow:0 10px 24px rgba(143,109,52,.22)}
+  .sc-sticky-call{background:#fff;color:#1d1b18;border:1px solid #e6dccf}
+  .sc-sticky-primary:focus-visible,.sc-sticky-call:focus-visible{outline:3px solid #8F6D34;outline-offset:2px}
+  @media (max-width:1080px){
+    .sc-nav-toggle{display:inline-flex}
+    .sc-nav-main{display:none}
+    .sc-nav-row{grid-template-columns:auto 1fr}
+    .sc-nav-right{justify-self:end;width:auto}
+  }
+  @media (max-width:760px){
+    .sc-page{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+    .sc-sticky-cta{
+      display:block;position:fixed;left:0;right:0;bottom:0;z-index:35;
+      padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));
+      background:rgba(246,241,232,.96);backdrop-filter:blur(14px);
+      border-top:1px solid #e6dccf;box-shadow:0 -12px 30px rgba(38,29,16,.1);
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -210,22 +314,67 @@
   </div>
 </div>
 
-<header>
+<div class="sc-page">
+
+<div class="sc-topbar">
+  <div class="sc-wrap sc-topbar-inner">
+    Speak with a licensed agent: <a href="tel:+12489709094">248-970-9094</a> · No obligation, ever.
+  </div>
+</div>
+
+<header class="sc-header">
+  <div class="sc-wrap sc-nav-row">
+    <a href="/" class="sc-brand" aria-label="Dustin McCormick — home" data-nav-close>
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 712 712" height="48" width="48" fill="currentColor"><title>DM</title><g transform="translate(0,712) scale(0.1,-0.1)"><path d="M210 6582 c0 -16 15 -24 71 -42 114 -34 183 -89 242 -191 60 -104 57 19 57 -2140 0 -2028 -1 -2082 -39 -2124 -22 -24 -61 -110 -61 -135 0 -39 -113 -119 -205 -145 -68 -19 -84 -30 -69 -45 14 -14 1823 -13 2059 0 194 11 407 40 575 76 124 28 346 96 395 121 135 71 162 83 183 83 61 0 334 174 508 323 442 379 717 921 775 1527 15 156 6 535 -16 675 -154 998 -796 1695 -1780 1934 -374 90 -425 93 -1637 98 -1046 4 -1058 4 -1058 -15z m2000 -153 c230 -23 446 -69 560 -119 36 -15 88 -36 117 -45 37 -12 53 -23 55 -37 2 -15 39 -40 133 -91 282 -151 474 -323 691 -617 114 -153 199 -331 268 -560 187 -619 134 -1428 -129 -1978 -30 -63 -60 -112 -65 -110 -11 3 -173 308 -497 933 -95 182 -268 510 -385 730 l-213 400 -430 0 c-376 0 -430 -2 -430 -15 0 -9 17 -20 45 -28 185 -53 306 -172 372 -367 l23 -70 5 -1235 5 -1235 55 3 c30 1 60 4 67 7 9 3 11 283 10 1159 -1 636 0 1156 3 1156 3 0 44 -76 92 -168 49 -92 156 -295 239 -452 218 -412 517 -986 588 -1127 60 -121 61 -122 91 -117 127 26 -159 -197 -405 -316 -260 -125 -543 -193 -920 -220 -166 -12 -1032 -14 -1039 -2 -7 12 -10 4508 -2 4520 10 16 32 4 45 -25 11 -23 15 -25 54 -19 23 4 53 18 67 31 24 23 34 25 155 28 192 6 666 -3 775 -14z m-1590 -309 c0 -16 -4 -30 -10 -30 -5 0 -10 14 -10 30 0 17 5 30 10 30 6 0 10 -13 10 -30z M6076 4913 c-7 -16 -46 -109 -86 -208 -40 -99 -87 -214 -105 -255 -18 -41 -59 -138 -90 -215 -32 -77 -70 -167 -86 -200 -16 -33 -29 -65 -29 -71 0 -6 -72 -184 -161 -395 -88 -211 -218 -528 -289 -704 -71 -176 -138 -339 -149 -362 -12 -23 -21 -46 -21 -52 0 -5 -11 -36 -24 -68 -14 -32 -100 -242 -191 -468 -198 -487 -215 -527 -227 -523 -9 3 -118 205 -412 763 -79 150 -128 231 -139 233 -11 2 -44 -21 -85 -60 -80 -76 -161 -139 -259 -202 -40 -26 -73 -51 -73 -57 0 -6 122 -245 270 -532 149 -287 325 -631 393 -764 67 -134 127 -243 132 -243 15 1 194 441 385 945 20 55 101 255 180 445 78 190 206 505 285 700 198 492 435 1078 555 1375 56 138 107 270 113 295 7 25 24 65 39 90 14 25 34 71 44 103 13 43 22 57 37 57 16 0 18 -5 12 -32 -4 -18 -12 -39 -19 -47 -8 -10 -12 -263 -14 -918 -2 -556 -7 -903 -13 -903 -5 0 -9 6 -9 13 0 6 -4 50 -10 97 -10 96 -19 260 -20 368 0 39 -4 72 -8 72 -9 0 -21 -1041 -23 -1905 l-1 -430 26 -3 c33 -4 33 -19 1 -83 -51 -100 -112 -149 -240 -194 -46 -16 -60 -26 -60 -40 0 -20 11 -20 610 -20 573 0 610 1 613 18 2 9 -2 19 -10 21 -173 52 -267 138 -313 286 -15 51 -16 197 -16 1872 1 1136 5 1836 11 1869 23 118 122 237 239 285 74 31 96 47 87 63 -5 8 -132 11 -421 11 l-414 0 -15 -27z M2335 1688 c-2 -7 -6 -159 -8 -338 l-3 -325 -32 -96 c-58 -173 -157 -290 -294 -346 -139 -56 -127 -58 397 -58 440 0 470 1 473 18 2 10 -4 20 -15 23 -136 47 -273 180 -325 317 -49 128 -51 149 -57 487 l-6 325 -63 3 c-44 2 -64 -1 -67 -10z" /></g></svg>
+    </a>
+
+    <nav class="sc-nav-main" aria-label="Primary">
+              <a href="/">Home</a>
+              <a href="/final-expense">Final Expense</a>
+              <a href="/indexed-universal-life">Indexed Universal Life</a>
+              <a href="/iul-compass/" data-active="true">IUL Compass</a>
+              <a href="/faq">FAQ</a>
+    </nav>
+
+    <div class="sc-nav-right">
+      <div class="sc-nav-icons">
+        <a class="sc-nav-icon" href="mailto:transamerica.dustin@gmail.com" aria-label="Email Dustin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></a>
+        <a class="sc-nav-icon" href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a class="sc-nav-icon" href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
+      <button type="button" class="sc-nav-toggle" id="sc-nav-toggle" aria-expanded="false" aria-controls="mobile-primary-nav" aria-label="Open menu">
+        <span class="sc-icon-menu" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span>
+        <span class="sc-icon-close" aria-hidden="true" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-primary-nav" class="sc-mobile-nav" hidden>
+    <div class="sc-wrap">
+      <nav class="sc-mobile-nav-links" aria-label="Mobile primary">
+              <a href="/" data-nav-close>Home</a>
+              <a href="/final-expense" data-nav-close>Final Expense</a>
+              <a href="/indexed-universal-life" data-nav-close>Indexed Universal Life</a>
+              <a href="/iul-compass/" data-active="true" data-nav-close>IUL Compass</a>
+              <a href="/faq" data-nav-close>FAQ</a>
+      </nav>
+      <p class="sc-mobile-nav-hint">No pressure. Call anytime: <a href="tel:+12489709094">248-970-9094</a></p>
+    </div>
+  </div>
+</header>
+
+
+<section class="compass-intro">
   <div class="wrap">
-    <div class="brandrow">
-      <a class="brandmark" href="https://dustinlife.com/" aria-label="Dustin McCormick — home">
-        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 712 712" height="56" fill="var(--gold-d)"><title>DM</title><g transform="translate(0,712) scale(0.1,-0.1)"><path d="M210 6582 c0 -16 15 -24 71 -42 114 -34 183 -89 242 -191 60 -104 57 19 57 -2140 0 -2028 -1 -2082 -39 -2124 -22 -24 -61 -110 -61 -135 0 -39 -113 -119 -205 -145 -68 -19 -84 -30 -69 -45 14 -14 1823 -13 2059 0 194 11 407 40 575 76 124 28 346 96 395 121 135 71 162 83 183 83 61 0 334 174 508 323 442 379 717 921 775 1527 15 156 6 535 -16 675 -154 998 -796 1695 -1780 1934 -374 90 -425 93 -1637 98 -1046 4 -1058 4 -1058 -15z m2000 -153 c230 -23 446 -69 560 -119 36 -15 88 -36 117 -45 37 -12 53 -23 55 -37 2 -15 39 -40 133 -91 282 -151 474 -323 691 -617 114 -153 199 -331 268 -560 187 -619 134 -1428 -129 -1978 -30 -63 -60 -112 -65 -110 -11 3 -173 308 -497 933 -95 182 -268 510 -385 730 l-213 400 -430 0 c-376 0 -430 -2 -430 -15 0 -9 17 -20 45 -28 185 -53 306 -172 372 -367 l23 -70 5 -1235 5 -1235 55 3 c30 1 60 4 67 7 9 3 11 283 10 1159 -1 636 0 1156 3 1156 3 0 44 -76 92 -168 49 -92 156 -295 239 -452 218 -412 517 -986 588 -1127 60 -121 61 -122 91 -117 127 26 -159 -197 -405 -316 -260 -125 -543 -193 -920 -220 -166 -12 -1032 -14 -1039 -2 -7 12 -10 4508 -2 4520 10 16 32 4 45 -25 11 -23 15 -25 54 -19 23 4 53 18 67 31 24 23 34 25 155 28 192 6 666 -3 775 -14z m-1590 -309 c0 -16 -4 -30 -10 -30 -5 0 -10 14 -10 30 0 17 5 30 10 30 6 0 10 -13 10 -30z M6076 4913 c-7 -16 -46 -109 -86 -208 -40 -99 -87 -214 -105 -255 -18 -41 -59 -138 -90 -215 -32 -77 -70 -167 -86 -200 -16 -33 -29 -65 -29 -71 0 -6 -72 -184 -161 -395 -88 -211 -218 -528 -289 -704 -71 -176 -138 -339 -149 -362 -12 -23 -21 -46 -21 -52 0 -5 -11 -36 -24 -68 -14 -32 -100 -242 -191 -468 -198 -487 -215 -527 -227 -523 -9 3 -118 205 -412 763 -79 150 -128 231 -139 233 -11 2 -44 -21 -85 -60 -80 -76 -161 -139 -259 -202 -40 -26 -73 -51 -73 -57 0 -6 122 -245 270 -532 149 -287 325 -631 393 -764 67 -134 127 -243 132 -243 15 1 194 441 385 945 20 55 101 255 180 445 78... [truncated]</g></svg>
-        <span class="brandtext">
-          <span class="logo">IUL Compass</span>
-          <span class="subline">Indexed Universal Life — educational projection tool</span>
-        </span>
-      </a>
+    <div class="brandtext">
+      <div class="logo">IUL Compass</div>
+      <div class="subline">Indexed Universal Life — educational projection tool</div>
     </div>
     <p class="lede">Model how indexed universal life cash value and death benefit could evolve over time under simplified,
     level assumptions. Adjust the inputs, review the assumptions table, and request a personalized follow-up.
     Everything runs locally in your browser.</p>
   </div>
-</header>
+</section>
 
 <div class="wrap">
 <main>
@@ -375,8 +524,7 @@
   <div id="selftest-list"></div>
 </section>
 
-<footer>
-  <a class="backlink" href="https://dustinlife.com/">← Back to dustinlife.com</a>
+<section class="wrap compass-disclosures" aria-label="Compass disclosures">
   <div class="mono">Important disclosures</div>
   <p>This tool is provided for educational and illustrative purposes only. It is <strong>not financial advice,
   not tax or legal advice, and not an offer</strong> to sell or solicit any insurance product. All projections are
@@ -386,7 +534,35 @@
   contracts and may lapse if insufficient premiums are paid; a lapse can have tax consequences. Consult a licensed
   insurance professional before making any decision. This tool is unaffiliated with any insurer and stores data only
   in your own browser (localStorage).</p>
+</section>
+
+<footer class="sc-footer">
+  <div class="sc-wrap sc-footer-inner">
+    <div class="sc-footer-name">Dustin McCormick</div>
+    <p class="sc-footer-address">
+      101 W Big Beaver Rd Ste 345, Troy, MI 48084<br>
+      248-970-9094
+    </p>
+    <div class="sc-footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms</a>
+      <a href="/disclosures">Disclosures</a>
+    </div>
+    <div class="sc-social-row">
+      <a class="sc-social-link" href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+      <a class="sc-social-link" href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    </div>
+    <p class="sc-footer-copy">© 2026 Dustin McCormick</p>
+  </div>
 </footer>
+
+<div class="sc-sticky-cta" role="region" aria-label="Quick actions">
+  <div class="sc-sticky-cta-inner">
+    <a class="sc-sticky-primary" href="/#assessment">Free Assessment</a>
+    <a class="sc-sticky-call" href="tel:+12489709094">Call 248-970-9094</a>
+  </div>
+</div>
+
 </div>
 
 <script>
@@ -843,5 +1019,34 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
+
+<script>
+(function(){
+  var toggle = document.getElementById('sc-nav-toggle');
+  var panel = document.getElementById('mobile-primary-nav');
+  if(!toggle || !panel) return;
+  var menuIcon = toggle.querySelector('.sc-icon-menu');
+  var closeIcon = toggle.querySelector('.sc-icon-close');
+  function setOpen(open){
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    panel.classList.toggle('is-open', open);
+    if(open){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+    document.body.style.overflow = open ? 'hidden' : '';
+    if(menuIcon) menuIcon.hidden = !!open;
+    if(closeIcon) closeIcon.hidden = !open;
+  }
+  toggle.addEventListener('click', function(){
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') setOpen(false);
+  });
+  document.querySelectorAll('[data-nav-close]').forEach(function(el){
+    el.addEventListener('click', function(){ setOpen(false); });
+  });
+})();
+</script>
+
 </body>
 </html>
