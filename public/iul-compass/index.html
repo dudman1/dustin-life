@@ -68,6 +68,7 @@
   main{display:grid;grid-template-columns:370px 1fr;gap:22px;padding:24px 0 40px}
   @media(max-width:940px){main{grid-template-columns:1fr}}
   @media(min-width:941px){main>.stack:first-child{align-self:start;position:sticky;top:24px}}
+  main > .stack { min-width: 0; }
   .panel{
     background:var(--panel);
     border:1px solid var(--line);border-radius:18px;padding:20px;
@@ -128,7 +129,8 @@
   th.active{color:var(--gold-d);box-shadow:inset 0 -2px 0 var(--gold)}
   td.active{color:var(--txt);background:rgba(185,150,91,.10)}
   td.lapsed{color:var(--danger)}
-  .tbl-scroll{overflow:auto;max-height:320px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .tbl-scroll{overflow:auto;max-width:100%;max-height:320px;border:1px solid var(--line);border-radius:12px;background:#fff}
+  .tbl-scroll.tbl-scroll--assump{max-height:none}
   .tbl-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
   .assump-note{
     margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.75;
@@ -437,7 +439,9 @@
   <div class="stack">
     <section class="panel">
       <h2>// Index Credit Assumptions</h2>
-      <div id="assumptions"></div>
+      <div class="tbl-scroll tbl-scroll--assump">
+        <div id="assumptions"></div>
+      </div>
       <div class="assump-note">
         Fixed admin fee $120/yr · cost-of-insurance = $0.20 + $0.02 per year over age 18,
         per $1,000 of coverage · face amount defaults to the greater of 25× annual premium or $50,000, and is used as entered when a desired coverage amount is specified ·
