@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import DmLogo from "@/app/components/DmLogo";
+import SiteChrome from "@/app/components/SiteChrome";
 import { type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
@@ -37,31 +36,6 @@ const STATES = [
   "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
 ];
 
-function EmailIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
-      <path d="M4 6h16v12H4z" />
-      <path d="M4 7l8 6 8-6" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
-  );
-}
-
-function LinkedInIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-    </svg>
-  );
-}
-
 export default function FinalExpenseClient() {
   const activeStepRef = useRef<HTMLDivElement | null>(null);
   const formWrapRef = useRef<HTMLDivElement | null>(null);
@@ -93,9 +67,10 @@ export default function FinalExpenseClient() {
   );
 
   const getStickyStepOffset = () => {
-    const nav = document.querySelector(".fe-page nav");
-    const navHeight = nav instanceof HTMLElement ? nav.getBoundingClientRect().height : 0;
-    return navHeight + 24;
+    // SiteChrome sticky header (module class hashed; element tag is stable)
+    const header = document.querySelector("header");
+    const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+    return headerHeight + 24;
   };
 
   const scrollToQuote = useCallback((behavior: ScrollBehavior = "smooth") => {
@@ -284,32 +259,8 @@ export default function FinalExpenseClient() {
   };
 
   return (
-    <>
+    <SiteChrome current="final-expense" stickyCtaHref="#get-quote" stickyCtaLabel="Get My Free Quote">
       <div className="fe-page">
-        <div className="topbar">
-          Speak with a licensed agent: <a href="tel:+12489709094">248-970-9094</a> &nbsp;·&nbsp; No obligation, ever.
-        </div>
-
-        <nav>
-          <div className="nav-inner">
-            <Link href="/" className="nav-logo" aria-label="Dustin McCormick — home">
-              <DmLogo height={48} />
-            </Link>
-            <div className="nav-main">
-              <Link href="/" className="nav-link">Home</Link>
-              <Link href="/final-expense" className="nav-link active">Final Expense</Link>
-              <Link href="/indexed-universal-life" className="nav-link">Indexed Universal Life</Link>
-              <a href="/iul-compass/" className="nav-link">IUL Compass</a>
-              <Link href="/faq" className="nav-link">FAQ</Link>
-            </div>
-            <div className="nav-icons">
-              <a href="mailto:transamerica.dustin@gmail.com" className="nav-icon-link" aria-label="Email Dustin"><EmailIcon /></a>
-              <a href="https://www.facebook.com/profile.php?id=61577772774808" target="_blank" rel="noopener noreferrer" className="nav-icon-link" aria-label="Facebook"><FacebookIcon /></a>
-              <a href="https://www.linkedin.com/in/w-dustin-mccormick/" target="_blank" rel="noopener noreferrer" className="nav-icon-link" aria-label="LinkedIn"><LinkedInIcon /></a>
-            </div>
-          </div>
-        </nav>
-
         <div className="hero">
           <div className="hero-inner">
             <div className="hero-content">
@@ -641,20 +592,6 @@ export default function FinalExpenseClient() {
           </div>
         </div>
 
-        <footer>
-          <div className="footer-name">Dustin McCormick</div>
-          <p className="footer-address">101 W Big Beaver Rd Ste 345, Troy, MI 48084<br />248-970-9094</p>
-          <div className="footer-links">
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms</a>
-            <a href="/disclosures">Disclosures</a>
-          </div>
-          <p className="footer-copy">© 2026 Dustin McCormick. All rights reserved.</p>
-        </footer>
-
-        <div className="mobile-cta">
-          <a href="#get-quote" onClick={handleQuoteLinkClick}>Get My Free Quote — No Obligation</a>
-        </div>
       </div>
 
       <style jsx global>{`
@@ -664,7 +601,7 @@ export default function FinalExpenseClient() {
           --bg: #faf9f7;
           --bg-2: #f3f1ee;
           --bg-dark: #1c1c1e;
-          --sticky-offset: 104px;
+          --sticky-offset: 88px;
           --text: #1c1c1e;
           --text-2: #4a4a4a;
           --text-3: #888;
@@ -689,100 +626,6 @@ export default function FinalExpenseClient() {
         .fe-page { scroll-behavior: smooth; }
         .fe-page img { max-width: 100%; display: block; }
         .fe-page a { color: inherit; text-decoration: none; }
-        .fe-page .topbar {
-          background: var(--bg-dark);
-          color: rgba(255,255,255,0.85);
-          text-align: center;
-          font-size: 13px;
-          padding: 9px 16px;
-          letter-spacing: 0.01em;
-        }
-        .fe-page .topbar a { color: #f5d98b; font-weight: 600; }
-        .fe-page .topbar a:hover { text-decoration: underline; }
-        .fe-page nav {
-          background: var(--white);
-          border-bottom: 1px solid var(--border);
-          position: sticky;
-          top: 0;
-          z-index: 100;
-          box-shadow: 0 1px 8px rgba(0,0,0,0.05);
-        }
-        .fe-page .nav-inner {
-          max-width: 1100px;
-          margin: 0 auto;
-          padding: 12px 24px;
-          min-height: 72px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 18px;
-          flex-wrap: wrap;
-        }
-        .fe-page .nav-logo { display: inline-flex; }
-        .fe-page .nav-logo img { height: 48px; width: auto; border-radius: 4px; }
-        .fe-page .nav-logo svg { color: var(--accent); }
-        .fe-page .nav-main {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 6px;
-          border: 1px solid var(--border);
-          border-radius: 999px;
-          background: var(--bg-2);
-          box-shadow: 0 10px 24px rgba(0,0,0,0.05);
-          margin: 0 auto;
-        }
-        .fe-page .nav-link {
-          padding: 8px 16px;
-          border-radius: 999px;
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--text-2);
-          transition: background 0.15s, color 0.15s;
-          white-space: nowrap;
-        }
-        .fe-page .nav-link:hover { color: var(--text); }
-        .fe-page .nav-link.active {
-          background: var(--accent);
-          color: var(--white);
-        }
-        .fe-page .nav-icons {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .fe-page .nav-icon-link {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 36px;
-          height: 36px;
-          border-radius: 999px;
-          border: 1px solid var(--border);
-          background: var(--white);
-          color: var(--accent);
-          box-shadow: 0 10px 24px rgba(0,0,0,0.05);
-        }
-        .fe-page .nav-icon-link svg {
-          width: 16px;
-          height: 16px;
-        }
-        @media (max-width: 900px) {
-          .fe-page {
-            --sticky-offset: 180px;
-          }
-          .fe-page .nav-inner {
-            justify-content: center;
-            padding: 12px 16px;
-          }
-          .fe-page .nav-main {
-            order: 3;
-            width: 100%;
-            justify-content: flex-start;
-            overflow-x: auto;
-          }
-        }
         .fe-page .hero {
           background: var(--white);
           border-bottom: 1px solid var(--border);
@@ -1413,51 +1256,6 @@ export default function FinalExpenseClient() {
         .fe-page .disclaimers { background: var(--bg); border-top: 1px solid var(--border); padding: 36px 24px; }
         .fe-page .disclaimers-inner { max-width: 800px; margin: 0 auto; }
         .fe-page .disclaimers p { font-size: 11px; color: var(--text-3); line-height: 1.6; margin-bottom: 8px; }
-        .fe-page footer {
-          background: var(--bg-dark);
-          color: rgba(255,255,255,0.55);
-          padding: 36px 24px;
-          text-align: center;
-        }
-        .fe-page .footer-name { font-family: var(--serif); font-size: 15px; color: rgba(255,255,255,0.8); margin-bottom: 10px; }
-        .fe-page .footer-address { font-size: 12px; line-height: 1.6; margin-bottom: 14px; }
-        .fe-page .footer-links {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 16px;
-          font-size: 12px;
-          margin-bottom: 16px;
-        }
-        .fe-page .footer-links a { color: rgba(255,255,255,0.45); transition: color 0.15s; }
-        .fe-page .footer-links a:hover { color: rgba(255,255,255,0.8); }
-        .fe-page .footer-copy { font-size: 10px; color: rgba(255,255,255,0.2); }
-        .fe-page .mobile-cta {
-          display: none;
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          background: var(--white);
-          border-top: 1px solid var(--border);
-          padding: 12px 16px;
-          z-index: 200;
-          box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-        }
-        .fe-page .mobile-cta a {
-          display: block;
-          background: var(--accent);
-          color: var(--white);
-          text-align: center;
-          font-size: 15px;
-          font-weight: 600;
-          padding: 14px;
-          border-radius: 8px;
-        }
-        @media (max-width: 680px) {
-          .fe-page .mobile-cta { display: block; }
-          .fe-page { padding-bottom: 72px; }
-        }
         .fe-page .cta-section {
           background: var(--accent);
           padding: 64px 24px;
@@ -1489,11 +1287,11 @@ export default function FinalExpenseClient() {
         }
         .fe-page .btn-white:hover { opacity: 0.92; transform: translateY(-1px); }
       `}</style>
-    </>
+    </SiteChrome>
   );
 }
 
 /*
 ---
-*Last updated: 2026-04-19 13:58 ET | Updated by: Forge*
+*Last updated: 2026-09-02 22:45 ET | Updated by: Grok Bot*
 */
