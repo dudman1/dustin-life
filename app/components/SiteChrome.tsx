@@ -223,12 +223,18 @@ export function SiteFooter() {
 }
 
 
-function StickyMobileCta() {
+function StickyMobileCta({
+  href = "/#assessment",
+  label = "Free Assessment",
+}: {
+  href?: string;
+  label?: string;
+}) {
   return (
     <div className={styles.stickyMobileCta} role="region" aria-label="Quick actions">
       <div className={styles.stickyMobileCtaInner}>
-        <a className={styles.stickyMobilePrimary} href="/#assessment">
-          Free Assessment
+        <a className={styles.stickyMobilePrimary} href={href}>
+          {label}
         </a>
         <a className={styles.stickyMobileCall} href="tel:+12489709094">
           Call 248-970-9094
@@ -240,9 +246,13 @@ function StickyMobileCta() {
 
 export default function SiteChrome({
   current = null,
+  stickyCtaHref = "/#assessment",
+  stickyCtaLabel = "Free Assessment",
   children,
 }: {
   current?: NavCurrent;
+  stickyCtaHref?: string;
+  stickyCtaLabel?: string;
   children: ReactNode;
 }) {
   return (
@@ -250,7 +260,7 @@ export default function SiteChrome({
       <SiteHeader current={current} />
       {children}
       <SiteFooter />
-      <StickyMobileCta />
+      <StickyMobileCta href={stickyCtaHref} label={stickyCtaLabel} />
     </div>
   );
 }

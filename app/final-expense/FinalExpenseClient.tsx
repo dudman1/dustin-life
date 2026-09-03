@@ -259,7 +259,7 @@ export default function FinalExpenseClient() {
   };
 
   return (
-    <SiteChrome current="final-expense">
+    <SiteChrome current="final-expense" stickyCtaHref="#get-quote" stickyCtaLabel="Get My Free Quote">
       <div className="fe-page">
         <div className="hero">
           <div className="hero-inner">
