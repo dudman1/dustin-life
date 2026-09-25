@@ -1,4 +1,5 @@
 import { pageMetadata } from "@/lib/seo";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import HomeClient from "./HomeClient";
 
 export const metadata = pageMetadata({
@@ -15,7 +16,7 @@ const localBusinessSchema = {
   url: "https://dustinlife.com",
   image: "https://dustinlife.com/headshot.jpg",
   telephone: "+1-248-970-9094",
-  email: "transamerica.dustin@gmail.com",
+  email: CONTACT_EMAIL,
   address: {
     "@type": "PostalAddress",
     streetAddress: "101 W Big Beaver Rd Ste 345",

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import SiteChrome from "@/app/components/SiteChrome";
 import ScrollToVideo from "@/app/indexed-universal-life/ScrollToVideo";
 import styles from "../dustinlife-v2.module.css";
@@ -117,7 +118,7 @@ export default function IndexedUniversalLifePage() {
                 </p>
                 <div className={styles.heroActions}>
                   <Link className={styles.primaryLink} href="/#assessment">Get My Free Assessment</Link>
-                  <a className={styles.outlineLink} href="mailto:transamerica.dustin@gmail.com">Talk to Dustin</a>
+                  <a className={styles.outlineLink} href={`mailto:${CONTACT_EMAIL}`}>Talk to Dustin</a>
                 </div>
               </div>
               <aside className={styles.callout}>
