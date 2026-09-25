@@ -2,9 +2,8 @@
 <!--
   Site chrome below is a hand-maintained duplicate of app/components/SiteChrome.tsx
   (+ related styles from app/dustinlife-v2.module.css). Update BOTH when nav changes.
-  Fonts: Playfair Display still loaded via Google Fonts (same family as next/font on the
-  React site). No woff2 files exist under public/; Next hashed media fonts under
-  out/_next/static/media/ are build artifacts and would bloat/break on rebuild if copied.
+  Fonts: Playfair Display self-hosted from /fonts/ (latin subset, variable wght; only 700
+  and 800 are used here). Same family as next/font on the React site.
   Body/UI chrome uses system-ui stack (close to Geist Sans) to avoid shipping Geist files.
 -->
 <html lang="en">
@@ -12,10 +11,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IUL Compass — Indexed Universal Life Illustration Tool</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/playfair-display-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  @font-face{
+    font-family:"Playfair Display";font-style:normal;font-weight:700 800;font-display:swap;
+    src:url("/fonts/playfair-display-latin-wght.woff2") format("woff2");
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
 
   :root{
     --bg:#f6f1e8; --bg2:#f1e9dc; --panel:#ffffff; --panel2:#faf6f0;
