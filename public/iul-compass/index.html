@@ -482,7 +482,7 @@
         <div id="chart" role="img" aria-label="Line chart of projected cash value and death benefit over time"></div>
         <div class="legend">
           <span><span class="sw" style="background:var(--emerald)"></span>Cash value</span>
-          <span><span class="sw" style="background:var(--indigo)"></span>Death benefit</span>
+          <span><span class="sw" style="background:var(--gold-d)"></span>Death benefit</span>
           <span style="margin-left:auto">illustration only · not a guarantee</span>
         </div>
       </div>
@@ -771,7 +771,7 @@ function buildChart(rows){
   });
   dArea += ' L '+X(n-1)+' '+Y(rows[n-1].cv)+' L '+X(n-1)+' '+(H-B)+' L '+X(0)+' '+(H-B)+' Z';
   s += '<path d="'+dArea+'" fill="url(#gcv)" stroke="none"/>';
-  s += '<path d="'+dDb+'" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-linejoin="round"/>';
+  s += '<path d="'+dDb+'" fill="none" stroke="#8F6D34" stroke-width="2.2" stroke-linejoin="round"/>';
   s += '<path d="'+dCv+'" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linejoin="round"/>';
 
   // lapse markers
@@ -782,9 +782,9 @@ function buildChart(rows){
   // endpoint dots + labels
   const last = rows[n-1];
   s += '<circle cx="'+X(n-1)+'" cy="'+Y(last.cv)+'" r="4" fill="#34d399"><title>Cash value year '+last.year+': '+fmt$(last.cv)+'</title></circle>';
-  s += '<circle cx="'+X(n-1)+'" cy="'+Y(last.db)+'" r="4" fill="#818cf8"><title>Death benefit year '+last.year+': '+fmt$(last.db)+'</title></circle>';
+  s += '<circle cx="'+X(n-1)+'" cy="'+Y(last.db)+'" r="4" fill="#8F6D34"><title>Death benefit year '+last.year+': '+fmt$(last.db)+'</title></circle>';
   s += '<text x="'+(X(n-1)+10)+'" y="'+(Y(last.cv)+4)+'" fill="#34d399" font-family="ui-monospace,monospace" font-size="11" font-weight="700">CV '+compact(last.cv)+'</text>';
-  s += '<text x="'+(X(n-1)+10)+'" y="'+(Y(last.db)+4)+'" fill="#818cf8" font-family="ui-monospace,monospace" font-size="11" font-weight="700">DB '+compact(last.db)+'</text>';
+  s += '<text x="'+(X(n-1)+10)+'" y="'+(Y(last.db)+4)+'" fill="#8F6D34" font-family="ui-monospace,monospace" font-size="11" font-weight="700">DB '+compact(last.db)+'</text>';
 
   s += '</svg>';
   return s;
