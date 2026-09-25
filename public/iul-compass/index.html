@@ -132,6 +132,10 @@
   .tbl-scroll{overflow:auto;max-width:100%;max-height:320px;border:1px solid var(--line);border-radius:12px;background:#fff}
   .tbl-scroll.tbl-scroll--assump{max-height:none}
   .tbl-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
+  @media(max-width:480px){
+    #sched th:first-child,#sched td:first-child{position:sticky;left:0;z-index:1;background:var(--panel);box-shadow:inset -1px 0 0 var(--line)}
+    #sched thead th:first-child{z-index:2;background:var(--panel2)}
+  }
   .assump-note{
     margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--dim);line-height:1.75;
   }
