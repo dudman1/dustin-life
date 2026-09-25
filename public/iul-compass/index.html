@@ -79,6 +79,11 @@
     letter-spacing:.16em;color:var(--gold-d);margin-bottom:16px;
   }
   .stack>*+*{margin-top:16px}
+  @media(max-width:480px){
+    .wrap{padding:0 16px}
+    .panel{padding:18px 16px}
+    label.field .lbl{flex-wrap:wrap;column-gap:8px}
+  }
 
   /* ---------- inputs ---------- */
   label.field{display:block}
