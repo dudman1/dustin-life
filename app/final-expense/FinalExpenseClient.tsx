@@ -269,7 +269,7 @@ export default function FinalExpenseClient() {
                 Final Expense Coverage
               </div>
               <h1>Help protect your family from an <em>unexpected bill.</em></h1>
-              <p className="hero-sub">Final expense insurance helps cover funeral costs, medical bills, and other end-of-life expenses, so your loved ones don't have to worry about money during one of the hardest moments of their lives.</p>
+              <p className="hero-sub">Final expense insurance helps cover funeral costs, medical bills, and other end-of-life expenses, so your loved ones don&apos;t have to worry about money during one of the hardest moments of their lives.</p>
               <div className="hero-actions">
                 <a href="#get-quote" className="btn-primary" onClick={handleQuoteLinkClick}>Get My Free Quote</a>
               </div>
@@ -326,7 +326,7 @@ export default function FinalExpenseClient() {
                 <div className="label">Median Funeral<br />Cost (2025)</div>
               </div>
             </div>
-            <p className="problem-text">That gap, thousands of dollars, often falls on grieving families without warning. Final expense coverage is designed to help close it, so the people you love aren't left with a bill they never planned for.</p>
+            <p className="problem-text">That gap, thousands of dollars, often falls on grieving families without warning. Final expense coverage is designed to help close it, so the people you love aren&apos;t left with a bill they never planned for.</p>
           </div>
         </section>
 
@@ -370,7 +370,7 @@ export default function FinalExpenseClient() {
                 <div className="how-step-num">2</div>
                 <div>
                   <h3>I shop multiple carriers for you</h3>
-                  <p>As an independent agent, I work for you, not one insurance company. I'll compare options and walk you through every one. No pressure.</p>
+                  <p>As an independent agent, I work for you, not one insurance company. I&apos;ll compare options and walk you through every one. No pressure.</p>
                 </div>
               </div>
               <div className="how-step">
@@ -392,7 +392,7 @@ export default function FinalExpenseClient() {
             <div>
               <div className="agent-name">Dustin McCormick</div>
               <div className="agent-title">Licensed Independent Agent</div>
-              <p className="agent-bio">I'm an independent agent, not captive to any one carrier. That means I work for you, not an insurance company. I'll shop the market, explain what actually matters, and help you find coverage that fits your life and your budget.</p>
+              <p className="agent-bio">I&apos;m an independent agent, not captive to any one carrier. That means I work for you, not an insurance company. I&apos;ll shop the market, explain what actually matters, and help you find coverage that fits your life and your budget.</p>
             </div>
           </div>
         </div>
@@ -437,7 +437,7 @@ export default function FinalExpenseClient() {
 
         <div className="cta-section">
           <h2>Give your family peace of mind.</h2>
-          <p>Coverage that's affordable, simple, and built to last.</p>
+          <p>Coverage that&apos;s affordable, simple, and built to last.</p>
           <a href="#get-quote" className="btn-white" onClick={handleQuoteLinkClick}>Get My Free Quote</a>
         </div>
 
