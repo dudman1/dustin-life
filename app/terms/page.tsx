@@ -1,4 +1,5 @@
 import { pageMetadata } from "@/lib/seo";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import SiteChrome from "@/app/components/SiteChrome";
 import styles from "../dustinlife-v2.module.css";
 
@@ -32,7 +33,7 @@ export default function Terms() {
               101 W Big Beaver Rd Ste 345<br />
               Troy, MI 48084<br />
               Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-              Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
+              Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </address>
 
             <h2>Use of This Website</h2>
@@ -87,7 +88,7 @@ export default function Terms() {
             </p>
             <ul>
               <li>Phone: <a href="tel:+12489709094">248-970-9094</a></li>
-              <li>Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a></li>
+              <li>Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
             </ul>
 
             <h3>Carrier Liability</h3>
@@ -147,7 +148,7 @@ export default function Terms() {
               101 W Big Beaver Rd Ste 345<br />
               Troy, MI 48084<br />
               Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-              Email: <a href="mailto:transamerica.dustin@gmail.com">transamerica.dustin@gmail.com</a>
+              Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </address>
           </article>
         </div>

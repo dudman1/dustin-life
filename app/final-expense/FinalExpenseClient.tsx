@@ -343,12 +343,12 @@ export default function FinalExpenseClient() {
               <div className="explainer-card">
                 <div className="explainer-num">2</div>
                 <h3>How does it work?</h3>
-                <p>You pay a monthly premium and your beneficiary receives a tax-free lump sum when you pass. They can use it for funeral costs, debts, or anything else, no restrictions.</p>
+                <p>You pay a monthly premium and your beneficiary receives a lump-sum death benefit when you pass. Death benefits are generally paid income-tax-free to beneficiaries; consult a tax professional. They can use it for funeral costs, debts, or anything else, no restrictions.</p>
               </div>
               <div className="explainer-card">
                 <div className="explainer-num">3</div>
                 <h3>How much do I need?</h3>
-                <p>Most families choose $10,000 to $15,000 to cover a basic funeral and final expenses. Once you lock in your rate, it never increases, even if your health changes.</p>
+                <p>Most families choose $10,000 to $15,000 to cover a basic funeral and final expenses. Many whole-life final expense policies have level premiums; terms vary by policy.</p>
               </div>
             </div>
           </div>
@@ -376,8 +376,8 @@ export default function FinalExpenseClient() {
               <div className="how-step">
                 <div className="how-step-num">3</div>
                 <div>
-                  <h3>Get covered, often within days</h3>
-                  <p>Once you choose a plan, I handle the paperwork. Most people are covered within days, not weeks. No medical exam required.</p>
+                  <h3>Get covered</h3>
+                  <p>Once you choose a plan, I handle the paperwork. Timing depends on the carrier and underwriting. No medical exam required.</p>
                 </div>
               </div>
             </div>
@@ -405,11 +405,11 @@ export default function FinalExpenseClient() {
               {[
                 {
                   q: "Do I qualify if I have health problems?",
-                  a: "Most people qualify with just a short health questionnaire, no medical exam required. Even if you've been declined for other types of insurance, there are options designed specifically for people with health conditions.",
+                  a: "Qualification varies by carrier and health history. Many plans use a health questionnaire, no medical exam required. Even if you've been declined for other types of insurance, there are options designed specifically for people with health conditions.",
                 },
                 {
                   q: "How much does it cost?",
-                  a: "Cost depends on your age, health, state, and the coverage amount you choose. Premiums are locked in when you enroll, they never increase. Get a free quote to see what's available for your specific situation.",
+                  a: "Cost depends on your age, health, state, and the coverage amount you choose. Many whole-life final expense policies have level premiums; terms vary by policy. Get a free quote to see what's available for your specific situation.",
                 },
                 {
                   q: "How fast can I get covered?",

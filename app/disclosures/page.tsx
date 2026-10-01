@@ -1,4 +1,5 @@
 import { pageMetadata } from "@/lib/seo";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import SiteChrome from "@/app/components/SiteChrome";
 import styles from "../dustinlife-v2.module.css";
 
@@ -59,7 +60,7 @@ export default function Disclosures() {
               101 W Big Beaver Rd Ste 345<br />
               Troy, MI 48084<br />
               Phone: <a href="tel:+12489709094">248-970-9094</a><br />
-              Email: <a href="mailto:dustin@dustinlife.com">dustin@dustinlife.com</a>
+              Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </address>
           </article>
         </div>

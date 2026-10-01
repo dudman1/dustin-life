@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import DmLogo from "@/app/components/DmLogo";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import styles from "@/app/dustinlife-v2.module.css";
 
 export type NavCurrent =
@@ -113,7 +114,7 @@ export function SiteHeader({ current = null }: { current?: NavCurrent }) {
 
           <div className={styles.navRight}>
             <div className={styles.navIcons}>
-              <a className={styles.navIcon} href="mailto:transamerica.dustin@gmail.com" aria-label="Email Dustin">
+              <a className={styles.navIcon} href={`mailto:${CONTACT_EMAIL}`} aria-label="Email Dustin">
                 <EmailIcon />
               </a>
               <a
