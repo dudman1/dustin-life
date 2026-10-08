@@ -1,6 +1,7 @@
 "use client";
 
 import SiteChrome from "@/app/components/SiteChrome";
+import { botFields, HONEYPOT_FIELD, HONEYPOT_STYLE, useTurnstile } from "@/lib/turnstile";
 import { type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
@@ -46,6 +47,8 @@ export default function FinalExpenseClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const turnstile = useTurnstile();
   const [heroImageFailed, setHeroImageFailed] = useState(false);
   const [agentAvatarFailed, setAgentAvatarFailed] = useState(false);
   const [agentPhotoFailed, setAgentPhotoFailed] = useState(false);
@@ -231,11 +234,13 @@ export default function FinalExpenseClient() {
           state: formData.state,
           phone: formData.phone,
           tcpaConsent,
+          ...botFields(turnstile.getToken(), honeypotRef.current?.value ?? ""),
         }),
       });
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        turnstile.reset();
         throw new Error(
           typeof data?.error === "string" ? data.error : "Something went wrong. Please try again.",
         );
@@ -566,6 +571,11 @@ export default function FinalExpenseClient() {
                     <button className="step-back" onClick={() => prevStep(4)}>← Back</button>
                   </div>
                 </div>
+                <div style={HONEYPOT_STYLE} aria-hidden="true">
+                  <label htmlFor="fe-dl-website">Leave this field empty</label>
+                  <input id="fe-dl-website" ref={honeypotRef} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+                </div>
+                {turnstile.enabled ? <div ref={turnstile.containerRef} /> : null}
               </>
             ) : (
               <div className="form-confirm" style={{ display: "block" }}>

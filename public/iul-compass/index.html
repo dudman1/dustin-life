@@ -524,7 +524,12 @@
             <label for="lead-consent">I agree to be contacted about life insurance options and understand this tool is an
             illustration only — projections are hypothetical and not guarantees, and this is not financial advice or an offer.</label>
           </div>
+          <div class="full" id="lead-turnstile" hidden></div>
           <div class="full"><button type="submit" class="primary" id="lead-submit">Send My Request &#8594;</button></div>
+        </div>
+        <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden" aria-hidden="true">
+          <label for="lead-dl-website">Leave this field empty</label>
+          <input type="text" id="lead-dl-website" name="dl_website" tabindex="-1" autocomplete="off" value="">
         </div>
         <div class="status" id="lead-status" role="status" aria-live="polite"></div>
       </form>
@@ -582,6 +587,9 @@
 
 <script>
 'use strict';
+// Cloudflare Turnstile site key (public). Empty string = widget not rendered and the
+// form submits exactly as before. Next.js forms use lib/turnstile.ts (keep in sync).
+const TURNSTILE_SITE_KEY = '';
 /*__PURE_MATH_START__*/
 // ===== deterministic projection core (pure, no DOM) =====
 const ADMIN_FEE = 120;
@@ -878,13 +886,45 @@ async function deliverLead(payload){
       body: JSON.stringify(payload), signal: ctrl.signal
     });
     clearTimeout(t);
-    return { ok: res.ok };
+    if(res.ok) return { ok:true };
+    // Surface the server's message only for a rejected bot check; every other
+    // failure keeps the generic message below.
+    const data = await res.json().catch(() => ({}));
+    return { ok:false, status:res.status, code:data && data.code, error:data && data.error };
   }catch(err){
     return { ok:false, error:String(err) };
   }
 }
 
+// ===== Cloudflare Turnstile (interaction-only; never blocks the visitor) =====
+let turnstileWidgetId = null;
+function initTurnstile(){
+  if(!TURNSTILE_SITE_KEY) return;
+  const box = $('lead-turnstile');
+  const s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  s.async = true;
+  s.onload = () => {
+    try{
+      box.hidden = false;
+      turnstileWidgetId = window.turnstile.render(box, {
+        sitekey: TURNSTILE_SITE_KEY, appearance:'interaction-only', 'refresh-expired':'auto'
+      }) ?? null;
+    }catch(e){ turnstileWidgetId = null; }
+  };
+  // On load failure: submit without a token; the server decides by TURNSTILE_MODE.
+  document.head.appendChild(s);
+}
+function turnstileGetToken(){
+  try{ return (window.turnstile && turnstileWidgetId !== null) ? (window.turnstile.getResponse(turnstileWidgetId) || '') : ''; }
+  catch(e){ return ''; }
+}
+function turnstileReset(){
+  try{ if(window.turnstile && turnstileWidgetId !== null) window.turnstile.reset(turnstileWidgetId); }catch(e){}
+}
+
 function bindLeadForm(){
+  initTurnstile();
   $('lead-form').addEventListener('submit', async ev => {
     ev.preventDefault();
     const name = $('lead-name').value.trim();
@@ -912,13 +952,22 @@ function bindLeadForm(){
       profile:{ age:st.startAge, premium:st.premium, years:st.years, posture:st.posture, gender:st.gender, tobacco:st.tobacco, faceOverride:st.faceOverride },
       lead:{ name, email, phone, consent }
     };
+    // Bot-check fields: included only when non-empty, so with no site key the body is unchanged.
+    const turnstileToken = turnstileGetToken();
+    if(turnstileToken) payload.turnstileToken = turnstileToken;
+    const honeypot = $('lead-dl-website').value;
+    if(honeypot) payload.dl_website = honeypot;
     const res = await deliverLead(payload);
+    if(!res.ok) turnstileReset();
     btn.disabled = false;
     if(res.ok){
       statusEl.className = 'status ok';
       statusEl.textContent = res.mocked
         ? '✓ Request captured (demo mode — stored locally, no network call made).'
         : '✓ Request sent. A licensed agent will follow up.';
+    }else if(res.code === 'bot_check_failed' && res.error){
+      statusEl.className = 'status err';
+      statusEl.textContent = '⚠ ' + res.error;
     }else{
       statusEl.className = 'status err';
       statusEl.textContent = '⚠ Send failed — please try again, or call/text me directly.';

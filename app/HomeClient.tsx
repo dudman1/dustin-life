@@ -1,9 +1,10 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import SiteChrome from "@/app/components/SiteChrome";
+import { botFields, HONEYPOT_FIELD, HONEYPOT_STYLE, useTurnstile } from "@/lib/turnstile";
 import styles from "./dustinlife-v2.module.css";
 
 const STATES = [
@@ -61,6 +62,8 @@ export default function HomeClient() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [checkboxError, setCheckboxError] = useState({ sms: false, terms: false });
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const turnstile = useTurnstile();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,10 +83,14 @@ export default function HomeClient() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formState),
+        body: JSON.stringify({
+          ...formState,
+          ...botFields(turnstile.getToken(), honeypotRef.current?.value ?? ""),
+        }),
       });
 
       if (!res.ok) {
+        turnstile.reset();
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Something went wrong. Please try again.");
       }
@@ -321,6 +328,12 @@ export default function HomeClient() {
                       <span className={styles.smallNote}>I have reviewed and accept Dustin McCormick&apos;s <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms and Conditions</Link>.</span>
                     </label>
                     {checkboxError.terms ? <p className={styles.fieldError} role="alert">You must accept the terms to continue.</p> : null}
+
+                    <div style={HONEYPOT_STYLE} aria-hidden="true">
+                      <label htmlFor="form-dl-website">Leave this field empty</label>
+                      <input id="form-dl-website" ref={honeypotRef} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+                    </div>
+                    {turnstile.enabled ? <div ref={turnstile.containerRef} /> : null}
 
                     {error ? <p className={styles.error}>{error}</p> : null}
 

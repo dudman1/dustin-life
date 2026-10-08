@@ -1,5 +1,6 @@
 // Cloudflare Pages Function — /api/lead
-// Supports both homepage IUL leads and /final-expense leads.
+// Supports homepage IUL, /final-expense and /iul-compass leads.
+// Bot protection: honeypot (always on) + Cloudflare Turnstile (TURNSTILE_MODE).
 
 interface Env {
   GHL_WEBHOOK_URL: string;
@@ -7,6 +8,9 @@ interface Env {
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_CHAT_ID?: string;
   CONVEX_TIMEOUT_MS?: number;
+  TURNSTILE_SECRET_KEY?: string;
+  // Rollout switch: "off" | "log" | "enforce". Unset or unknown = off.
+  TURNSTILE_MODE?: string;
 }
 
 interface BaseLeadPayload {
@@ -49,6 +53,11 @@ interface IulCompassLeadPayload extends BaseLeadPayload {
 
 type LeadPayload = IulLeadPayload & FinalExpenseLeadPayload & IulCompassLeadPayload;
 
+// Honeypot input rendered off-screen on all three lead forms. Humans never see
+// it; naive bots fill it. Named so browser autofill heuristics don't match it
+// ("company"/"organization" would trigger Chrome's org autofill).
+const HONEYPOT_FIELD = "dl_website";
+
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -70,6 +79,9 @@ interface ShapedLead {
 const CONVEX_MUTATION_URL = "https://rapid-hummingbird-980.convex.cloud/api/mutation";
 const GHL_TIMEOUT_MS = 5_000;
 const TELEGRAM_TIMEOUT_MS = 5_000;
+const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+const TURNSTILE_TIMEOUT_MS = 3_000;
+const BOT_CHECK_FAILED_MESSAGE = "We couldn't verify your submission. Please try again or call us.";
 // Convex is awaited with a bounded timeout. 15s is generous for a healthy
 // write (E2E ~sub-second) while keeping the ad-traffic page from hanging on a
 // dead Convex. Overridable via CONVEX_TIMEOUT_MS — but sanitized: NaN/strings
@@ -224,6 +236,79 @@ function extractConvexId(obj: Record<string, unknown>): string | null {
   return null;
 }
 
+type TurnstileMode = "off" | "log" | "enforce";
+
+function turnstileMode(env: Env): TurnstileMode {
+  const raw = String(env.TURNSTILE_MODE ?? "").trim().toLowerCase();
+  return raw === "log" || raw === "enforce" ? raw : "off";
+}
+
+// Outcome of the Turnstile check:
+//   passed   — siteverify said success
+//   no_token — the client sent no token (widget blocked, failed to load, etc.)
+//   failed   — siteverify rejected the token (bot, expired, reused)
+//   error    — siteverify itself errored, timed out, or rejected our config;
+//              we can't tell, so the lead is processed (fail open) and flagged
+type BotCheck =
+  | { status: "passed" }
+  | { status: "no_token" }
+  | { status: "failed"; codes: string[] }
+  | { status: "error"; error: string };
+
+// Error codes that describe OUR side (config) or Cloudflare's side, not the
+// visitor's token. Treated as "error" → fail open, never as a bot.
+const TURNSTILE_UNVERIFIABLE_CODES = new Set([
+  "missing-input-secret",
+  "invalid-input-secret",
+  "internal-error",
+  "bad-request",
+]);
+
+// POST to siteverify with a 3s timeout. Never throws.
+async function verifyTurnstile(secret: string, token: string, remoteIp: string | null): Promise<BotCheck> {
+  if (!token) return { status: "no_token" };
+  try {
+    const timed = await postWithTimeout(
+      TURNSTILE_VERIFY_URL,
+      { secret, response: token, ...(remoteIp ? { remoteip: remoteIp } : {}) },
+      TURNSTILE_TIMEOUT_MS,
+    );
+    try {
+      // Body read happens under the still-armed timer.
+      if (!timed.res.ok) {
+        return { status: "error", error: `siteverify HTTP ${timed.res.status}` };
+      }
+      const data = (await timed.res.json()) as { success?: unknown; "error-codes"?: unknown };
+      if (data && data.success === true) return { status: "passed" };
+      const codes = Array.isArray(data?.["error-codes"])
+        ? (data["error-codes"] as unknown[]).map(String)
+        : [];
+      if (codes.some((c) => TURNSTILE_UNVERIFIABLE_CODES.has(c))) {
+        return { status: "error", error: `siteverify ${codes.join(", ")}` };
+      }
+      return { status: "failed", codes };
+    } finally {
+      timed.done();
+    }
+  } catch (err) {
+    return { status: "error", error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+// One line for the Telegram alert, or "" when there is nothing to flag.
+function botCheckLine(check: BotCheck | null): string {
+  if (!check || check.status === "passed") return "";
+  if (check.status === "no_token") return "Bot check: no token";
+  if (check.status === "failed") return `Bot check: FAILED (${check.codes.join(", ") || "no error codes"})`;
+  return `Bot check: UNVERIFIED — siteverify error (${check.error}); lead accepted`;
+}
+
+function isHoneypotFilled(body: Record<string, unknown>): boolean {
+  const value = body[HONEYPOT_FIELD];
+  if (value === undefined || value === null || value === false) return false;
+  return String(value).trim() !== "";
+}
+
 function buildCompassProfileLine(body: LeadPayload): string {
   if (body.tool !== "iul-compass" || !body.profile) return "";
   const p = body.profile;
@@ -255,7 +340,13 @@ async function fireGhlBestEffort(env: Env, shaped: ShapedLead, convexId: string 
 }
 
 // Telegram alert is best-effort: 5s timeout, everything caught, never throws.
-async function sendTelegramAlert(env: Env, body: LeadPayload, shaped: ShapedLead, convexId: string | null) {
+async function sendTelegramAlert(
+  env: Env,
+  body: LeadPayload,
+  shaped: ShapedLead,
+  convexId: string | null,
+  botLine = "",
+) {
   const token = env.TELEGRAM_BOT_TOKEN;
   const chatId = env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) {
@@ -267,13 +358,20 @@ async function sendTelegramAlert(env: Env, body: LeadPayload, shaped: ShapedLead
   const text = [
     `🔔 New lead — ${formName} | ${name} | ${shaped.phone} | ${shaped.email}`,
     buildCompassProfileLine(body),
+    botLine,
   ].filter(Boolean).join("\n");
   await sendTelegramText(env, text, convexId);
 }
 
 // Failure alert for the one moment paging matters most: the system of record
 // rejected the lead. Same best-effort semantics — never throws.
-async function sendTelegramFailureAlert(env: Env, shaped: ShapedLead, convexId: string | null, error: string) {
+async function sendTelegramFailureAlert(
+  env: Env,
+  shaped: ShapedLead,
+  convexId: string | null,
+  error: string,
+  botLine = "",
+) {
   const token = env.TELEGRAM_BOT_TOKEN;
   const chatId = env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) {
@@ -282,7 +380,10 @@ async function sendTelegramFailureAlert(env: Env, shaped: ShapedLead, convexId: 
   }
   const formName = String(shaped.ghlPayload.form_name ?? "unknown");
   const name = shaped.fullName || String(shaped.ghlPayload.name ?? "");
-  const text = `🚨 LEAD STORAGE FAILED — ${formName} | ${name} | ${shaped.phone} | ${shaped.email} | error: ${error}`;
+  const text = [
+    `🚨 LEAD STORAGE FAILED — ${formName} | ${name} | ${shaped.phone} | ${shaped.email} | error: ${error}`,
+    botLine,
+  ].filter(Boolean).join("\n");
   await sendTelegramText(env, text, convexId);
 }
 
@@ -457,12 +558,50 @@ export async function onRequestPost(context: {
     return json({ error: "Request body must be a JSON object." }, 400);
   }
 
+  // Honeypot: a filled hidden field means a bot. Answer exactly like a real
+  // success so the bot learns nothing, and touch no downstream system.
+  if (isHoneypotFilled(body as Record<string, unknown>)) {
+    console.log("[lead] honeypot filled — dropped silently (no Convex/GHL/Telegram)");
+    return json({ success: true, message: "Lead received." });
+  }
+
+  // Strip bot-check fields so they can never reach Convex/GHL/Telegram.
+  const rest: Record<string, unknown> = { ...body };
+  const turnstileToken = typeof rest.turnstileToken === "string" ? rest.turnstileToken.trim() : "";
+  delete rest.turnstileToken;
+  delete rest[HONEYPOT_FIELD];
+  body = rest as LeadPayload;
+
+  // Validate before the bot check: siteverify consumes the token, so a form
+  // validation error must not burn it.
   const shaped = buildLeadShape(body);
   if ("error" in shaped) {
     return json({ error: shaped.error }, 400);
   }
 
   const env = context.env;
+
+  // Turnstile. off = skip. log = always process, flag failures in Telegram.
+  // enforce = reject a missing/invalid token, but FAIL OPEN when siteverify
+  // itself is unreachable — a Cloudflare outage must never cost a real lead.
+  let mode = turnstileMode(env);
+  const secret = env.TURNSTILE_SECRET_KEY?.trim() ?? "";
+  if (mode === "enforce" && !secret) {
+    console.warn("[lead] TURNSTILE_MODE=enforce but TURNSTILE_SECRET_KEY is not set — falling back to log mode");
+    mode = "log";
+  }
+  let botCheck: BotCheck | null = null;
+  if (mode !== "off") {
+    botCheck = secret
+      ? await verifyTurnstile(secret, turnstileToken, context.request.headers.get("CF-Connecting-IP"))
+      : { status: "error", error: "TURNSTILE_SECRET_KEY not set" };
+    if (mode === "enforce" && (botCheck.status === "no_token" || botCheck.status === "failed")) {
+      console.log(`[lead] bot check rejected (${botCheckLine(botCheck)}) — no Convex/GHL/Telegram`);
+      return json({ error: BOT_CHECK_FAILED_MESSAGE, code: "bot_check_failed" }, 400);
+    }
+  }
+  const botFlag = botCheckLine(botCheck);
+  if (botFlag) console.warn(`[lead] ${botFlag}`);
 
   // 1. Convex is the must-land leg and the source of truth. Await it first with
   //    a bounded 15s timeout — a healthy write is sub-second; the cap keeps a
@@ -489,7 +628,7 @@ export async function onRequestPost(context: {
     console.error(`[lead] Convex write failed: ${convex.error}`);
     await Promise.all([
       fireGhlBestEffort(env, shaped, null),
-      sendTelegramFailureAlert(env, shaped, null, convex.error ?? "unknown"),
+      sendTelegramFailureAlert(env, shaped, null, convex.error ?? "unknown", botFlag),
     ]);
     return json({ error: "Lead storage failed." }, 500);
   }
@@ -501,7 +640,7 @@ export async function onRequestPost(context: {
   //    ~sum(legs) — no double-submit window from a slow best-effort tail.
   await Promise.all([
     fireGhlBestEffort(env, shaped, convexId),
-    sendTelegramAlert(env, body, shaped, convexId),
+    sendTelegramAlert(env, body, shaped, convexId, botFlag),
   ]);
 
   return json({ success: true, message: "Lead received." });
