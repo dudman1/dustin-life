@@ -454,8 +454,8 @@ export default function FinalExpenseClient() {
 
                 <div className="form-steps">
                   <div ref={currentStep === 1 ? activeStepRef : undefined} className={`form-step${currentStep === 1 ? " active" : ""}`} data-step="1">
-                    <p className="step-question">What's your name?</p>
-                    <p className="step-why">So Dustin knows who he's helping, that's it.</p>
+                    <p className="step-question">What&apos;s your name?</p>
+                    <p className="step-why">So Dustin knows who he&apos;s helping, that&apos;s it.</p>
                     <div className="input-row">
                       <input
                         type="text"
@@ -489,7 +489,7 @@ export default function FinalExpenseClient() {
 
                   <div ref={currentStep === 2 ? activeStepRef : undefined} className={`form-step${currentStep === 2 ? " active" : ""}`} data-step="2">
                     <p className="step-question">What state do you live in?</p>
-                    <p className="step-why">Coverage availability and pricing vary by state. We're licensed in all 50 states.</p>
+                    <p className="step-why">Coverage availability and pricing vary by state. We&apos;re licensed in all 50 states.</p>
                     <select
                       className="step-select"
                       value={formData.state}
@@ -547,7 +547,7 @@ export default function FinalExpenseClient() {
                   </div>
 
                   <div ref={currentStep === 4 ? activeStepRef : undefined} className={`form-step${currentStep === 4 ? " active" : ""}`} data-step="4">
-                    <p className="step-question">What's the best number to reach you?</p>
+                    <p className="step-question">What&apos;s the best number to reach you?</p>
                     <p className="step-why">Dustin will call you personally, usually within one business day.</p>
                     <input
                       type="tel"
@@ -572,7 +572,7 @@ export default function FinalExpenseClient() {
                 <div className="confirm-icon">
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
                 </div>
-                <h2 className="confirm-title">You're all set!</h2>
+                <h2 className="confirm-title">You&apos;re all set!</h2>
                 <p className="confirm-sub">Dustin will personally reach out within one business day to walk you through your options, no pressure, no obligation.</p>
                 <p style={{ fontSize: "13px", color: "var(--text-3)", marginBottom: "12px" }}>Want to talk sooner? Call directly:</p>
                 <a href="tel:+12489709094" className="confirm-phone">
