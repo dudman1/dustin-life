@@ -300,7 +300,7 @@ function botCheckLine(check: BotCheck | null): string {
   if (!check || check.status === "passed") return "";
   if (check.status === "no_token") return "Bot check: no token";
   if (check.status === "failed") return `Bot check: FAILED (${check.codes.join(", ") || "no error codes"})`;
-  return `Bot check: UNVERIFIED — siteverify error (${check.error}); lead accepted`;
+  return `Bot check: UNVERIFIED (${check.error}); lead accepted`;
 }
 
 function isHoneypotFilled(body: Record<string, unknown>): boolean {
