@@ -55,7 +55,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <noscript>
-          <img height="1" width="1" style={{display:'none'}} src="https://www.facebook.com/tr?id=25947417544946778&ev=PageView&noscript=1" />
+          <img alt="" height="1" width="1" style={{display:'none'}} src="https://www.facebook.com/tr?id=25947417544946778&ev=PageView&noscript=1" />
         </noscript>
         {children}
       </body>
