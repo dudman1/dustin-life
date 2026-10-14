@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import DmLogo from "@/app/components/DmLogo";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
 import styles from "@/app/dustinlife-v2.module.css";
 
 export type NavCurrent =
@@ -88,7 +88,7 @@ export function SiteHeader({ current = null }: { current?: NavCurrent }) {
     <>
       <div className={styles.topbar}>
         <div className={`${styles.wrap} ${styles.topbarInner}`}>
-          Speak with a licensed agent: <a href="tel:+12489709094">248-970-9094</a> · No obligation, ever.
+          Speak with a licensed agent: <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a> · No obligation, ever.
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export function SiteHeader({ current = null }: { current?: NavCurrent }) {
                 )
               )}
             </nav>
-            <p className={styles.mobileNavHint}>No pressure. Call anytime: <a href="tel:+12489709094">248-970-9094</a></p>
+            <p className={styles.mobileNavHint}>No pressure. Call anytime: <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a></p>
           </div>
         </div>
       </header>
@@ -190,7 +190,7 @@ export function SiteFooter() {
         <p className={styles.footerAddress}>
           101 W Big Beaver Rd Ste 345, Troy, MI 48084
           <br />
-          248-970-9094
+          {CONTACT_PHONE_DISPLAY}
         </p>
         <div className={styles.footerLinks}>
           <Link href="/privacy">Privacy Policy</Link>
@@ -237,8 +237,8 @@ function StickyMobileCta({
         <a className={styles.stickyMobilePrimary} href={href}>
           {label}
         </a>
-        <a className={styles.stickyMobileCall} href="tel:+12489709094">
-          Call 248-970-9094
+        <a className={styles.stickyMobileCall} href={`tel:${CONTACT_PHONE_TEL}`}>
+          Call {CONTACT_PHONE_DISPLAY}
         </a>
       </div>
     </div>

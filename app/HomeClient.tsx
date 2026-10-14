@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import Link from "next/link";
 import SiteChrome from "@/app/components/SiteChrome";
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
 import styles from "./dustinlife-v2.module.css";
 
 const STATES = [
@@ -146,9 +147,9 @@ export default function HomeClient() {
                   <CheckIcon />
                   <span>Talk to a real person — no chatbots</span>
                 </div>
-                <a className={styles.humanTrustChip} href="tel:+12489709094">
+                <a className={styles.humanTrustChip} href={`tel:${CONTACT_PHONE_TEL}`}>
                   <PhoneIcon />
-                  <span>Call 248-970-9094</span>
+                  <span>Call {CONTACT_PHONE_DISPLAY}</span>
                 </a>
                 <div className={styles.humanTrustChip}>
                   <PinIcon />

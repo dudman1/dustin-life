@@ -1,5 +1,6 @@
 import { pageMetadata } from "@/lib/seo";
 import SiteChrome from "@/app/components/SiteChrome";
+import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import styles from "../dustinlife-v2.module.css";
 
 export const metadata = pageMetadata({
@@ -130,7 +131,7 @@ const faqSchema = {
       "name": "How do I get started?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Use the free assessment on the homepage, call 248-970-9094, or send an email and we can start from there."
+        "text": `Use the free assessment on the homepage, call ${CONTACT_PHONE_DISPLAY}, or send an email and we can start from there.`
       }
     }
   ]
@@ -230,7 +231,7 @@ export default function FAQPage() {
               </article>
               <article className={styles.faqItem}>
                 <h2 className={styles.faqQuestion}>How do I get started?</h2>
-                <p className={styles.cardText}>Use the free assessment on the homepage, call 248-970-9094, or send an email and we can start from there.</p>
+                <p className={styles.cardText}>Use the free assessment on the homepage, call {CONTACT_PHONE_DISPLAY}, or send an email and we can start from there.</p>
               </article>
             </div>
           </section>

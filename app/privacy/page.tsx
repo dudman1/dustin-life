@@ -1,5 +1,5 @@
 import { pageMetadata } from "@/lib/seo";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
 import SiteChrome from "@/app/components/SiteChrome";
 import styles from "../dustinlife-v2.module.css";
 
@@ -29,7 +29,7 @@ export default function Privacy() {
               William Dustin McCormick (Dustin McCormick)<br />
               101 W Big Beaver Rd Ste 345<br />
               Troy, MI 48084<br />
-              Phone: <a href="tel:+12489709094">248-970-9094</a><br />
+              Phone: <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a><br />
               Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </address>
 
@@ -113,7 +113,7 @@ export default function Privacy() {
               William Dustin McCormick (Dustin McCormick)<br />
               101 W Big Beaver Rd Ste 345<br />
               Troy, MI 48084<br />
-              Phone: <a href="tel:+12489709094">248-970-9094</a><br />
+              Phone: <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a><br />
               Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </address>
           </article>
