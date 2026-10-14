@@ -1,5 +1,5 @@
 import { pageMetadata } from "@/lib/seo";
-import { CONTACT_EMAIL } from "@/lib/contact";
+import { CONTACT_EMAIL, CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import HomeClient from "./HomeClient";
 
 export const metadata = pageMetadata({
@@ -15,7 +15,7 @@ const localBusinessSchema = {
   name: "Dustin McCormick — Independent Life Insurance Agent",
   url: "https://dustinlife.com",
   image: "https://dustinlife.com/headshot.jpg",
-  telephone: "+1-248-970-9094",
+  telephone: `+1-${CONTACT_PHONE_DISPLAY}`,
   email: CONTACT_EMAIL,
   address: {
     "@type": "PostalAddress",

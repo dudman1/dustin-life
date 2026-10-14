@@ -1,6 +1,7 @@
 "use client";
 
 import SiteChrome from "@/app/components/SiteChrome";
+import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from "@/lib/contact";
 import { type MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type FormDataState = {
@@ -575,9 +576,9 @@ export default function FinalExpenseClient() {
                 <h2 className="confirm-title">You're all set!</h2>
                 <p className="confirm-sub">Dustin will personally reach out within one business day to walk you through your options, no pressure, no obligation.</p>
                 <p style={{ fontSize: "13px", color: "var(--text-3)", marginBottom: "12px" }}>Want to talk sooner? Call directly:</p>
-                <a href="tel:+12489709094" className="confirm-phone">
+                <a href={`tel:${CONTACT_PHONE_TEL}`} className="confirm-phone">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11 19.79 19.79 0 01.21 2.36 2 2 0 012.22.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.37a16 16 0 006.72 6.72l1.56-1.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
-                  248-970-9094
+                  {CONTACT_PHONE_DISPLAY}
                 </a>
               </div>
             )}
