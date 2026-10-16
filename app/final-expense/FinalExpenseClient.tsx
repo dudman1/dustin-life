@@ -245,10 +245,10 @@ export default function FinalExpenseClient() {
       const fbq = (window as Window & {
         fbq?: (...args: unknown[]) => void;
       }).fbq;
-      fbq?.('track', 'Lead', {
-        content_name: 'Final Expense Quote Request',
-        content_category: 'final_expense',
-      });
+      fbq?.("track", "Lead", {
+        content_name: "Final Expense Quote Request",
+        content_category: "final_expense",
+      }, { eventID: data.eventId as string });
       setSubmitted(true);
     } catch (error: unknown) {
       setSubmitError(
