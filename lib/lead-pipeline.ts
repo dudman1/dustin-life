@@ -12,6 +12,7 @@ export interface Env {
   META_LEADGEN_VERIFY_TOKEN?: string;
   META_APP_SECRET?: string;
   META_PAGE_TOKEN?: string;
+  V1_API_KEY?: string;
 }
 
 export interface BaseLeadPayload {
@@ -448,7 +449,7 @@ export async function isDuplicateLeadgenId(env: Env, leadgenId: string): Promise
   try {
     const result = await safePost(
       CONVEX_QUERY_URL,
-      { path: "insuranceLeads:list", args: { limit: 100000 } },
+      { path: "insuranceLeads:list", args: { limit: 100000, apiKey: env.V1_API_KEY } },
       10_000,
       `Convex ${env.CONVEX_ADMIN_KEY}`,
     );
