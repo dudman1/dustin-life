@@ -64,6 +64,8 @@ export interface ShapedLead {
   state: string;
   notes: string;
   ghlPayload: Record<string, unknown>;
+  /** Optional extra segments shown after the phone in the Telegram alert; empty values are skipped. */
+  alertDetails?: string[];
 }
 
 const CONVEX_MUTATION_URL = "https://rapid-hummingbird-980.convex.cloud/api/mutation";
@@ -324,8 +326,9 @@ async function sendTelegramAlert(env: Env, shaped: ShapedLead, convexId: string 
   }
   const formName = String(shaped.ghlPayload.form_name ?? "unknown");
   const name = shaped.fullName || String(shaped.ghlPayload.name ?? "");
+  const details = (shaped.alertDetails ?? []).filter(Boolean).map((d) => ` | ${d}`).join("");
   const text = [
-    `🔔 New lead — ${formName} | ${name} | ${shaped.phone} | ${shaped.email}`,
+    `🔔 New lead — ${formName} | ${name} | ${shaped.phone}${details} | ${shaped.email}`,
     body ? buildCompassProfileLine(body) : "",
   ].filter(Boolean).join("\n");
   await sendTelegramText(env, text, convexId);
