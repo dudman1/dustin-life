@@ -124,6 +124,7 @@ function mapToShapedLead(lead: MetaLeadgenResponse): ShapedLead | { error: strin
 
   const bestCallTime = find("best_call_time");
   const ageRange = find("age_range");
+  const coverageAmount = find("coverage_amount");
   const formId = lead.form_id ?? "";
 
   const notesParts: string[] = [];
@@ -135,6 +136,7 @@ function mapToShapedLead(lead: MetaLeadgenResponse): ShapedLead | { error: strin
   if (lead.ad_id) notesParts.push(`ad_id:${lead.ad_id}`);
   if (lead.campaign_id) notesParts.push(`campaign_id:${lead.campaign_id}`);
   if (ageRange) notesParts.push(`age_range:${ageRange}`);
+  if (coverageAmount) notesParts.push(`coverage_amount:${coverageAmount}`);
 
   return {
     product: "Final Expense",
@@ -144,7 +146,7 @@ function mapToShapedLead(lead: MetaLeadgenResponse): ShapedLead | { error: strin
     phone,
     state,
     notes: notesParts.join(" | "),
-    alertDetails: [state, bestCallTime, ageRange],
+    alertDetails: [state, bestCallTime, ageRange, coverageAmount],
     ghlPayload: {
       source: "FB Lead Ad",
       product: "Final Expense",
